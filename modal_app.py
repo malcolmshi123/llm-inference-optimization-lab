@@ -16,7 +16,7 @@ vllm_image = (
     .uv_pip_install("vllm==0.21.0")
     .env({
         "HF_HOME": HF_CACHE_PATH,
-        "VLLM_CACHE_ROOT": VLLM_CACHE_PATH,
+        "VLLM_CACHE_ROOT": VLLM_CACHE_PATH
     })
 )
 
@@ -25,10 +25,11 @@ vllm_cache_vol = modal.Volume.from_name("inference-lab-vllm-cache", create_if_mi
 
 cache_mounts = {
     HF_CACHE_PATH: hf_cache_vol,
-    VLLM_CACHE_PATH: vllm_cache_vol,
+    VLLM_CACHE_PATH: vllm_cache_vol
 }
 
 @app.function(gpu=GPU_TYPE, image=vllm_image, volumes=cache_mounts, timeout=900, max_containers=1)
+@modal.concurrent(max_inputs=8)
 @modal.web_server(port=VLLM_PORT, startup_timeout=600, requires_proxy_auth=True)
 def serve():
     import subprocess
@@ -41,7 +42,7 @@ def serve():
         "--port", str(VLLM_PORT),
         "--max-model-len", str(MAX_MODEL_LENGTH),
         "--dtype", "bfloat16",
-        "--gpu-memory-utilization", "0.8",
+        "--gpu-memory-utilization", "0.8"
     ]
 
     print("Starting vLLM server with command:", " ".join(command), flush=True)
