@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="610" viewBox="0 0 960 610" role="img" aria-label="Larger scheduling budget did not improve first-token latency">
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:currentColor}.title{font-size:25px;font-weight:700}.subtitle{font-size:14px;opacity:.72}.footnote{font-size:12px;opacity:.66}.tick{font-size:13px;opacity:.83}.axislabel{font-size:15px;font-weight:600}.legend{font-size:14px}.value{font-size:14px;font-weight:600}</style>
+<text x="44.00" y="44.00" class="title">Larger scheduling budget did not improve first-token latency</text>
+<text x="44.00" y="72.00" class="subtitle">Relative change when raising max_num_batched_tokens from 2,048 to 4,096</text>
+<text x="44.00" y="575.00" class="footnote">20 measured batches × 8 requests per workload/config · positive = worse · fixed run order: descriptive only</text>
+<line x1="112.00" y1="500.00" x2="910.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="505.00" class="tick" text-anchor="end">0%</text>
+<line x1="112.00" y1="402.00" x2="910.00" y2="402.00" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="407.00" class="tick" text-anchor="end">+4%</text>
+<line x1="112.00" y1="304.00" x2="910.00" y2="304.00" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="309.00" class="tick" text-anchor="end">+8%</text>
+<line x1="112.00" y1="206.00" x2="910.00" y2="206.00" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="211.00" class="tick" text-anchor="end">+12%</text>
+<line x1="112.00" y1="108.00" x2="910.00" y2="108.00" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="113.00" class="tick" text-anchor="end">+16%</text>
+<line x1="112.00" y1="108.00" x2="112.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1.5" opacity="0.65"/>
+<line x1="112.00" y1="500.00" x2="910.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1.5" opacity="0.65"/>
+<text x="212.00" y="528.00" class="tick" text-anchor="middle">Short p50</text>
+<text x="402.00" y="528.00" class="tick" text-anchor="middle">Short p95</text>
+<text x="592.00" y="528.00" class="tick" text-anchor="middle">Long p50</text>
+<text x="782.00" y="528.00" class="tick" text-anchor="middle">Long p95</text>
+<text x="511.00" y="555.00" class="axislabel" text-anchor="middle">Workload / TTFT percentile</text>
+<text x="26.00" y="304.00" class="axislabel" text-anchor="middle" transform="rotate(-90 26.00 304.00)">Change vs. 2,048 (%)</text>
+<rect x="177.00" y="156.10" width="70.00" height="343.90" fill="currentColor" opacity="0.85"/>
+<text x="212.00" y="143.10" class="value" text-anchor="middle">+14.04%</text>
+<rect x="367.00" y="323.08" width="70.00" height="176.92" fill="currentColor" opacity="0.85"/>
+<text x="402.00" y="310.08" class="value" text-anchor="middle">+7.22%</text>
+<rect x="557.00" y="462.89" width="70.00" height="37.11" fill="currentColor" opacity="0.85"/>
+<text x="592.00" y="449.89" class="value" text-anchor="middle">+1.51%</text>
+<rect x="747.00" y="428.42" width="70.00" height="71.58" fill="currentColor" opacity="0.85"/>
+<text x="782.00" y="415.42" class="value" text-anchor="middle">+2.92%</text>
+</svg>

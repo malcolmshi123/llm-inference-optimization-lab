@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="610" viewBox="0 0 960 610" role="img" aria-label="Higher concurrency increases median first-token latency">
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:currentColor}.title{font-size:25px;font-weight:700}.subtitle{font-size:14px;opacity:.72}.footnote{font-size:12px;opacity:.66}.tick{font-size:13px;opacity:.83}.axislabel{font-size:15px;font-weight:600}.legend{font-size:14px}.value{font-size:14px;font-weight:600}</style>
+<text x="44.00" y="44.00" class="title">Higher concurrency increases median first-token latency</text>
+<text x="44.00" y="72.00" class="subtitle">Initial baseline · client-observed TTFT · cold starts excluded</text>
+<text x="44.00" y="575.00" class="footnote">p50 pooled across successful requests in 5 batches per condition · synthetic prompts</text>
+<line x1="112.00" y1="500.00" x2="910.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="505.00" class="tick" text-anchor="end">0</text>
+<line x1="112.00" y1="416.60" x2="910.00" y2="416.60" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="421.60" class="tick" text-anchor="end">500</text>
+<line x1="112.00" y1="333.19" x2="910.00" y2="333.19" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="338.19" class="tick" text-anchor="end">1000</text>
+<line x1="112.00" y1="249.79" x2="910.00" y2="249.79" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="254.79" class="tick" text-anchor="end">1500</text>
+<line x1="112.00" y1="166.38" x2="910.00" y2="166.38" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="171.38" class="tick" text-anchor="end">2000</text>
+<line x1="112.00" y1="108.00" x2="112.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1.5" opacity="0.65"/>
+<line x1="112.00" y1="500.00" x2="910.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1.5" opacity="0.65"/>
+<text x="112.00" y="528.00" class="tick" text-anchor="middle">1</text>
+<text x="454.00" y="528.00" class="tick" text-anchor="middle">4</text>
+<text x="910.00" y="528.00" class="tick" text-anchor="middle">8</text>
+<text x="511.00" y="555.00" class="axislabel" text-anchor="middle">Concurrent requests</text>
+<text x="26.00" y="304.00" class="axislabel" text-anchor="middle" transform="rotate(-90 26.00 304.00)">TTFT p50 (ms)</text>
+<line x1="112.00" y1="448.86" x2="454.00" y2="427.04" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1"/>
+<line x1="454.00" y1="427.04" x2="910.00" y2="391.40" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1"/>
+<circle cx="112.00" cy="448.86" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<circle cx="454.00" cy="427.04" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<circle cx="910.00" cy="391.40" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<text x="112.00" y="435.86" class="value" text-anchor="middle">307</text>
+<text x="454.00" y="414.04" class="value" text-anchor="middle">437</text>
+<text x="910.00" y="378.40" class="value" text-anchor="middle">651</text>
+<line x1="112.00" y1="406.35" x2="454.00" y2="265.44" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1" stroke-dasharray="9 6"/>
+<line x1="454.00" y1="265.44" x2="910.00" y2="149.71" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1" stroke-dasharray="9 6"/>
+<rect x="107.00" y="401.35" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<rect x="449.00" y="260.44" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<rect x="905.00" y="144.71" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<text x="112.00" y="429.35" class="value" text-anchor="middle">561</text>
+<text x="454.00" y="288.44" class="value" text-anchor="middle">1406</text>
+<text x="910.00" y="172.71" class="value" text-anchor="middle">2100</text>
+<line x1="618.00" y1="120.00" x2="650.00" y2="120.00" stroke="currentColor" fill="none" stroke-width="2.5" opacity="1"/>
+<circle cx="634.00" cy="120.00" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<text x="661.00" y="125.00" class="legend">Short · 256 input tokens</text>
+<line x1="618.00" y1="149.00" x2="650.00" y2="149.00" stroke="currentColor" fill="none" stroke-width="2.5" opacity="1" stroke-dasharray="9 6"/>
+<rect x="629.00" y="144.00" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<text x="661.00" y="154.00" class="legend">Long · 2,048 input tokens</text>
+</svg>

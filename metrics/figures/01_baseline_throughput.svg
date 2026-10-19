@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="610" viewBox="0 0 960 610" role="img" aria-label="Aggregate output throughput scales with concurrency">
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:currentColor}.title{font-size:25px;font-weight:700}.subtitle{font-size:14px;opacity:.72}.footnote{font-size:12px;opacity:.66}.tick{font-size:13px;opacity:.83}.axislabel{font-size:15px;font-weight:600}.legend{font-size:14px}.value{font-size:14px;font-weight:600}</style>
+<text x="44.00" y="44.00" class="title">Aggregate output throughput scales with concurrency</text>
+<text x="44.00" y="72.00" class="subtitle">Initial baseline · Qwen3-4B on NVIDIA L4 · vLLM 0.21.0</text>
+<text x="44.00" y="575.00" class="footnote">5 measured batches per workload/concurrency · throughput is a mean of batch-level rates</text>
+<line x1="112.00" y1="500.00" x2="910.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="505.00" class="tick" text-anchor="end">0</text>
+<line x1="112.00" y1="412.89" x2="910.00" y2="412.89" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="417.89" class="tick" text-anchor="end">50</text>
+<line x1="112.00" y1="325.78" x2="910.00" y2="325.78" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="330.78" class="tick" text-anchor="end">100</text>
+<line x1="112.00" y1="238.67" x2="910.00" y2="238.67" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="243.67" class="tick" text-anchor="end">150</text>
+<line x1="112.00" y1="151.56" x2="910.00" y2="151.56" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
+<text x="96.00" y="156.56" class="tick" text-anchor="end">200</text>
+<line x1="112.00" y1="108.00" x2="112.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1.5" opacity="0.65"/>
+<line x1="112.00" y1="500.00" x2="910.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1.5" opacity="0.65"/>
+<text x="112.00" y="528.00" class="tick" text-anchor="middle">1</text>
+<text x="454.00" y="528.00" class="tick" text-anchor="middle">4</text>
+<text x="910.00" y="528.00" class="tick" text-anchor="middle">8</text>
+<text x="511.00" y="555.00" class="axislabel" text-anchor="middle">Concurrent requests</text>
+<text x="26.00" y="304.00" class="axislabel" text-anchor="middle" transform="rotate(-90 26.00 304.00)">Output tokens / second</text>
+<line x1="112.00" y1="450.87" x2="454.00" y2="316.47" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1"/>
+<line x1="454.00" y1="316.47" x2="910.00" y2="160.72" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1"/>
+<circle cx="112.00" cy="450.87" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<circle cx="454.00" cy="316.47" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<circle cx="910.00" cy="160.72" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<text x="106.00" y="438.87" class="value" text-anchor="middle">28.2</text>
+<text x="448.00" y="304.47" class="value" text-anchor="middle">105.3</text>
+<text x="904.00" y="148.72" class="value" text-anchor="middle">194.7</text>
+<line x1="112.00" y1="455.36" x2="454.00" y2="363.38" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1" stroke-dasharray="9 6"/>
+<line x1="454.00" y1="363.38" x2="910.00" y2="290.86" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1" stroke-dasharray="9 6"/>
+<rect x="107.00" y="450.36" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<rect x="449.00" y="358.38" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<rect x="905.00" y="285.86" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<text x="118.00" y="473.36" class="value" text-anchor="middle">25.6</text>
+<text x="460.00" y="381.38" class="value" text-anchor="middle">78.4</text>
+<text x="916.00" y="308.86" class="value" text-anchor="middle">120.0</text>
+<line x1="618.00" y1="120.00" x2="650.00" y2="120.00" stroke="currentColor" fill="none" stroke-width="2.5" opacity="1"/>
+<circle cx="634.00" cy="120.00" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<text x="661.00" y="125.00" class="legend">Short · 256 input tokens</text>
+<line x1="618.00" y1="149.00" x2="650.00" y2="149.00" stroke="currentColor" fill="none" stroke-width="2.5" opacity="1" stroke-dasharray="9 6"/>
+<rect x="629.00" y="144.00" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
+<text x="661.00" y="154.00" class="legend">Long · 2,048 input tokens</text>
+</svg>
