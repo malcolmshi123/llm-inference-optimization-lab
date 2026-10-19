@@ -232,7 +232,7 @@ cd llm-inference-optimization-lab
 python -m venv .venv
 source .venv/Scripts/activate
 
-python -m pip install modal httpx numpy transformers
+python -m pip install -r requirements.txt
 python -m modal setup
 ```
 
