@@ -3,6 +3,7 @@ import json
 import csv
 from bench.results import save_results_json
 from bench.results import save_results_csv
+from tempfile import TemporaryDirectory
 
 dummy_batches = [
     {
@@ -36,18 +37,23 @@ dummy_batches = [
     }
 ]
 
-# json
-save_results_json("results/test.json", dummy_batches)
+temp_dir = TemporaryDirectory()
 
-loaded = json.loads(Path("results/test.json").read_text(encoding="utf-8"))
+json_path = Path(temp_dir.name) / "test.json"
+csv_path = Path(temp_dir.name) / "test.csv"
+
+# json
+save_results_json(json_path, dummy_batches)
+
+loaded = json.loads(Path(json_path).read_text(encoding="utf-8"))
 
 assert loaded == dummy_batches
 print("JSON persistence test passed!")
 
 # csv
-save_results_csv("results/test.csv", dummy_batches)
+save_results_csv(csv_path, dummy_batches)
 
-with open("results/test.csv", newline="", encoding="utf-8") as file:
+with open(csv_path, newline="", encoding="utf-8") as file:
     rows = list(csv.DictReader(file))
 
 assert len(rows) == 2
@@ -64,3 +70,5 @@ assert rows[0]["completion_tokens"] == "32"
 assert float(rows[0]["batch_time_s"]) == 1.2
 
 print("CSV persistence test passed!")
+
+temp_dir.cleanup()
