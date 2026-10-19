@@ -9,6 +9,21 @@ from datetime import datetime
 from bench.workloads import generate_prompt
 from bench.results import save_results_json, save_results_csv
 
+def positive_int(raw: str) -> int:
+    try:
+        value = int(raw)
+    except ValueError as exc:
+        raise argparse.ArgumentTypeError(
+            "must be a positive integer"
+        ) from exc
+
+    if value <= 0:
+        raise argparse.ArgumentTypeError(
+            "must be a positive integer"
+        )
+
+    return value
+
 MODEL_NAME = "Qwen/Qwen3-4B-Instruct-2507"
 
 VLLM_BASE_URL = os.environ["VLLM_BASE_URL"]
@@ -128,10 +143,23 @@ async def run_batch(client: httpx.AsyncClient, prompts: list[str], max_tokens: i
 
 async def main():
     parser = argparse.ArgumentParser(description="Benchmark vLLM inference.")
-    parser.add_argument("--concurrency", nargs="+", type=int, default=[1, 4, 8])
-    parser.add_argument("--trials", type=int, default=5)
-    parser.add_argument("--max-num-batched-tokens", type=int, default=None)
+    parser.add_argument("--concurrency", nargs="+", type=positive_int, default=[1, 4, 8])
+    parser.add_argument("--trials", type=positive_int, default=5)
+    parser.add_argument("--max-num-batched-tokens", type=positive_int, default=None)
     args = parser.parse_args()
+
+    required = (
+        "VLLM_BASE_URL",
+        "MODAL_PROXY_KEY",
+        "MODAL_PROXY_SECRET"
+    )
+
+    missing = [name for name in required if not os.environ.get(name)]
+
+    if missing:
+        parser.error(
+            "Missing environment variables: " + ", ".join(missing)
+        )
 
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
