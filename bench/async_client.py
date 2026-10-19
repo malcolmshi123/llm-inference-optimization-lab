@@ -4,7 +4,9 @@ import httpx
 import json
 import statistics
 import time
+from datetime import datetime
 from bench.workloads import generate_prompt
+from bench.results import save_results_json, save_results_csv
 
 MODEL_NAME = "Qwen/Qwen3-4B-Instruct-2507"
 
@@ -46,31 +48,31 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
         response.raise_for_status()
 
         async for line in response.aiter_lines():
-                if not line.startswith("data:"):
-                    continue
+            if not line.startswith("data:"):
+                continue
 
-                data = line.removeprefix("data:").strip()
+            data = line.removeprefix("data:").strip()
 
-                if data == "[DONE]":
-                    break
+            if data == "[DONE]":
+                break
 
-                event = json.loads(data)
-                usage = event.get("usage")
+            event = json.loads(data)
+            usage = event.get("usage")
 
-                if usage is not None:
-                    prompt_tokens = usage.get("prompt_tokens")
-                    completion_tokens = usage.get("completion_tokens")
+            if usage is not None:
+                prompt_tokens = usage.get("prompt_tokens")
+                completion_tokens = usage.get("completion_tokens")
 
-                if not event.get("choices"):
-                    continue
+            if not event.get("choices"):
+                continue
 
-                content = event["choices"][0]["delta"].get("content")
+            content = event["choices"][0]["delta"].get("content")
 
-                if content:
-                    if first_token_time is None:
-                        first_token_time = time.perf_counter()
-                    # print(content, end="", flush=True)
-                    content_chunks.append(content)
+            if content:
+                if first_token_time is None:
+                    first_token_time = time.perf_counter()
+                # print(content, end="", flush=True)
+                content_chunks.append(content)
 
         end_time = time.perf_counter()
 
@@ -90,27 +92,51 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
         }
 
 async def run_batch(client: httpx.AsyncClient, prompts: list[str], max_tokens: int = 128):
-        batch_start = time.perf_counter()
-        results = await asyncio.gather(
-            *(
-                send_streaming_request(client, prompt, max_tokens)
-                for prompt in prompts
-            )
-        )
-        batch_end = time.perf_counter()
-        batch_time_s = batch_end - batch_start
+    batch_start = time.perf_counter()
+    results = await asyncio.gather(
+        *(
+            send_streaming_request(client, prompt, max_tokens)
+            for prompt in prompts
+        ),
+        return_exceptions=True
+    )
+    batch_end = time.perf_counter()
+    batch_time_s = batch_end - batch_start
 
-        return {
-            "results": results,
-            "batch_time_s": batch_time_s
-        }
+    normalized_results = []
+
+    for result in results:
+        if isinstance(result, Exception):
+            normalized_results.append({
+                "success": False,
+                "error_type": type(result).__name__,
+                "error_message": str(result),
+                "ttft_ms": None,
+                "e2e_ms": None,
+                "prompt_tokens": None,
+                "completion_tokens": None,
+            })
+        else:
+            result["success"] = True
+            normalized_results.append(result)
+
+    return {
+        "results": normalized_results,
+        "batch_time_s": batch_time_s
+    }
 
 async def main():
+    run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
+
+    json_path = f"results/{run_id}.json"
+    csv_path = f"results/{run_id}.csv"
+
     async with httpx.AsyncClient(timeout=600, follow_redirects=True) as client:
         test_prompt = "Explain what a KV cache is in one sentence."
 
         # warmup request
         print("=== Warmup Request ===")
+        
         result = await send_streaming_request(client, test_prompt)
 
         print("Status: ", result["status_code"])
@@ -125,12 +151,14 @@ async def main():
 
         # batch requests
         print("\n=== Concurrent Batch ===")
+
         workloads = {
             "short": 256,
             "long": 2048
         }
         concurrency_levels = [1, 4, 8]
         num_trials = 5
+
         all_batches = []
 
         for workload_name, target_tokens in workloads.items():
@@ -165,19 +193,36 @@ async def main():
                     results = batch["results"]
                     batch_time_s = batch["batch_time_s"]
 
+                    successful_requests = sum(1 for result in results if result["success"])
+                    failed_requests = len(results) - successful_requests
+
+                    batch["successful_requests"] = successful_requests
+                    batch["failed_requests"] = failed_requests
+
                     output_tokens_per_sec = None
 
                     for i, result in enumerate(results):
+
+                        if not result["success"]:
+                            print(f"Request {i + 1}:")
+                            print(f"Error type: {result['error_type']}")
+                            print(f"Error message: {result['error_message']}")
+                            continue
+
                         ttft = result["ttft_ms"]
                         e2e = result["e2e_ms"]
 
                         ttft_display = f"{ttft:.2f}" if ttft is not None else "N/A"
+                        e2e_display = f"{e2e:.2f}" if e2e is not None else "N/A"
 
                         print(
                             f"Request {i + 1}: "
                             f"TTFT={ttft_display} ms, "
-                            f"E2E={e2e:.2f} ms"
+                            f"E2E={e2e_display} ms"
                         )
+
+                        print(f"Prompt tokens: {result['prompt_tokens']}")
+                        print(f"Completion tokens: {result['completion_tokens']}")
 
                     if all(r["completion_tokens"] is not None for r in results):
                         total_completion_tokens = sum(r["completion_tokens"] for r in results)
@@ -187,24 +232,34 @@ async def main():
                         print("\nOutput tokens per second: N/A (missing token counts)")
                     batch["output_tokens_per_sec"] = output_tokens_per_sec
 
-                    requests_per_sec = concurrency / batch_time_s
-                    batch["requests_per_sec"] = requests_per_sec
-
+                    requests_per_sec = successful_requests / batch_time_s
                     print(f"Requests per second: {requests_per_sec:.2f} req/s")
+                    batch["requests_per_sec"] = requests_per_sec
 
                     print(f"Batch time: {(batch_time_s * 1000):.2f} ms")
 
                     all_batches.append(batch)
 
+                    save_results_json(json_path, all_batches)
+                    save_results_csv(csv_path, all_batches)
+
             print("Total batches collected so far:", len(all_batches))
-            
+
             print("\n=== Latency Summary ===")
             for concurrency in concurrency_levels:
+
+                failed_batches = [
+                    batch for batch in all_batches
+                    if batch["workload"] == workload_name
+                    and batch["concurrency"] == concurrency
+                    and batch["failed_requests"] > 0
+                ]
 
                 selected_batches = [
                     batch for batch in all_batches 
                     if batch["workload"] == workload_name
                     and batch["concurrency"] == concurrency
+                    and batch["failed_requests"] == 0
                 ]
 
                 ttft_values = [
@@ -218,6 +273,7 @@ async def main():
                     request["e2e_ms"]
                     for batch in selected_batches
                     for request in batch["results"]
+                    if request["e2e_ms"] is not None
                 ]
 
                 token_tp_values = [
@@ -232,6 +288,10 @@ async def main():
                 ]
 
                 print(f"\n--- Concurrency: {concurrency} ---")
+
+                print(f"Successful batches: {len(selected_batches)}")
+                print(f"Failed batches: {len(failed_batches)}")
+
                 print(f"TTFT samples: {len(ttft_values)}")
                 print(f"E2E samples: {len(e2e_values)}")
 

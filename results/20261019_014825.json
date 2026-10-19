@@ -1,0 +1,1562 @@
+[
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive, stream-of-consciousness sequence of words related to nature\u2014such as *road, water, tree, bird, sun, moon, rain, wind, forest, garden, river, cloud, night, field, stone*\u2014with no clear structure, grammar, or logical progression. It appears to be a random or poetic collage of natural imagery, possibly generated algorithmically or as a form of abstract expression.\n\n**Summary:**  \nA fragmented, repetitive collection of nature-related words with no coherent narrative or meaning. It evokes imagery of forests, rivers, skies, and wildlife at different times of day and weather,",
+        "ttft_ms": 443.62909998744726,
+        "e2e_ms": 4672.037299984368,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.673930100019788,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 1,
+    "trial": 1,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 27.385946571913447,
+    "requests_per_sec": 0.2139527075930738
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words, primarily centered around natural elements such as birds, sun, moon, rain, wind, trees, water, stone, garden, forest, field, and road. There is no clear narrative or logical structure, and the repeated phrases suggest a lack of coherent meaning. \n\nSummary:  \nThe text is a chaotic, repetitive stream of nature-related keywords with no clear theme, structure, or message. It appears to be a random or nonsensical combination of words describing elements of nature and outdoor settings (e.g., garden, forest, sun, rain, wind), possibly generated algorithmically",
+        "ttft_ms": 255.52499998593703,
+        "e2e_ms": 4484.5231999934185,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.486574500013376,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 1,
+    "trial": 2,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 28.529560804042905,
+    "requests_per_sec": 0.2228871937815852
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive, stream-of-consciousness sequence of natural elements such as river, water, stone, tree, wind, sun, moon, cloud, bird, garden, forest, road, and night. It lacks a clear structure or logical progression, instead cycling through images of nature in a rhythmic, almost poetic or meditative pattern. There is no explicit narrative, argument, or specific message\u2014only repeated motifs of natural scenes, often blending together in a chaotic yet harmonious flow. The summary is that this is a fragmented, sensory-rich, and cyclical depiction of natural elements, evoking a dreamlike or meditative",
+        "ttft_ms": 306.5519999945536,
+        "e2e_ms": 4514.926199975889,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.516547199978959,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 1,
+    "trial": 3,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 28.34023299935763,
+    "requests_per_sec": 0.2214080703074815
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as night, day, sky (cloud, moon, sun), weather (rain, wind), and landscapes (road, field, river, forest, stone, tree, bird, water). It lacks clear structure, grammar, or logical progression, and appears to be a stream of random or poetic phrases rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of words describing natural scenes\u2014such as night, day, weather, and landscapes\u2014without a clear theme, sequence, or meaning. It may represent a poetic or abstract",
+        "ttft_ms": 279.20410002116114,
+        "e2e_ms": 4489.559100009501,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.491383499989752,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 1,
+    "trial": 4,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 28.499013722674107,
+    "requests_per_sec": 0.22264854470839146
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of natural elements such as wind, cloud, moon, sun, rain, water, tree, bird, stone, forest, garden, road, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of imagery related to nature\u2014elements like wind, rain, trees, water, birds, and landscapes (forest, garden, road, night, sun, moon). It appears to be a poetic or rhythmic stream of natural scenes rather than a coherent narrative or argument. There is no clear message,",
+        "ttft_ms": 316.8629999854602,
+        "e2e_ms": 4529.362999979639,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.530970799998613,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 1,
+    "trial": 5,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 28.250016530682384,
+    "requests_per_sec": 0.22070325414595612
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive and rhythmic sequence of natural elements such as light, moon, cloud, tree, rain, water, river, forest, bird, sun, wind, stone, garden, field, road, and night. It lacks clear structure or original meaning, instead emphasizing recurring imagery of nature and weather. The repeated phrases suggest a poetic or meditative flow, possibly evoking a sense of movement, cycles of day and night, and the interconnectedness of natural elements. However, due to its lack of coherent narrative or logical progression, it cannot be summarized in a traditional sense. Instead, it can be described as a stream",
+        "ttft_ms": 426.6012000152841,
+        "e2e_ms": 4806.114500010153,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as moon, light, stone, rain, bird, sun, forest, garden, water, cloud, wind, tree, field, night, and road. It lacks clear structure, grammar, or logical progression, and appears to be a stream of poetic or sensory keywords rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of natural imagery related to elements of nature (e.g., sun, rain, trees, water, birds, forests, gardens) and time of day (e.g., night, day, moon).",
+        "ttft_ms": 420.6713000021409,
+        "e2e_ms": 4823.102900001686,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as moon, sun, cloud, wind, water, tree, garden, river, bird, stone, night, and field. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative keywords rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of imagery related to nature\u2014such as moonlight, clouds, wind, water, trees, gardens, rivers, birds, and stones\u2014set against night and day scenes. It conveys a dreamlike or poetic atmosphere of natural elements inter",
+        "ttft_ms": 423.0247999948915,
+        "e2e_ms": 4801.804799993988,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as rain, wind, sun, tree, river, water, forest, moon, cloud, garden, field, bird, stone, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a chaotic, repetitive stream of nature-related words, emphasizing themes of natural elements (rain, wind, water, trees, rivers, forests, moon, sun, birds, gardens, fields) occurring across different times (day, night) and settings (garden, field, forest, road). It appears to be a poetic or",
+        "ttft_ms": 279.9945999868214,
+        "e2e_ms": 4753.902800002834,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.826409200002672,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 4,
+    "trial": 1,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 106.08300680342573,
+    "requests_per_sec": 0.8287734906517635
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as moon, sun, rain, river, forest, wind, bird, tree, garden, stone, road, and light. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative or random phrases rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of natural imagery (e.g., sun, moon, rain, trees, rivers, birds, gardens) with no clear meaning, sequence, or theme. It may represent a poetic or abstract expression of nature, but due to its",
+        "ttft_ms": 480.87450000457466,
+        "e2e_ms": 4838.2326000137255,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words related to nature, such as trees, roads, light, rain, water, gardens, forests, birds, clouds, and night/day cycles. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative imagery rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a chaotic, repetitive collection of natural elements (trees, water, light, rain, clouds, gardens, forests, birds, night, day) that evoke imagery of natural scenes\u2014gardens, forests, roads, rivers, and skies\u2014often in alternating day and",
+        "ttft_ms": 458.13419998739846,
+        "e2e_ms": 4854.734299995471,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as rivers, stones, trees, gardens, birds, clouds, light, wind, rain, sun, and night. It lacks clear structure or coherent meaning, instead appearing to be a stream of associative keywords and phrases that evoke imagery of nature, landscapes, and changing conditions (day/night, weather, movement). \n\nSummary:  \nThe text is a chaotic, repetitive collection of nature-related terms describing scenes of gardens, rivers, trees, weather, and light throughout day and night. It conveys a dreamlike or poetic vision of natural environments but does not convey a specific",
+        "ttft_ms": 316.4020999975037,
+        "e2e_ms": 4785.199100006139,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of natural elements such as stone, sun, river, moon, rain, cloud, wind, bird, tree, garden, water, night, field, and light. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of nature-related words with no coherent narrative or meaning. It appears to be a poetic or abstract stream of imagery centered on natural elements, possibly representing a cyclical or dreamlike vision of nature, but it does not convey a specific message, theme, or logical structure. It may be intended",
+        "ttft_ms": 455.3973999863956,
+        "e2e_ms": 4832.485999999335,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.85824989998946,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 4,
+    "trial": 2,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 105.38774466935322,
+    "requests_per_sec": 0.8233417552293221
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of words related to natural elements such as sun, moon, wind, water, trees, birds, clouds, stone, garden, forest, road, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of imagery describing natural scenes\u2014gardens, forests, roads, weather, and celestial bodies\u2014without a coherent narrative or meaningful organization. It appears to be a poetic or abstract stream of sensory impressions rather than a structured passage. There is no clear message, plot, or logical flow.",
+        "ttft_ms": 295.3030999924522,
+        "e2e_ms": 4735.3353000071365,
+        "prompt_tokens": 256,
+        "completion_tokens": 127,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as rain, water, sun, moon, trees, birds, wind, clouds, roads, gardens, and fields. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a chaotic, repetitive stream of imagery related to nature (e.g., rain, water, trees, birds, sun, moon, wind, clouds) and landscapes (e.g., gardens, roads, fields, forests). It appears to be a nonsensical or poetic collage rather than a coherent narrative or description. There is no clear message, plot, or",
+        "ttft_ms": 438.30170002183877,
+        "e2e_ms": 4838.865800003987,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as fields, trees, rivers, birds, rain, wind, sun, moon, stones, gardens, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a chaotic, repetitive stream of words describing natural scenes\u2014fields, forests, trees, water, wind, rain, sun, moon, birds, and gardens\u2014often appearing in random or overlapping combinations. It conveys a sensory or atmospheric depiction of nature across day and night, but due to its lack of coherence and structure, it does not form a meaningful narrative",
+        "ttft_ms": 436.4173999929335,
+        "e2e_ms": 4815.563899988774,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as sun, moon, rain, forest, river, tree, cloud, wind, stone, garden, water, and light. It lacks clear structure, grammar, or logical progression, and appears to be a stream of random or poetic imagery rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of natural imagery (e.g., sun, moon, rain, trees, rivers, clouds, stones, gardens) that evokes a dreamlike or meditative atmosphere. It does not convey a specific message, plot, or logical",
+        "ttft_ms": 435.1189000008162,
+        "e2e_ms": 4814.8793000145815,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.842708399984986,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 4,
+    "trial": 3,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 105.5194650996505,
+    "requests_per_sec": 0.825984071230141
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as birds, trees, rivers, clouds, sun, moon, wind, rain, water, gardens, forests, fields, and roads. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a chaotic, repetitive stream of nature-related words with no coherent narrative or meaning. It appears to be a random or generated sequence of imagery associated with natural scenes (e.g., forests, rivers, skies, gardens), possibly reflecting a pattern or algorithmic output rather than a meaningful message. There is no clear theme, plot, or logical flow",
+        "ttft_ms": 504.03179999557324,
+        "e2e_ms": 4887.14809998055,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive, stream-of-consciousness sequence of natural elements such as wind, water, rain, sun, moon, trees, rivers, fields, stones, birds, and gardens. It lacks clear structure or logical progression, instead emphasizing recurring imagery associated with nature and landscapes. The repeated phrases suggest a meditative or poetic flow, evoking scenes of forests, rivers, gardens, and night skies. There is no explicit narrative or argument\u2014only a rhythmic, sensory-rich montage of natural elements, possibly intended to convey a sense of harmony, cycles of nature, or emotional tranquility. The summary is that this is a poetic",
+        "ttft_ms": 339.98080002493225,
+        "e2e_ms": 4817.26609999896,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of natural elements such as wind, water, moon, trees, clouds, rain, stone, field, forest, and night. It lacks clear structure, grammar, or logical progression. There is no coherent narrative, argument, or specific message.\n\n**Summary:**  \nThe text is a fragmented, repetitive collection of natural imagery with no clear meaning or organization. It appears to be a random or poetic stream of words related to nature and the night, possibly representing a meditative or sensory experience, but it does not convey a specific idea, story, or insight. Therefore, a meaningful",
+        "ttft_ms": 478.96510001737624,
+        "e2e_ms": 4881.749100022716,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of natural elements such as clouds, rivers, stones, forests, birds, light, rain, wind, trees, gardens, and night. It lacks clear structure or coherent meaning, instead emphasizing recurring imagery of nature and the passage of time (night, day, moon, sun). The repetition suggests a meditative or poetic rhythm, possibly evoking a dreamlike or sensory experience of a natural landscape. There is no explicit narrative or logical progression\u2014only a continuous flow of visual and atmospheric motifs. \n\nIn summary:  \nThe text is a poetic, repetitive stream of natural imagery (",
+        "ttft_ms": 479.1329999861773,
+        "e2e_ms": 4859.480799990706,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.889420700026676,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 4,
+    "trial": 4,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 104.71588178067937,
+    "requests_per_sec": 0.8180928264115576
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive and stream-of-consciousness sequence of natural elements such as trees, rivers, moons, winds, birds, gardens, clouds, light, night, and sun, often appearing in varying combinations. It lacks a clear narrative or logical structure, instead emphasizing imagery of nature and the interplay of light, weather, and scenery across different times of day (day and night) and settings (gardens, forests, roads, fields). The repeated phrases suggest a meditative or poetic reflection on the natural world, with a focus on sensory and visual elements. There is no explicit plot or message\u2014only a rhythmic, almost",
+        "ttft_ms": 469.8256000119727,
+        "e2e_ms": 4874.158899998292,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive and stream-of-consciousness sequence of natural elements such as sun, forest, water, rain, tree, river, cloud, moon, wind, field, garden, bird, stone, and road. It lacks a clear structure or coherent narrative, instead cycling through images of nature and landscapes in a rhythmic, almost poetic or meditative pattern. There is no specific event, argument, or logical progression\u2014only repeated motifs of natural scenes, often in combinations that suggest a visual or sensory experience of the outdoors across different times of day (daylight, night) and weather conditions (sun, rain, wind, cloud",
+        "ttft_ms": 465.7207000127528,
+        "e2e_ms": 4869.42140001338,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as rain, sun, wind, water, trees, birds, forests, gardens, stones, rivers, fields, and night. It lacks clear structure or coherent meaning, instead appearing to be a stream of keywords and phrases that emphasize imagery of nature and the changing conditions of day and night.\n\nSummary:  \nThe text is a repetitive, unstructured collection of words describing natural scenes\u2014such as rain, sun, wind, water, trees, birds, forests, gardens, and stones\u2014set against the backdrop of day and night. It conveys a poetic or sensory impression of",
+        "ttft_ms": 319.8020000127144,
+        "e2e_ms": 4800.871200015536,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive and stream-of-consciousness sequence of natural elements such as rain, sun, moon, wind, trees, rivers, birds, stones, fields, and gardens. It lacks clear structure or logical progression, instead emphasizing recurring imagery of nature and the environment. The repeated phrases suggest a meditative or poetic reflection on natural scenes\u2014often at night or during daylight\u2014focusing on elements like rivers, gardens, birds, and weather. There is no explicit narrative or argument, only a rhythmic, almost hypnotic flow of visual and sensory details. The summary is that this is a fragmented, poetic representation of natural landscapes and",
+        "ttft_ms": 465.3340000077151,
+        "e2e_ms": 4851.505600003293,
+        "prompt_tokens": 257,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.876304600009462,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 4,
+    "trial": 5,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 104.99754260613796,
+    "requests_per_sec": 0.8202933016104528
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of natural elements such as moon, sun, tree, river, wind, rain, stone, forest, field, garden, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, cyclical collection of images related to nature and the passage of time (day/night, weather, landscapes). It does not convey a coherent message or narrative but instead emphasizes recurring themes of natural elements in a poetic, almost meditative rhythm. There is no specific plot, argument, or clear meaning\u2014only repeated motifs suggesting a contempl",
+        "ttft_ms": 355.98409999511205,
+        "e2e_ms": 5096.096000022953,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as wind, water, moon, forest, bird, tree, rain, road, stone, light, and sun, often appearing in random or overlapping patterns. It lacks a clear structure, coherent narrative, or logical progression. \n\n**Summary:**  \nThe text is a chaotic, repetitive stream of nature-related words with no discernible meaning, theme, or organization. It appears to be a random or nonsensical combination of imagery associated with natural scenes (e.g., forest, rain, moon, wind), possibly generated algorithmically or as a poetic abstraction. There is no",
+        "ttft_ms": 679.5685999968555,
+        "e2e_ms": 5182.210400002077,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of natural elements such as sun, moon, rain, wind, water, trees, rivers, fields, gardens, stones, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of imagery related to nature and the passage of time (day, night, weather, landscapes). It conveys a sensory, poetic depiction of natural scenes\u2014rivers, trees, skies, rain, wind, and light\u2014but does not convey a specific message, argument, or coherent narrative. It appears to be a random",
+        "ttft_ms": 423.22759999660775,
+        "e2e_ms": 5162.15999997803,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words related to natural elements such as light, water, moon, sun, trees, forests, rivers, birds, wind, and gardens, often appearing in combinations like \"light field,\" \"water river,\" \"moon night,\" or \"sun tree.\" There is no clear narrative or logical structure\u2014instead, it resembles a stream of associative imagery, possibly generated algorithmically or as a poetic, abstract representation of nature.\n\n**Summary:**  \nThe text is a repetitive, poetic stream of natural imagery involving light, water, sky elements (sun, moon, clouds), and natural settings (forests",
+        "ttft_ms": 684.2444000067189,
+        "e2e_ms": 5179.187600006117,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words, primarily centered around natural elements such as sun, moon, water, wind, rain, forest, garden, tree, bird, light, and night. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative or poetic phrases rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a repetitive, unstructured stream of nature-related imagery (sun, moon, water, wind, rain, forest, garden, bird, light, night), suggesting a poetic or meditative reflection on natural cycles and scenes. It does not convey a",
+        "ttft_ms": 674.5294000138529,
+        "e2e_ms": 5175.809100008337,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words related to natural elements such as clouds, water, trees, sun, moon, birds, stone, forest, road, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, poetic repetition of nature-related imagery, blending elements like sky, land, water, and movement. It does not convey a coherent message or narrative but instead evokes a dreamlike, meditative atmosphere of natural scenes transitioning through day and night. There is no discernible plot, argument, or specific theme\u2014only a rhythmic",
+        "ttft_ms": 693.4396000287961,
+        "e2e_ms": 5187.456400017254,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of natural elements such as wind, water, stone, tree, rain, sun, moon, forest, field, river, cloud, bird, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of nature-related words, suggesting a poetic or meditative stream of imagery centered on natural elements and their interplay throughout day and night. It does not convey a coherent narrative or specific message but instead evokes a sensory, rhythmic depiction of the natural world in constant motion. There is no discernible",
+        "ttft_ms": 665.24259999278,
+        "e2e_ms": 5168.48300001584,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive, stream-of-consciousness sequence of words related to natural elements such as clouds, rain, trees, rivers, light, night, wind, birds, forests, stones, and fields. It lacks clear structure or coherent sentences, instead emphasizing imagery and sensory details of nature, often in nocturnal or rainy settings. There is no explicit narrative or logical progression\u2014rather, it appears to be a poetic or abstract collage of environmental themes, possibly reflecting a meditative or atmospheric mood. The repeated phrases suggest a focus on the interplay of natural elements, especially during night and rain, with an emphasis on light, water,",
+        "ttft_ms": 666.2494000047445,
+        "e2e_ms": 5168.319999997038,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 5.204190299991751,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 8,
+    "trial": 1,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 196.76451877665255,
+    "requests_per_sec": 1.537222802942598
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of natural elements such as trees, water, birds, moon, rain, wind, sun, clouds, roads, gardens, and forests. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of images and sensations from nature\u2014such as birds, water, moonlight, rain, wind, and forests\u2014without a coherent narrative or meaningful organization. It appears to be a poetic or chaotic stream of natural imagery, possibly representing a meditative or sensory experience, but it does not convey a specific message, plot,",
+        "ttft_ms": 591.6251000016928,
+        "e2e_ms": 5163.660899997922,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive, stream-of-consciousness sequence of natural elements such as wind, forest, river, sun, moon, water, tree, stone, rain, cloud, garden, field, night, and bird. It lacks a clear structure or coherent narrative, instead cycling through images of nature and landscapes in a rhythmic, almost poetic or meditative pattern. There is no explicit plot, argument, or logical progression\u2014only repeated motifs suggesting a sensory or emotional immersion in natural scenes. The summary is that this is a fragmented, repetitive passage evoking imagery of nature, often in motion or at night, with a focus on elements",
+        "ttft_ms": 668.287100008456,
+        "e2e_ms": 5196.459099999629,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of natural elements such as moon, rain, tree, water, wind, garden, stone, sun, cloud, bird, and road, often appearing in various combinations and without clear structure or logical progression. It lacks coherent sentences or a meaningful narrative. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of nature-related words with no clear meaning, structure, or theme. It appears to be a random or poetic stream of imagery involving elements like rain, trees, water, moon, wind, and gardens, possibly reflecting a meditative or sensory atmosphere. However, it",
+        "ttft_ms": 566.551800002344,
+        "e2e_ms": 5135.803400014993,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive and stream-of-consciousness sequence of natural elements such as forest, river, rain, sun, bird, cloud, wind, stone, garden, field, water, moon, and road. It lacks a clear structure or coherent narrative, instead emphasizing recurring imagery of nature and landscapes. The repeated phrases suggest a meditative or poetic reflection on the cycles of nature\u2014day and night, rain and sun, movement of wind and water, and the interplay between natural elements. There is no specific plot or message, but the overall tone evokes a sense of tranquility, observation, and the beauty of the natural world",
+        "ttft_ms": 564.6856999956071,
+        "e2e_ms": 5133.200500014937,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as river, forest, field, road, sun, moon, rain, wind, tree, bird, stone, garden, light, and night. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative or random phrases rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of nature-related words and phrases (e.g., river, forest, sun, moon, rain, tree, bird, stone) that evoke imagery of natural scenes but do not form a meaningful or organized message.",
+        "ttft_ms": 663.62200002186,
+        "e2e_ms": 5160.300200019265,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words, primarily centered around natural elements such as trees, rain, moon, cloud, river, wind, light, water, bird, forest, field, garden, and night. There is no clear narrative, structure, or original meaning\u2014instead, it appears to be a stream of repeated and overlapping imagery, possibly generated algorithmically or as a poetic, abstract representation of nature.\n\n**Summary:**  \nThe text is a repetitive, poetic stream of natural imagery (trees, rain, moon, clouds, rivers, wind, light, birds, forests, fields, gardens, water, night)",
+        "ttft_ms": 559.1142999764998,
+        "e2e_ms": 5154.730999987805,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words related to nature, such as birds, trees, water, clouds, moon, sun, wind, forest, garden, and night. It lacks clear structure, grammar, or logical progression. \n\nSummary:  \nThe text is a chaotic, repetitive stream of nature-related keywords with no coherent meaning or narrative. It appears to be a random or generated sequence of phrases describing elements of natural scenes (e.g., garden, forest, water, sky), possibly reflecting a pattern or algorithmic output rather than a meaningful message. There is no clear theme, story, or logical structure to summarize.",
+        "ttft_ms": 381.9587999896612,
+        "e2e_ms": 5076.968100009253,
+        "prompt_tokens": 257,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive, stream-of-consciousness sequence of natural elements such as birds, sun, rain, wind, trees, water, clouds, stones, forests, gardens, rivers, and night. It lacks a clear structure or narrative, instead emphasizing recurring imagery of nature in various conditions\u2014daylight, night, rain, wind, and stillness. The repeated phrases suggest a meditative or poetic reflection on the cyclical and ever-present elements of the natural world. There is no specific plot, event, or logical progression\u2014only a rhythmic, sensory-rich montage of nature scenes. \n\nIn essence, the text evokes a",
+        "ttft_ms": 559.5928000111599,
+        "e2e_ms": 5129.711900022812,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 5.200274400005583,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 8,
+    "trial": 2,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 196.91268599189704,
+    "requests_per_sec": 1.5383803593116956
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of words related to natural elements such as rain, wind, light, moon, sun, water, trees, rivers, fields, gardens, forests, and stones. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of nature-related terms with no coherent narrative or meaning. It appears to be a random or poetic stream of imagery involving natural scenes like rivers, gardens, forests, and weather, rather than a structured description or story. There is no clear message, plot, or organization\u2014only recurring motifs of light",
+        "ttft_ms": 655.6515000120271,
+        "e2e_ms": 5159.643200022401,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as sun, moon, water, trees, birds, wind, clouds, forest, garden, road, and rain. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative imagery rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a repetitive, poetic stream of natural imagery involving elements like sun, moon, water, trees, birds, wind, clouds, forests, gardens, roads, and rain. It conveys a dreamlike or meditative atmosphere, emphasizing the cyclical and interconnected presence of nature, but",
+        "ttft_ms": 677.8702999872621,
+        "e2e_ms": 5152.094099990791,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as water, road, sun, moon, tree, bird, stone, wind, river, cloud, forest, garden, and night. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative or poetic keywords rather than a coherent sentence or narrative.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of natural imagery (e.g., sun, moon, water, trees, birds, stones, wind, rivers, clouds) that evokes a dreamlike or meditative atmosphere. It does not convey a specific message,",
+        "ttft_ms": 293.2703999977093,
+        "e2e_ms": 5067.381500004558,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of words related to natural elements such as water, trees, birds, moon, sun, rain, wind, stone, garden, forest, road, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of nature-related terms with no coherent narrative or meaning. It appears to be a random or poetic stream of imagery centered on natural scenes\u2014gardens, forests, rivers, skies, and wildlife\u2014repeated across multiple lines. There is no clear message, plot, or organization, suggesting it may",
+        "ttft_ms": 650.8079999766778,
+        "e2e_ms": 5153.636799979722,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as river, forest, wind, bird, sun, stone, garden, rain, moon, water, cloud, tree, road, field, and night. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative keywords rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a chaotic, repetitive collection of nature-related words and phrases, emphasizing elements like rivers, forests, birds, sunlight, rain, stones, gardens, and night. It conveys a sensory or atmospheric impression of natural scenes but does not form a",
+        "ttft_ms": 649.5237000053748,
+        "e2e_ms": 5228.50609998568,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words, primarily centered around natural elements such as wind, rain, light, bird, river, forest, field, tree, garden, moon, night, and stone. It lacks clear structure, grammar, or coherent meaning, suggesting it may be a random or poetic stream of imagery rather than a meaningful sentence or paragraph.\n\n**Summary:**  \nA repetitive, poetic stream of natural imagery (wind, rain, light, birds, rivers, forests, gardens, trees, moon, night, stone) evokes a dreamlike or meditative scene of nature at various times of day and night.",
+        "ttft_ms": 647.7654000045732,
+        "e2e_ms": 5228.0467999808025,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as moon, rain, wind, river, forest, garden, sun, tree, stone, bird, cloud, field, and night. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative keywords rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a chaotic, repetitive collection of images and elements from nature\u2014such as moonlight, rain, wind, rivers, forests, gardens, trees, birds, and clouds\u2014set against night and day scenes. It conveys a dreamlike or poetic atmosphere but does",
+        "ttft_ms": 644.8843000107445,
+        "e2e_ms": 5151.2258000147995,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words, primarily consisting of natural elements such as sun, moon, rain, wind, tree, forest, river, field, garden, night, and light. There is no clear narrative or structured meaning. It appears to be a stream of keywords or phrases that repeatedly cycle through images of nature, often combining elements like \"sun,\" \"moon,\" \"rain,\" \"tree,\" and \"forest\" in various combinations.\n\nSummary:  \nThe text is a chaotic, repetitive collection of nature-related terms with no coherent structure or story. It reflects recurring themes of natural scenes\u2014such as sun, moon",
+        "ttft_ms": 645.7321000052616,
+        "e2e_ms": 5152.522300020792,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 5.237739400006831,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 8,
+    "trial": 3,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 195.50419022348927,
+    "requests_per_sec": 1.52737648612101
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as trees, rain, wind, water, moon, sun, birds, fields, forests, stones, roads, and gardens, often appearing in random or overlapping combinations. It lacks a clear narrative or logical structure and seems to be a stream of associative imagery rather than a coherent passage.\n\n**Summary:**  \nThe text is a repetitive, chaotic sequence of natural imagery (trees, rain, wind, sun, moon, birds, fields, forests, water, stones, roads, gardens) with no clear structure or meaning. It appears to reflect a poetic or dreamlike montage of",
+        "ttft_ms": 926.2732999923173,
+        "e2e_ms": 5448.609799990663,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of natural elements such as forest, river, road, wind, sun, cloud, rain, night, stone, garden, bird, tree, light, and water. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of nature-related words and phrases, emphasizing themes of forests, rivers, gardens, weather, and natural elements. It appears to be a poetic or chaotic stream of imagery rather than a coherent narrative or argument. There is no clear message, plot, or logical flow\u2014only recurring motifs of nature",
+        "ttft_ms": 924.5868000143673,
+        "e2e_ms": 5431.725900009042,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive and stream-of-consciousness sequence of natural elements such as trees, rivers, birds, clouds, moon, sun, wind, rain, stone, garden, road, field, and night. It lacks a clear structure or logical progression, instead emphasizing imagery of nature in various settings\u2014forests, gardens, fields, rivers, and skies\u2014often in combination and with recurring themes of light, water, and movement (wind, rain, birds). The repeated phrases suggest a meditative or poetic reflection on the natural world, capturing moments of stillness and motion across day and night. There is no explicit narrative or argument",
+        "ttft_ms": 752.3405000101775,
+        "e2e_ms": 5393.562200013548,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words related to natural elements such as water, sun, forest, tree, wind, rain, light, stone, bird, garden, field, road, moon, and cloud. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a chaotic, repetitive stream of nature-related keywords with no coherent narrative or meaning. It appears to be a random or generated sequence of words describing natural scenes (e.g., forest, water, sun, birds, wind), possibly reflecting a poetic or abstract representation of nature, but without clear organization or purpose. It does",
+        "ttft_ms": 923.6548999906518,
+        "e2e_ms": 5427.619900001446,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words related to nature\u2014such as sun, moon, water, trees, birds, stones, wind, rain, forest, garden, and night\u2014without clear structure, grammar, or logical progression. It appears to be a poetic or rhythmic collage rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a fragmented, repetitive collection of natural imagery centered on themes of night, water, trees, birds, stones, wind, and light. It lacks a clear structure or meaning, suggesting a poetic or abstract expression of natural elements rather than a factual or logical",
+        "ttft_ms": 601.5097000054084,
+        "e2e_ms": 5338.1861000088975,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive and rhythmic sequence of natural elements such as rain, sun, moon, wind, water, trees, forests, gardens, rivers, stones, birds, and fields. It lacks clear structure or original meaning, instead emphasizing recurring imagery of nature in various combinations and settings\u2014often alternating between night and day, and between different landscapes like gardens, forests, roads, and rivers. The repetition suggests a poetic or meditative tone, possibly evoking a sense of continuity, cycles of nature, or emotional reflection. However, it does not convey a specific narrative, argument, or factual summary. \n\nIn essence:  \nA",
+        "ttft_ms": 920.9977999853436,
+        "e2e_ms": 5423.56799999834,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of words related to natural elements such as sun, moon, rain, wind, trees, rivers, gardens, forests, stones, birds, and fields. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a chaotic, repetitive stream of nature-related imagery with no coherent narrative or meaning. It appears to be a random or generated sequence of keywords describing scenes of gardens, forests, rivers, skies, and weather, possibly illustrating a dreamlike or meditative atmosphere. However, due to its lack of structure and coherence, it cannot be interpreted as a meaningful",
+        "ttft_ms": 766.1662000173237,
+        "e2e_ms": 5386.819000006653,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and stream-of-consciousness sequence of natural elements such as water, moon, cloud, rain, bird, tree, stone, field, garden, forest, wind, sun, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, repetitive collection of nature-related words and phrases, suggesting a poetic or meditative flow of imagery rather than a coherent message. It evokes scenes of natural landscapes\u2014fields, gardens, forests, rivers, skies\u2014interwoven with elements of time (day, night) and weather (rain, wind, sun",
+        "ttft_ms": 742.1539000060875,
+        "e2e_ms": 5401.735899999039,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 5.450560700002825,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 8,
+    "trial": 4,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 187.87057999362693,
+    "requests_per_sec": 1.4677389062002104
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as sun, moon, wind, forest, river, tree, bird, cloud, stone, field, garden, and night. It lacks clear structure, grammar, or logical progression, and appears to be a stream of random or poetic phrases rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of natural imagery (e.g., sun, wind, forest, river, bird, cloud) occurring in various combinations and contexts, often in cycles of night and day, nature and movement. It does not convey a clear message,",
+        "ttft_ms": 654.8825999780092,
+        "e2e_ms": 5156.5616999869235,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive, stream-of-consciousness sequence of natural elements such as sun, moon, water, trees, wind, rain, birds, fields, rivers, gardens, stones, and night. It lacks a clear structure or coherent narrative, instead emphasizing cyclical and sensory imagery of nature. The repeated phrases suggest a meditative or poetic reflection on the natural world, highlighting themes of continuity, change, and the interconnection of elements in the environment. There is no specific plot, argument, or logical progression\u2014only a rhythmic, almost hypnotic flow of natural imagery. \n\nIn short: A poetic, repetitive stream of natural",
+        "ttft_ms": 653.0238999985158,
+        "e2e_ms": 5172.155499982182,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as stone, water, sun, moon, trees, birds, wind, rain, clouds, rivers, fields, gardens, and roads. It lacks clear structure, grammar, or logical progression. There is no coherent narrative or meaningful message\u2014instead, it appears to be a stream of random, repeated keywords and phrases, possibly generated algorithmically or as a form of noise.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of nature-related terms (e.g., sun, water, trees, wind, rain, clouds) with no clear meaning, narrative,",
+        "ttft_ms": 476.15989999030717,
+        "e2e_ms": 5137.28359999368,
+        "prompt_tokens": 257,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive, stream-of-consciousness sequence of words related to nature\u2014such as clouds, rain, birds, trees, rivers, stones, sun, moon, fields, gardens, and night\u2014without clear structure, grammar, or logical progression. It appears to be a poetic or abstract collage of natural imagery, possibly representing a dreamlike or meditative state. There is no coherent narrative or argument, but rather a rhythmic, cyclical recurrence of elements associated with landscapes and weather. The summary is that this is an unstructured, repetitive collection of natural imagery, evoking a sense of tranquility, movement, and the",
+        "ttft_ms": 329.7279999824241,
+        "e2e_ms": 5063.713199982885,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of natural elements such as stone, rain, sun, moon, wind, water, trees, rivers, fields, gardens, birds, and clouds. It lacks a clear structure, logical progression, or coherent narrative. There is no discernible theme, argument, or message\u2014only repeated phrases and imagery drawn from nature.\n\n**Summary:**  \nThe text is a fragmented, repetitive collection of natural imagery with no clear meaning or organization. It appears to be a random or poetic stream of words related to nature, rather than a structured or meaningful statement.",
+        "ttft_ms": 474.90420000394806,
+        "e2e_ms": 4899.9399000022095,
+        "prompt_tokens": 256,
+        "completion_tokens": 122,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive and fragmented sequence of natural elements such as wind, moon, forest, rain, sun, tree, water, stone, bird, garden, road, and night. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a chaotic, repetitive stream of nature-related words with no coherent narrative or meaning. It appears to be a random or generated sequence of imagery associated with natural scenes (forests, rivers, skies, animals, weather), possibly reflecting a poetic or abstract representation of nature, but without clear organization or purpose. There is no discernible theme, plot, or",
+        "ttft_ms": 651.2740999751259,
+        "e2e_ms": 5165.021599997999,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The text is a repetitive, stream-of-consciousness sequence of natural elements such as sun, moon, rain, water, trees, birds, fields, rivers, forests, stones, wind, and gardens. It lacks clear structure or logical progression, instead cycling through images of nature in a rhythmic, almost poetic or dreamlike manner. There is no explicit narrative, argument, or specific message\u2014only repeated motifs of light, water, nature, and movement. The summary is that this is a fragmented, repetitive description of natural scenes, emphasizing the interplay of light, water, and elements of the natural world in a continuous, cyclical",
+        "ttft_ms": 645.7030999881681,
+        "e2e_ms": 5156.107699993299,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of natural elements such as sun, moon, rain, wind, river, garden, tree, stone, bird, and night, with no clear structure or narrative. It appears to be a poetic or rhythmic collage of imagery, possibly representing a cyclical or dreamlike experience of nature and time. There is no explicit plot, argument, or logical progression\u2014instead, the repetition emphasizes themes of nature, cycles of day and night, and the interplay between elements like rain, wind, and light.\n\n**Summary:**  \nA fragmented, repetitive sequence of natural imagery (sun,",
+        "ttft_ms": 468.8971000141464,
+        "e2e_ms": 5148.735400027363,
+        "prompt_tokens": 256,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 5.176439700007904,
+    "workload": "short",
+    "target_tokens": 256,
+    "concurrency": 8,
+    "trial": 5,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 196.66026438952733,
+    "requests_per_sec": 1.5454637673047333
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like *water*, *forest*, *bird*, *light*, *river*, *night*, *sun*, *wind*, *tree*, *garden*, *road*, *moon*, *rain*, and *stone*. There is no clear narrative, logical structure, or coherent message.\n\n**Summary:**\n\nThe text appears to be a random, repetitive sequence of nature-related keywords with no discernible meaning, structure, or purpose. It does not convey a specific idea, story, or argument. It may be",
+        "ttft_ms": 820.0593999936245,
+        "e2e_ms": 5207.17720000539,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 5.209200699988287,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 1,
+    "trial": 1,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 24.571907932110932,
+    "requests_per_sec": 0.19196803071961666
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words, with frequent repetition of terms like \"rain,\" \"water,\" \"wind,\" \"tree,\" \"night,\" \"cloud,\" \"forest,\" \"road,\" \"bird,\" \"sun,\" and \"moon.\" It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, unstructured sequence of natural elements (e.g., rain, wind, trees, night, clouds) with no clear meaning, narrative, or logical flow. It",
+        "ttft_ms": 564.7954999876674,
+        "e2e_ms": 4948.410099983448,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.9500692000146955,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 1,
+    "trial": 2,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 25.858224365756342,
+    "requests_per_sec": 0.20201737785747143
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, primarily centered around natural elements like **rain, sun, moon, wind, water, field, tree, garden, bird, cloud, forest, river, stone, night, light**, and some variations of these. There is no clear narrative, logical structure, or coherent message.\n\n### Summary:\nThe text appears to be a **random, repetitive sequence of nature-related keywords** with no discernible meaning, grammar, or logical progression. It may be generated by a machine learning model attempting to mimic natural language patterns or could be a corrupted or",
+        "ttft_ms": 557.8104000014719,
+        "e2e_ms": 4939.562800020212,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.941300499980571,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 1,
+    "trial": 3,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 25.904111680822346,
+    "requests_per_sec": 0.20237587250642458
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like \"rain,\" \"night,\" \"light,\" \"bird,\" \"forest,\" \"tree,\" \"moon,\" \"wind,\" \"river,\" \"stone,\" \"garden,\" \"field,\" and \"water.\" It lacks clear structure, logical progression, or coherent meaning.\n\n**Summary:**\n\nThe text appears to be a fragmented, poetic, or possibly generated stream of natural imagery\u2014repeating elements associated with nature (night, forest, rain, birds, moon, trees, water, wind, stone, garden,",
+        "ttft_ms": 556.786800007103,
+        "e2e_ms": 4940.740799997002,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.94249580000178,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 1,
+    "trial": 4,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 25.89784699462039,
+    "requests_per_sec": 0.2023269296454718
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like \"rain,\" \"cloud,\" \"forest,\" \"water,\" \"sun,\" \"night,\" \"tree,\" \"garden,\" \"wind,\" \"stone,\" \"moon,\" \"field,\" \"river,\" \"bird,\" and \"light.\" It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, incoherent string of natural elements (e.g., sun, rain, forest,",
+        "ttft_ms": 561.4040000073146,
+        "e2e_ms": 4945.123099983903,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 4.9472583000024315,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 1,
+    "trial": 5,
+    "successful_requests": 1,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 25.87291631810231,
+    "requests_per_sec": 0.2021321587351743
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, primarily centered around natural elements like **sun, moon, rain, wind, water, trees, birds, forests, gardens, rivers, stones, and fields**. It lacks clear structure, grammar, or logical progression.\n\n### Summary:\nThe text appears to be a fragmented, poetic, or possibly generated stream of imagery describing scenes of nature\u2014such as forests, rivers, gardens, skies, and animals\u2014set at night or during twilight. It repeatedly cycles through combinations of these elements, often in a rhythmic or repetitive pattern. However,",
+        "ttft_ms": 1210.8887999784201,
+        "e2e_ms": 6456.577100005234,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words with no clear structure, grammar, or logical progression. It contains frequent repetitions of terms like *bird*, *water*, *rain*, *sun*, *moon*, *garden*, *wind*, *tree*, *stone*, *field*, *cloud*, *forest*, *river*, and *night*, suggesting a poetic or rhythmic pattern rather than a coherent narrative or argument.\n\n**Summary:**\n\nThe text is a fragmented, repetitive stream of natural elements (birds, water, sun, moon, wind, trees, gardens, rain, etc.) that evokes",
+        "ttft_ms": 556.9487999891862,
+        "e2e_ms": 6379.691699985415,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words, with frequent repetitions of terms like \"wind,\" \"water,\" \"garden,\" \"tree,\" \"rain,\" \"night,\" \"sun,\" \"cloud,\" \"stone,\" \"forest,\" \"road,\" \"bird,\" and \"moon.\" It lacks clear structure, logical progression, or coherent meaning. \n\n**Summary:**  \nThe text appears to be a random, repetitive sequence of natural elements (water, wind, sun, rain, trees, gardens, forests, etc.) with no discernible narrative, theme, or purpose. It may be a form",
+        "ttft_ms": 1558.143400005065,
+        "e2e_ms": 6487.031800003024,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"sun,\" \"moon,\" \"rain,\" \"forest,\" \"tree,\" \"wind,\" \"water,\" \"bird,\" \"field,\" \"garden,\" \"night,\" \"road,\" and \"stone.\" It lacks clear structure, logical progression, or coherent narrative.\n\n**Summary:**\n\nThe text appears to be a fragmented, poetic, or possibly generated stream of imagery related to natural elements (sun, moon, rain, wind, water, trees, forests, fields, gardens, birds, stones, roads)",
+        "ttft_ms": 1602.202199981548,
+        "e2e_ms": 6520.557399984682,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 6.527421800012235,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 4,
+    "trial": 1,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 78.43832001159177,
+    "requests_per_sec": 0.6127993750905607
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"water,\" \"wind,\" \"tree,\" \"moon,\" \"rain,\" \"bird,\" \"road,\" \"forest,\" \"sun,\" \"garden,\" \"cloud,\" \"night,\" and \"stone.\" It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, chaotic sequence of natural elements (water, wind, tree, moon, rain, bird, etc.) with no clear",
+        "ttft_ms": 545.9850000042934,
+        "e2e_ms": 6363.915800000541,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words, primarily centered around natural elements like **water, wind, sun, moon, tree, bird, garden, forest, river, light, night, rain, stone, field, road**, and others. It lacks clear structure, grammar, or logical progression.\n\n### Summary:\nThe text appears to be a poetic or rhythmic repetition of nature-related imagery, emphasizing themes of **nature, cycles of day and night, movement (wind, water, birds), and natural settings (garden, forest, river, field)**. There is no coherent narrative, argument, or",
+        "ttft_ms": 1198.7451000022702,
+        "e2e_ms": 6451.458800002001,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words with frequent repetitions of natural elements such as *water*, *cloud*, *tree*, *bird*, *moon*, *night*, *sun*, *wind*, *field*, *forest*, *river*, *rain*, *stone*, *garden*, and *light*. It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**\n\nThe text is a repetitive, chaotic sequence of natural imagery (e.g., water, clouds, trees, birds, moon",
+        "ttft_ms": 1583.9954999973997,
+        "e2e_ms": 6502.793199993903,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, primarily composed of natural elements such as *bird, rain, moon, tree, river, wind, stone, forest, garden, sun, cloud, field, water*, etc., often repeated in random or chaotic order.\n\n**Summary:**\n\nThere is no coherent narrative, logical structure, or meaningful message in the text. It appears to be a random or generated sequence of nature-related keywords, possibly created through algorithmic or linguistic repetition. While it contains recurring themes like nature (birds, rain, moon, trees, rivers, wind), it",
+        "ttft_ms": 1562.0313999825157,
+        "e2e_ms": 6472.035799990408,
+        "prompt_tokens": 2049,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 6.5085448999889195,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 4,
+    "trial": 2,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 78.66581668674847,
+    "requests_per_sec": 0.6145766928652224
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words and phrases, primarily centered around natural elements like **water, rain, cloud, wind, tree, moon, sun, bird, forest, garden, river, stone, road, night**, and related imagery. It lacks clear structure, grammar, or logical progression.\n\n### Summary:\nThis text is not a coherent narrative or argument but rather a **repetitive, poetic, and fragmented stream of nature-related imagery**. It evokes scenes of natural landscapes\u2014forests, gardens, rivers, skies, and wildlife\u2014often in the context of night, day, rain",
+        "ttft_ms": 1592.1528000035323,
+        "e2e_ms": 6490.489699994214,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and highly fragmented stream of words, primarily composed of natural elements such as *cloud*, *moon*, *rain*, *tree*, *wind*, *bird*, *river*, *forest*, *road*, *light*, *night*, *sun*, *stone*, *garden*, and *water*. There is no clear narrative, logical structure, or coherent message.\n\n**Summary:**\n\nThe text appears to be a poetic or rhythmic repetition of imagery associated with nature\u2014nighttime scenes involving skies, forests, rivers, birds, and weather\u2014without a clear beginning, middle, or end",
+        "ttft_ms": 1203.1380999833345,
+        "e2e_ms": 6446.163099986734,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and chaotic stream of words with no clear structure or coherent meaning. It appears to be a random sequence of natural elements (e.g., river, tree, sun, bird, cloud, water, night, wind) repeated in a non-logical, almost poetic or rhythmic pattern.\n\n**Summary:**\n\nThere is no meaningful or coherent narrative in the text. It consists of repetitive, fragmented phrases involving nature elements (trees, rivers, sun, moon, birds, clouds, water, wind, night, road, garden, stone) but lacks logical progression, context, or clear message. The",
+        "ttft_ms": 564.3350000027567,
+        "e2e_ms": 6342.6056999887805,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"rain,\" \"tree,\" \"light,\" \"cloud,\" \"forest,\" \"river,\" \"moon,\" \"wind,\" \"bird,\" \"stone,\" \"field,\" \"garden,\" and \"night.\" It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, chaotic string of natural elements (e.g., rain, trees, light, clouds, rivers, birds) with no",
+        "ttft_ms": 1548.1595000019297,
+        "e2e_ms": 6452.404699986801,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 6.492549300019164,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 4,
+    "trial": 3,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 78.8596245235271,
+    "requests_per_sec": 0.6160908165900555
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive sequence of words and phrases, primarily centered around natural elements such as **rain, sun, wind, water, tree, forest, field, garden, cloud, stone, road, night, moon, bird**, and others. There is no clear narrative, structure, or logical progression\u2014instead, it appears to be a stream of fragmented, overlapping imagery, possibly generated algorithmically or as a poetic/abstract repetition.\n\n### Summary:\nThe text is a repetitive, poetic stream of natural imagery describing scenes of **rain, sun, wind, water, trees, forests, gardens, clouds, stones, roads",
+        "ttft_ms": 1253.783399995882,
+        "e2e_ms": 6484.581400000025,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"rain,\" \"wind,\" \"field,\" \"moon,\" \"tree,\" \"water,\" \"bird,\" \"cloud,\" \"road,\" \"forest,\" \"stone,\" \"sun,\" and \"garden.\" It lacks clear structure, logical progression, or coherent meaning. \n\n**Summary:**  \nThe text appears to be a random, repetitive sequence of natural elements (e.g., rain, wind, trees, water, moon, birds) with no discernible narrative, theme, or purpose. It may be generated",
+        "ttft_ms": 569.0628000011202,
+        "e2e_ms": 6368.777900002897,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"sun,\" \"water,\" \"rain,\" \"tree,\" \"road,\" \"moon,\" \"forest,\" \"garden,\" \"night,\" \"wind,\" \"bird,\" \"river,\" \"light,\" \"stone,\" and \"field.\" There is no clear narrative, logical structure, or coherent message.\n\n**Summary:**\n\nThe text appears to be a fragmented, repetitive sequence of natural elements and imagery (sun, moon, rain, trees, rivers, gardens, forests, night, wind, birds, etc.)",
+        "ttft_ms": 1632.095400011167,
+        "e2e_ms": 6547.81489999732,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words and phrases, primarily centered around natural elements like **sun, moon, rain, water, tree, forest, garden, bird, wind, cloud, river, stone, field, night, light**, and others. It lacks clear structure, grammar, or logical progression.\n\n### Summary:\nThe text appears to be a poetic or rhythmic repetition of imagery related to nature\u2014day and night cycles, natural landscapes (gardens, forests, rivers, fields), and elements of the environment (sun, moon, rain, wind, birds, trees, water). There is no",
+        "ttft_ms": 1587.4087999982294,
+        "e2e_ms": 6516.620200010948,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 6.55369260002044,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 4,
+    "trial": 4,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 78.12389613733228,
+    "requests_per_sec": 0.6103429385729084
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, primarily composed of natural elements (sun, moon, water, rain, tree, bird, forest, field, road, stone, wind, garden, night, light) and combinations thereof. It lacks clear structure, grammar, or logical progression.\n\n**Summary:**\n\nThe text appears to be a fragmented, poetic, or random sequence of imagery related to nature\u2014such as sun, moon, rain, trees, birds, forests, water, and roads\u2014repeated in a cyclical and chaotic manner. There is no coherent narrative, argument",
+        "ttft_ms": 1600.2148000115994,
+        "e2e_ms": 6533.090899989475,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, fragmented, and largely nonsensical stream of words and phrases, with frequent repetition of terms like \"cloud,\" \"rain,\" \"moon,\" \"tree,\" \"forest,\" \"water,\" \"bird,\" \"light,\" \"night,\" \"road,\" \"field,\" \"stone,\" and \"wind.\" It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a chaotic, repetitive collection of natural elements (clouds, rain, moon, trees, water, birds, light, night, etc",
+        "ttft_ms": 1264.1246000130195,
+        "e2e_ms": 6472.286200005328,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and highly fragmented stream of words with no clear structure, grammar, or logical coherence. It appears to be a random concatenation of natural elements (water, tree, moon, wind, garden, forest, bird, cloud, sun, rain, night, road, field) repeated in a chaotic and non-sequential manner.\n\n**Summary:**\n\nThere is no meaningful or coherent message in the text. It consists of repetitive, nonsensical phrases combining nature-related terms in a random order, likely generated through algorithmic or poetic repetition rather than intentional writing. It does not convey a clear narrative,",
+        "ttft_ms": 603.5756999917794,
+        "e2e_ms": 6375.691799999913,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like \"wind,\" \"water,\" \"tree,\" \"cloud,\" \"night,\" \"rain,\" \"sun,\" \"bird,\" \"road,\" \"garden,\" \"forest,\" \"field,\" \"moon,\" and \"light.\" It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, chaotic string of natural elements (e.g., wind, water, trees, clouds, night, sun",
+        "ttft_ms": 1642.5821999728214,
+        "e2e_ms": 6557.409000000916,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 6.563723600003868,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 4,
+    "trial": 5,
+    "successful_requests": 4,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 78.0045034193241,
+    "requests_per_sec": 0.6094101829634695
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, primarily composed of natural elements such as *water, bird, tree, wind, rain, sun, moon, forest, river, field, garden, stone, cloud, road*, etc. While it appears to describe scenes of nature\u2014like birds flying over rivers, trees in the forest, rain and sunlight, or a night sky with moon and clouds\u2014it lacks clear structure, logical progression, or coherent narrative.\n\n**Summary:**\n\nThe text is a fragmented, repetitive sequence of nature-related terms with no clear meaning or organization. It seems to",
+        "ttft_ms": 1629.9804000009317,
+        "e2e_ms": 8353.066400013631,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like *rain*, *wind*, *tree*, *road*, *light*, *bird*, *water*, *moon*, *forest*, *garden*, *field*, and *cloud*. It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, chaotic string of natural elements (e.g., rain, wind, trees, water, birds, moon) with no clear meaning,",
+        "ttft_ms": 2641.59529999597,
+        "e2e_ms": 8470.47429997474,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, fragmented, and largely nonsensical stream of words and phrases, combining elements like \"light,\" \"river,\" \"forest,\" \"rain,\" \"moon,\" \"stone,\" \"bird,\" \"tree,\" \"night,\" \"field,\" \"water,\" and \"cloud\" in a chaotic and redundant manner. There is no clear narrative, logical structure, or coherent message.\n\n**Summary:**  \nThe text appears to be a random, repetitive sequence of nature-related keywords with no meaningful organization or purpose. It does not convey a clear idea, story, or insight. It may be a glitch, a generated noise,",
+        "ttft_ms": 2975.9791999822482,
+        "e2e_ms": 8501.999900006922,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive stream of words and phrases, primarily centered around natural elements such as **trees, water, rain, sun, moon, wind, forest, garden, road, bird, stone, and night**. It lacks clear structure, grammar, or logical progression, and appears to be a fragmented or randomized sequence of descriptive terms rather than a coherent narrative or argument.\n\n### Summary:\nThe text is a repetitive, unstructured collection of imagery related to nature\u2014especially forests, gardens, rivers, weather (rain, sun, wind, cloud), and natural elements\u2014set against a backdrop of night and day. There",
+        "ttft_ms": 3030.606499989517,
+        "e2e_ms": 8533.013900014339,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, combining elements like \"forest,\" \"water,\" \"moon,\" \"tree,\" \"bird,\" \"stone,\" \"light,\" \"rain,\" \"field,\" \"garden,\" \"wind,\" \"cloud,\" \"night,\" \"sun,\" and \"road.\" There is no clear narrative, logical structure, or coherent message.\n\n**Summary:**  \nThe text appears to be a random, repetitive sequence of nature-related keywords with no discernible meaning, structure, or purpose. It does not convey a specific idea, story, or argument. It may be",
+        "ttft_ms": 1279.1963999916334,
+        "e2e_ms": 8311.54759999481,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"field,\" \"tree,\" \"water,\" \"moon,\" \"rain,\" \"forest,\" \"light,\" \"wind,\" \"road,\" \"garden,\" \"bird,\" \"sun,\" and \"night.\" It lacks clear structure, logical progression, or coherent narrative.\n\n**Summary:**\n\nThe text appears to be a fragmented, poetic, or random sequence of natural imagery\u2014such as trees, water, skies, forests, and animals\u2014repeated in a cyclical and repetitive manner. There is no clear message",
+        "ttft_ms": 594.9414000206161,
+        "e2e_ms": 8156.437300000107,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words with frequent repetition of terms like *wind*, *water*, *moon*, *tree*, *rain*, *road*, *night*, *light*, *field*, *forest*, *bird*, *sun*, *stone*, *cloud*, *river*, and *garden*. There is no clear narrative, logical structure, or coherent message.\n\n**Summary:**\n\nThe text appears to be a random, repetitive sequence of natural elements and imagery (e.g., wind, water, moon, trees, birds, roads, gardens, clouds) with no discern",
+        "ttft_ms": 1948.3955999894533,
+        "e2e_ms": 8388.489399978425,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words and phrases, primarily centered around natural elements like **sun, moon, rain, wind, water, trees, birds, stone, garden, forest, field, cloud, and night**. It lacks clear structure, grammar, or logical progression, and appears to be a poetic or rhythmic collage rather than a coherent narrative or argument.\n\n### Summary:\nThis text is a fragmented, repetitive stream of nature-related imagery, emphasizing themes of **nature, cycles of day and night, and the interplay of elements** such as light, water, wind, trees, birds,",
+        "ttft_ms": 2288.9950000098906,
+        "e2e_ms": 8421.114299999317,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 8.539976700005354,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 8,
+    "trial": 1,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 119.90665033071554,
+    "requests_per_sec": 0.9367707057087151
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"bird,\" \"tree,\" \"water,\" \"moon,\" \"rain,\" \"wind,\" \"forest,\" \"road,\" \"sun,\" \"cloud,\" \"night,\" and \"garden.\" It lacks clear structure, logical progression, or coherent narrative.\n\n**Summary:**\n\nThe text appears to be a fragmented, poetic, or possibly generated stream of imagery centered around natural elements\u2014such as trees, water, birds, sky phenomena (sun, moon, clouds), and natural settings (forest, field, garden,",
+        "ttft_ms": 3018.7920999887865,
+        "e2e_ms": 8527.60119998129,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive stream of words and phrases, primarily centered around natural elements such as **bird, river, forest, moon, cloud, rain, wind, sun, field, stone, water, tree, garden, night, light**, and related combinations. There is no clear narrative, structure, or logical progression.\n\n### Summary:\nThe text appears to be a **random, repetitive sequence of nature-related keywords** with no discernible meaning, purpose, or coherence. It may be generated algorithmically, as a poetic or rhythmic pattern, or as a form of digital noise. There is no identifiable story, argument",
+        "ttft_ms": 1941.6027000115719,
+        "e2e_ms": 8380.514199991012,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetitions of elements like \"light,\" \"wind,\" \"rain,\" \"tree,\" \"moon,\" \"river,\" \"bird,\" \"forest,\" \"water,\" \"sun,\" \"road,\" \"cloud,\" \"garden,\" and \"night.\" It lacks clear structure, logical progression, or coherent narrative.\n\n**Summary:**\n\nThe text appears to be a fragmented, poetic, or random sequence of natural imagery\u2014such as wind, rain, trees, rivers, birds, moon, and gardens\u2014repeated in a cyclical and un",
+        "ttft_ms": 1270.3039000043646,
+        "e2e_ms": 8297.74810001254,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words and phrases, primarily centered around natural elements such as **water, moon, sun, cloud, tree, river, forest, bird, stone, wind, rain, night, light, garden, road, field**, and others. There is no clear narrative, structure, or logical progression.\n\n### Summary:\nThe text appears to be a poetic or rhythmic repetition of nature-related imagery, emphasizing cycles of day and night, natural elements, and their interplay. It lacks coherent meaning or a specific message, instead functioning more like a meditative or sensory collage. The repeated",
+        "ttft_ms": 585.8220999944024,
+        "e2e_ms": 8172.876600001473,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like \"water,\" \"tree,\" \"rain,\" \"wind,\" \"field,\" \"garden,\" \"stone,\" \"bird,\" \"moon,\" \"sun,\" \"road,\" and \"forest.\" It lacks clear structure, logical progression, or coherent meaning. \n\n**Summary:**  \nThe text appears to be a random, repetitive sequence of nature-related keywords with no discernible narrative, theme, or purpose. It does not convey a meaningful message, argument, or story. It may be a generated or corrupted text,",
+        "ttft_ms": 2283.180300000822,
+        "e2e_ms": 8414.723499998217,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and poetic stream of words with a strong emphasis on natural elements such as **moon, water, tree, wind, cloud, night, forest, river, bird, stone, light, rain, garden, road, field, sun**, and others. It appears to be a rhythmic or lyrical composition, possibly generated algorithmically or as a form of artistic expression.\n\n### Summary:\nThe text is a flowing, repetitive meditation on nature and the interplay of natural elements\u2014especially **night, moon, water, trees, wind, clouds, birds, rain, forests, gardens, roads,",
+        "ttft_ms": 2626.932700019097,
+        "e2e_ms": 8450.62630000757,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, combining elements like \"rain,\" \"forest,\" \"moon,\" \"tree,\" \"water,\" \"bird,\" \"wind,\" \"night,\" \"road,\" \"stone,\" \"garden,\" and \"sun\" in a chaotic and redundant manner. There is no clear structure, logical sequence, or coherent narrative.\n\n**Summary:**  \nThe text appears to be a random, repetitive string of nature-related keywords with no meaningful organization or original message. It does not convey a clear idea, argument, or story. It may be a glitch, a generated",
+        "ttft_ms": 1607.0009999966715,
+        "e2e_ms": 8334.422200015979,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive stream of words and phrases, primarily centered around natural elements such as **water, tree, bird, stone, light, cloud, sun, moon, rain, wind, forest, road, garden, field, river**, and related combinations. There is no clear narrative, structure, or logical progression.\n\n### Summary:\nThe text appears to be a **random, repetitive sequence of nature-related keywords** with no discernible meaning, purpose, or coherence. It may be generated algorithmically, as a form of noise, or as a poetic/abstract stream of imagery. While it evokes a sense of",
+        "ttft_ms": 2953.4408999898005,
+        "e2e_ms": 8487.399699981324,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 8.52973939999356,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 8,
+    "trial": 2,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 120.05056098205922,
+    "requests_per_sec": 0.9378950076723377
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words and phrases, primarily centered around natural elements like **wind, night, moon, rain, forest, garden, tree, water, bird, stone, road, light, sun, and cloud**. It lacks clear structure, grammar, or logical progression, and appears to be a fragmented or randomly generated stream of imagery rather than a coherent narrative or argument.\n\n### Summary:\nThe text is a chaotic, repetitive collection of nature-related keywords, with recurring themes of **night, moon, rain, wind, trees, gardens, rivers, and natural elements**. It conveys",
+        "ttft_ms": 2915.700299985474,
+        "e2e_ms": 8446.193599986145,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"water,\" \"rain,\" \"cloud,\" \"tree,\" \"road,\" \"bird,\" \"light,\" \"night,\" \"sun,\" \"forest,\" \"field,\" \"wind,\" and \"stone.\" It lacks clear structure, logical progression, or coherent meaning. \n\n**Summary:**  \nThe text appears to be a random, repetitive sequence of natural elements (e.g., sky, weather, nature, landscape) with no discernible narrative, theme, or purpose. It may be generated algorithmically or as a",
+        "ttft_ms": 568.9424999873154,
+        "e2e_ms": 8146.276399987983,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, primarily centered around natural elements like **water, forest, tree, rain, cloud, wind, sun, moon, stone, bird, garden, road, night, light**, and related combinations. There is no clear narrative, logical structure, or coherent message.\n\n### Summary:\nThe text appears to be a **random, repetitive sequence of nature-related keywords** with no discernible meaning, grammar, or logical progression. It may be generated algorithmically, as a form of noise, or as a test of pattern recognition. There is no identifiable",
+        "ttft_ms": 1559.1928999929223,
+        "e2e_ms": 8271.532499988098,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words with frequent repetitions of terms like *light*, *night*, *water*, *tree*, *rain*, *moon*, *bird*, *field*, *forest*, *road*, *wind*, *cloud*, *sun*, and *stone*. It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**\n\nThe text is a repetitive, chaotic sequence of natural elements (light, night, water, trees, birds, clouds, wind, sun, rain,",
+        "ttft_ms": 1216.2439999810886,
+        "e2e_ms": 8251.97539999499,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words related to nature\u2014such as *water, rain, sun, moon, bird, tree, river, cloud, wind, garden, forest, stone, field, night*\u2014with no clear structure, grammar, or logical progression. It appears to be a poetic or rhythmic collage rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a fragmented, repetitive collection of natural imagery (rain, sun, birds, trees, rivers, clouds, wind, etc.) occurring in alternating sequences of day and night. It lacks a clear structure, grammar,",
+        "ttft_ms": 1909.5453000045381,
+        "e2e_ms": 8329.599700024119,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like \"tree,\" \"water,\" \"rain,\" \"night,\" \"light,\" \"forest,\" \"river,\" \"bird,\" \"stone,\" \"wind,\" \"garden,\" \"moon,\" \"sun,\" and \"road.\" It lacks clear structure, logical progression, or coherent meaning.\n\n**Summary:**\n\nThe text appears to be a random, repetitive sequence of natural elements (trees, water, rain, light, night, forest, etc.) with no discernible narrative, theme, or purpose. It may be",
+        "ttft_ms": 2576.047999988077,
+        "e2e_ms": 8403.099599992856,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and highly fragmented stream of words, primarily composed of natural elements (moon, rain, wind, tree, stone, bird, water, sun, cloud, forest, garden, field, river) and phrases that appear in a chaotic, cyclical pattern. There is no clear narrative, logical structure, or coherent message.\n\n**Summary:**\n\nThe text appears to be a poetic or rhythmic repetition of nature-related imagery, emphasizing themes of nature (trees, rivers, birds, clouds, sun, moon, wind, water, stone, garden, forest, field) and their interplay throughout different",
+        "ttft_ms": 2224.6033000119496,
+        "e2e_ms": 8363.497000013012,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of natural elements\u2014such as moon, rain, tree, wind, bird, water, sun, stone, forest, garden, cloud, field, river, and road\u2014arranged in a chaotic, rhythmic pattern. It lacks clear structure, grammar, or logical progression. \n\n**Summary:**  \nThe text is a fragmented, poetic repetition of images related to nature (e.g., moon, rain, trees, wind, birds, water, sun, forests, gardens) occurring in a cyclical and emotionally evocative manner. It conveys a dreamlike or med",
+        "ttft_ms": 3008.6289000173565,
+        "e2e_ms": 8475.071499997284,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 8.487486699974397,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 8,
+    "trial": 3,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 120.64820083937084,
+    "requests_per_sec": 0.9425640690575847
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, poetic, and highly fragmented stream of imagery involving natural elements such as **water, moon, wind, birds, trees, forest, stone, garden, cloud, sun, rain, and night**. It lacks clear structure, grammar, or logical progression, and appears to be a stream of associative or lyrical phrases rather than a coherent narrative or argument.\n\n### Summary:\nThe text is a chaotic, repetitive sequence of poetic phrases centered around natural elements and imagery, evoking a dreamlike or meditative atmosphere. It emphasizes themes of **nature, cycles of day and night, movement (wind, water,",
+        "ttft_ms": 1975.2660999947693,
+        "e2e_ms": 8400.392599985935,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words, with frequent repetitions of terms like \"stone,\" \"water,\" \"tree,\" \"wind,\" \"rain,\" \"moon,\" \"sun,\" \"forest,\" \"garden,\" \"night,\" \"bird,\" and \"river.\" It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is an unstructured, repetitive collection of natural elements (e.g., stone, water, tree, wind, rain, sun, moon) and settings (e",
+        "ttft_ms": 2642.809999990277,
+        "e2e_ms": 8474.672299984377,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, primarily composed of natural elements like *cloud*, *wind*, *water*, *light*, *rain*, *tree*, *moon*, *bird*, *field*, *river*, *road*, *garden*, *forest*, and *night*. It lacks clear structure, grammar, or logical progression.\n\n**Summary:**\n\nThe text appears to be a fragmented, poetic, or random sequence of nature-related imagery, with recurring themes of weather (cloud, wind, rain, light), natural landscapes (field, forest, river, garden,",
+        "ttft_ms": 1276.7999999923632,
+        "e2e_ms": 8316.398499999195,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive sequence of random words with no clear structure, grammar, or coherent meaning. It appears to be a stream of fragmented, nonsensical phrases combining natural elements (stone, water, forest, wind, cloud, sun, bird, tree, night, rain, garden, road) in a chaotic and repetitive manner.\n\n**Summary:**\n\nThere is no meaningful or coherent message in the text. It consists of randomly repeated and jumbled natural imagery, likely generated algorithmically or as a form of noise. It does not convey a specific idea, narrative, or logical progression. Therefore, a summary cannot extract",
+        "ttft_ms": 589.9051000014879,
+        "e2e_ms": 8191.831000003731,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words related to nature (river, wind, rain, tree, moon, sun, cloud, stone, water, garden, forest, bird, road, night, light), with no clear structure, grammar, or logical progression. It appears to be a poetic or rhythmic collage rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a fragmented, repetitive stream of natural imagery\u2014such as rivers, wind, rain, trees, moon, sun, and birds\u2014without a clear meaning, structure, or logical flow. It may represent a poetic or med",
+        "ttft_ms": 1617.1895999868866,
+        "e2e_ms": 8332.667599985143,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetitions of elements like \"sun,\" \"wind,\" \"water,\" \"moon,\" \"tree,\" \"cloud,\" \"bird,\" \"field,\" \"river,\" \"garden,\" \"night,\" and \"rain.\" It lacks clear structure, logical progression, or coherent meaning. \n\n**Summary:**  \nThe text appears to be a random, repetitive sequence of natural elements (sun, moon, wind, water, trees, birds, clouds, etc.) with no discernible narrative, theme, or purpose. It may be generated algorithmically",
+        "ttft_ms": 3028.313699993305,
+        "e2e_ms": 8539.052200008882,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words, with frequent repetitions of terms like *light*, *moon*, *water*, *rain*, *field*, *forest*, *tree*, *wind*, *cloud*, *river*, *night*, *garden*, *stone*, *bird*, and *sun*. It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, chaotic string of natural elements (light, water, moon, rain, trees, forests, rivers",
+        "ttft_ms": 2972.737900010543,
+        "e2e_ms": 8501.619899994694,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"cloud,\" \"water,\" \"tree,\" \"rain,\" \"sun,\" \"moon,\" \"wind,\" \"forest,\" \"bird,\" \"road,\" \"field,\" \"river,\" \"garden,\" and \"night.\" It lacks clear structure, logical progression, or coherent meaning.\n\n**Summary:**\n\nThe text appears to be a random, repetitive sequence of natural elements (such as sky, weather, nature, and landscapes) with no discernible narrative, theme, or purpose. It may be generated algorithmically",
+        "ttft_ms": 2287.7621999941766,
+        "e2e_ms": 8431.268499989528,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 8.54926670002169,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 8,
+    "trial": 4,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 119.77635461967775,
+    "requests_per_sec": 0.9357527704662324
+  },
+  {
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of elements like \"rain,\" \"water,\" \"forest,\" \"moon,\" \"bird,\" \"tree,\" \"night,\" \"light,\" \"wind,\" \"stone,\" \"river,\" \"cloud,\" \"field,\" \"road,\" and \"garden.\" There is no clear narrative, logical structure, or coherent message.\n\n**Summary:**\n\nThe text appears to be a random, repetitive sequence of natural imagery (e.g., rain, water, trees, birds, moon, forest, wind) with no discernible theme, plot",
+        "ttft_ms": 596.554699994158,
+        "e2e_ms": 8193.493900005706,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and highly fragmented stream of words, primarily composed of natural elements (moon, cloud, bird, light, river, water, stone, forest, garden, tree, wind, rain, sun, field, night, road) and phrases that appear in a chaotic, non-sequential manner. There is no clear structure, grammar, or logical narrative.\n\n**Summary:**\n\nThe text appears to be a poetic or rhythmic stream of imagery describing natural elements\u2014such as moon, clouds, birds, rivers, water, trees, gardens, and weather\u2014set against scenes of nature and human environments (",
+        "ttft_ms": 3066.976300004171,
+        "e2e_ms": 8542.599800013704,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words and phrases, primarily centered around natural elements like **moon, night, water, tree, wind, cloud, rain, stone, forest, garden, river, bird, light, sun, field, road**, and others. There is no clear narrative, structure, or logical progression.\n\n### Summary:\nThe text appears to be a poetic or rhythmic collage of nature-related imagery, emphasizing cycles of night and day, natural elements, and scenes such as forests, rivers, gardens, and skies. It lacks coherent meaning or a specific message, instead repeating phrases and images in",
+        "ttft_ms": 1621.9352000043727,
+        "e2e_ms": 8357.201200007694,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like \"tree,\" \"river,\" \"moon,\" \"rain,\" \"bird,\" \"forest,\" \"light,\" \"night,\" \"field,\" \"wind,\" \"stone,\" \"cloud,\" \"sun,\" and \"garden.\" It lacks clear structure, logical progression, or coherent meaning. \n\n**Summary:**  \nThe text appears to be a random, repetitive sequence of natural elements (trees, rivers, moon, rain, birds, etc.) with no discernible narrative, theme, or purpose. It may be generated",
+        "ttft_ms": 1275.7992999977432,
+        "e2e_ms": 8314.485100010643,
+        "prompt_tokens": 2049,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and highly fragmented sequence of words, primarily centered around natural elements such as **moon, water, river, wind, tree, garden, forest, bird, sun, night, cloud, stone, field, light, rain**, and others. It lacks clear structure, grammar, or logical progression, and appears to be a stream of poetic or rhythmic phrases rather than a coherent narrative or argument.\n\n### Summary:\nThe text is a repetitive, poetic stream of imagery describing natural elements\u2014such as moonlight, rivers, forests, birds, wind, and gardens\u2014often occurring in cycles or combinations.",
+        "ttft_ms": 2642.5195000192616,
+        "e2e_ms": 8469.057900016196,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and highly fragmented sequence of words, primarily centered around natural elements like **water, moon, bird, forest, stone, wind, rain, light, tree, garden, river, night, sun, cloud, field, and road**. There is no clear narrative, logical structure, or coherent message.\n\n### Summary:\nThe text appears to be a **random, repetitive stream of poetic or lyrical phrases** involving nature imagery, possibly generated algorithmically or as a form of artistic expression. It lacks a clear plot, purpose, or grammatical coherence. While it evokes a dreamlike or",
+        "ttft_ms": 2289.3937999906484,
+        "e2e_ms": 8433.125700015808,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of natural elements\u2014such as *tree, rain, moon, wind, water, sun, bird, forest, garden, field, river, stone, cloud, night*\u2014with no clear structure, grammar, or logical progression. It appears to be a poetic or rhythmic collage rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a repetitive, unstructured sequence of natural imagery (e.g., trees, rain, moon, wind, water, birds, forests, gardens) that evokes a dreamlike or meditative atmosphere. It lacks clear meaning",
+        "ttft_ms": 1944.8339999944437,
+        "e2e_ms": 8393.257999996422,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words, phrases, and fragments\u2014repeating terms like \"tree,\" \"wind,\" \"rain,\" \"light,\" \"forest,\" \"garden,\" \"moon,\" \"water,\" \"stone,\" \"night,\" and \"road\"\u2014without clear structure, grammar, or logical progression. It appears to be a random or generated sequence rather than a coherent narrative, description, or argument.\n\n**Summary:**  \nThe text is a repetitive, chaotic string of natural elements (tree, wind, rain, light, forest, garden, moon, water, stone, night,",
+        "ttft_ms": 2971.046499995282,
+        "e2e_ms": 8504.13529999787,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "success": true
+      }
+    ],
+    "batch_time_s": 8.546052599995164,
+    "workload": "long",
+    "target_tokens": 2048,
+    "concurrency": 8,
+    "trial": 5,
+    "successful_requests": 8,
+    "failed_requests": 0,
+    "output_tokens_per_sec": 119.82140152057798,
+    "requests_per_sec": 0.9361046993795155
+  }
+]
