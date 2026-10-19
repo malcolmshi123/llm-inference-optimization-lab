@@ -320,6 +320,17 @@ python -m modal app stop llm-inference-optimization-lab
 
 Stopping the application terminates its active GPU containers while preserving separately managed persistent volumes.
 
+### Run tests
+
+From the repository root with local dependencies installed:
+
+```bash
+python -m bench.test_results
+python -m unittest bench.test_async_client -v
+```
+
+These tests cover JSON/CSV persistence and streaming-response validation. They run locally without a Modal deployment or GPU.
+
 ## Repository Structure
 
 ```text
