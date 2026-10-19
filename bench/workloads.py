@@ -1,5 +1,4 @@
 import random
-from transformers import AutoTokenizer
 
 def generate_prompt(target_tokens: int, seed: int) -> str:
     if target_tokens <= 0:
@@ -27,6 +26,8 @@ def count_prompt_tokens(tokenizer, prompt: str) -> int:
     return len(encoded["input_ids"])
 
 if __name__ == "__main__":
+    from transformers import AutoTokenizer
+
     prompt_a = generate_prompt(256, 42)
     prompt_b = generate_prompt(256, 42)
     prompt_c = generate_prompt(256, 43)

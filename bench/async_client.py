@@ -26,9 +26,9 @@ def positive_int(raw: str) -> int:
 
 MODEL_NAME = "Qwen/Qwen3-4B-Instruct-2507"
 
-VLLM_BASE_URL = os.environ["VLLM_BASE_URL"]
-MODAL_PROXY_KEY = os.environ["MODAL_PROXY_KEY"]
-MODAL_PROXY_SECRET = os.environ["MODAL_PROXY_SECRET"]
+VLLM_BASE_URL = os.environ.get("VLLM_BASE_URL", "")
+MODAL_PROXY_KEY = os.environ.get("MODAL_PROXY_KEY", "")
+MODAL_PROXY_SECRET = os.environ.get("MODAL_PROXY_SECRET", "")
 
 HEADERS = {
     "Modal-Key": MODAL_PROXY_KEY,
