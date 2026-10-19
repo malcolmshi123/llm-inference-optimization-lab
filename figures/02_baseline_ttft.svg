@@ -1,46 +1,69 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="960" height="610" viewBox="0 0 960 610" role="img" aria-label="Higher concurrency increases median first-token latency" style="color:#17212b">
-<rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>
-<style>text{font-family:Arial,Helvetica,sans-serif;fill:currentColor}.title{font-size:25px;font-weight:700}.subtitle{font-size:14px;opacity:.72}.footnote{font-size:12px;opacity:.66}.tick{font-size:13px;opacity:.83}.axislabel{font-size:15px;font-weight:600}.legend{font-size:14px}.value{font-size:14px;font-weight:600}</style>
-<text x="44.00" y="44.00" class="title">Higher concurrency increases median first-token latency</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="610" viewBox="0 0 960 610" role="img" aria-label="Median first-token latency rises with concurrency">
+<title>Median first-token latency rises with concurrency</title>
+<desc>Initial baseline · client-observed TTFT · cold starts excluded. Markers = median TTFT · Whiskers = interquartile range of requests pooled across 5 batches. Paired offsets separate workloads at each concurrency · IQR describes request spread, not confidence intervals</desc>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#17212b}.title{font-size:25px;font-weight:700}.subtitle{font-size:14px;opacity:.72}.footnote{font-size:12px;opacity:.66}.tick{font-size:13px;opacity:.83}.axislabel{font-size:15px;font-weight:600}.legend{font-size:14px}.value{font-size:14px;font-weight:600}</style>
+<text x="44.00" y="44.00" class="title">Median first-token latency rises with concurrency</text>
 <text x="44.00" y="72.00" class="subtitle">Initial baseline · client-observed TTFT · cold starts excluded</text>
-<text x="44.00" y="575.00" class="footnote">p50 pooled across successful requests in 5 batches per condition · synthetic prompts</text>
-<line x1="112.00" y1="500.00" x2="910.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
-<text x="96.00" y="505.00" class="tick" text-anchor="end">0</text>
-<line x1="112.00" y1="416.60" x2="910.00" y2="416.60" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
-<text x="96.00" y="421.60" class="tick" text-anchor="end">500</text>
-<line x1="112.00" y1="333.19" x2="910.00" y2="333.19" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
-<text x="96.00" y="338.19" class="tick" text-anchor="end">1000</text>
-<line x1="112.00" y1="249.79" x2="910.00" y2="249.79" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
-<text x="96.00" y="254.79" class="tick" text-anchor="end">1500</text>
-<line x1="112.00" y1="166.38" x2="910.00" y2="166.38" stroke="currentColor" fill="none" stroke-width="1" opacity="0.12"/>
-<text x="96.00" y="171.38" class="tick" text-anchor="end">2000</text>
-<line x1="112.00" y1="108.00" x2="112.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1.5" opacity="0.65"/>
-<line x1="112.00" y1="500.00" x2="910.00" y2="500.00" stroke="currentColor" fill="none" stroke-width="1.5" opacity="0.65"/>
-<text x="112.00" y="528.00" class="tick" text-anchor="middle">1</text>
+<text x="44.00" y="575.00" class="footnote">Markers = median TTFT · Whiskers = interquartile range of requests pooled across 5 batches</text>
+<line x1="104.00" y1="500.00" x2="904.00" y2="500.00" stroke="#17212b" stroke-width="1" opacity="0.12"/>
+<text x="88.00" y="505.00" class="tick" text-anchor="end">0</text>
+<line x1="104.00" y1="450.00" x2="904.00" y2="450.00" stroke="#17212b" stroke-width="1" opacity="0.12"/>
+<text x="88.00" y="455.00" class="tick" text-anchor="end">500</text>
+<line x1="104.00" y1="400.00" x2="904.00" y2="400.00" stroke="#17212b" stroke-width="1" opacity="0.12"/>
+<text x="88.00" y="405.00" class="tick" text-anchor="end">1000</text>
+<line x1="104.00" y1="350.00" x2="904.00" y2="350.00" stroke="#17212b" stroke-width="1" opacity="0.12"/>
+<text x="88.00" y="355.00" class="tick" text-anchor="end">1500</text>
+<line x1="104.00" y1="300.00" x2="904.00" y2="300.00" stroke="#17212b" stroke-width="1" opacity="0.12"/>
+<text x="88.00" y="305.00" class="tick" text-anchor="end">2000</text>
+<line x1="104.00" y1="250.00" x2="904.00" y2="250.00" stroke="#17212b" stroke-width="1" opacity="0.12"/>
+<text x="88.00" y="255.00" class="tick" text-anchor="end">2500</text>
+<line x1="104.00" y1="200.00" x2="904.00" y2="200.00" stroke="#17212b" stroke-width="1" opacity="0.12"/>
+<text x="88.00" y="205.00" class="tick" text-anchor="end">3000</text>
+<line x1="104.00" y1="160.00" x2="104.00" y2="500.00" stroke="#17212b" stroke-width="1.5" opacity="0.65"/>
+<line x1="104.00" y1="500.00" x2="904.00" y2="500.00" stroke="#17212b" stroke-width="1.5" opacity="0.65"/>
+<text x="154.00" y="528.00" class="tick" text-anchor="middle">1</text>
 <text x="454.00" y="528.00" class="tick" text-anchor="middle">4</text>
-<text x="910.00" y="528.00" class="tick" text-anchor="middle">8</text>
-<text x="511.00" y="555.00" class="axislabel" text-anchor="middle">Concurrent requests</text>
-<text x="26.00" y="304.00" class="axislabel" text-anchor="middle" transform="rotate(-90 26.00 304.00)">TTFT p50 (ms)</text>
-<line x1="112.00" y1="448.86" x2="454.00" y2="427.04" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1"/>
-<line x1="454.00" y1="427.04" x2="910.00" y2="391.40" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1"/>
-<circle cx="112.00" cy="448.86" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
-<circle cx="454.00" cy="427.04" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
-<circle cx="910.00" cy="391.40" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
-<text x="112.00" y="435.86" class="value" text-anchor="middle">307</text>
-<text x="454.00" y="414.04" class="value" text-anchor="middle">437</text>
-<text x="910.00" y="378.40" class="value" text-anchor="middle">651</text>
-<line x1="112.00" y1="406.35" x2="454.00" y2="265.44" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1" stroke-dasharray="9 6"/>
-<line x1="454.00" y1="265.44" x2="910.00" y2="149.71" stroke="currentColor" fill="none" stroke-width="2.7" opacity="1" stroke-dasharray="9 6"/>
-<rect x="107.00" y="401.35" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
-<rect x="449.00" y="260.44" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
-<rect x="905.00" y="144.71" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
-<text x="112.00" y="429.35" class="value" text-anchor="middle">561</text>
-<text x="454.00" y="288.44" class="value" text-anchor="middle">1406</text>
-<text x="910.00" y="172.71" class="value" text-anchor="middle">2100</text>
-<line x1="618.00" y1="120.00" x2="650.00" y2="120.00" stroke="currentColor" fill="none" stroke-width="2.5" opacity="1"/>
-<circle cx="634.00" cy="120.00" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>
-<text x="661.00" y="125.00" class="legend">Short · 256 input tokens</text>
-<line x1="618.00" y1="149.00" x2="650.00" y2="149.00" stroke="currentColor" fill="none" stroke-width="2.5" opacity="1" stroke-dasharray="9 6"/>
-<rect x="629.00" y="144.00" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>
-<text x="661.00" y="154.00" class="legend">Long · 2,048 input tokens</text>
+<text x="854.00" y="528.00" class="tick" text-anchor="middle">8</text>
+<text x="504.00" y="555.00" class="axislabel" text-anchor="middle">Concurrent requests</text>
+<text x="26.00" y="330.00" class="axislabel" text-anchor="middle" transform="rotate(-90 26.00 330.00)">TTFT (ms)</text>
+<line x1="144.00" y1="472.08" x2="144.00" y2="468.31" stroke="#0072B2" stroke-width="1.9" opacity="1"/>
+<line x1="140.00" y1="472.08" x2="148.00" y2="472.08" stroke="#0072B2" stroke-width="1.9" opacity="1"/>
+<line x1="140.00" y1="468.31" x2="148.00" y2="468.31" stroke="#0072B2" stroke-width="1.9" opacity="1"/>
+<line x1="444.00" y1="459.95" x2="444.00" y2="453.33" stroke="#0072B2" stroke-width="1.9" opacity="1"/>
+<line x1="440.00" y1="459.95" x2="448.00" y2="459.95" stroke="#0072B2" stroke-width="1.9" opacity="1"/>
+<line x1="440.00" y1="453.33" x2="448.00" y2="453.33" stroke="#0072B2" stroke-width="1.9" opacity="1"/>
+<line x1="844.00" y1="443.66" x2="844.00" y2="432.17" stroke="#0072B2" stroke-width="1.9" opacity="1"/>
+<line x1="840.00" y1="443.66" x2="848.00" y2="443.66" stroke="#0072B2" stroke-width="1.9" opacity="1"/>
+<line x1="840.00" y1="432.17" x2="848.00" y2="432.17" stroke="#0072B2" stroke-width="1.9" opacity="1"/>
+<polyline points="144.00,469.34 444.00,456.26 844.00,434.90" fill="none" stroke="#0072B2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="144.00" y="494.08" class="value" text-anchor="middle">307</text>
+<text x="444.00" y="481.95" class="value" text-anchor="middle">437</text>
+<text x="844.00" y="465.66" class="value" text-anchor="middle">651</text>
+<line x1="164.00" y1="444.22" x2="164.00" y2="443.52" stroke="#C55A11" stroke-width="1.9" opacity="1"/>
+<line x1="160.00" y1="444.22" x2="168.00" y2="444.22" stroke="#C55A11" stroke-width="1.9" opacity="1"/>
+<line x1="160.00" y1="443.52" x2="168.00" y2="443.52" stroke="#C55A11" stroke-width="1.9" opacity="1"/>
+<line x1="464.00" y1="395.00" x2="464.00" y2="341.14" stroke="#C55A11" stroke-width="1.9" opacity="1"/>
+<line x1="460.00" y1="395.00" x2="468.00" y2="395.00" stroke="#C55A11" stroke-width="1.9" opacity="1"/>
+<line x1="460.00" y1="341.14" x2="468.00" y2="341.14" stroke="#C55A11" stroke-width="1.9" opacity="1"/>
+<line x1="864.00" y1="351.08" x2="864.00" y2="228.90" stroke="#C55A11" stroke-width="1.9" opacity="1"/>
+<line x1="860.00" y1="351.08" x2="868.00" y2="351.08" stroke="#C55A11" stroke-width="1.9" opacity="1"/>
+<line x1="860.00" y1="228.90" x2="868.00" y2="228.90" stroke="#C55A11" stroke-width="1.9" opacity="1"/>
+<polyline points="164.00,443.86 464.00,359.39 864.00,290.01" fill="none" stroke="#C55A11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="164.00" y="429.52" class="value" text-anchor="middle">561</text>
+<text x="464.00" y="327.14" class="value" text-anchor="middle">1406</text>
+<text x="864.00" y="214.90" class="value" text-anchor="middle">2100</text>
+<circle cx="144.00" cy="469.34" r="5.3" fill="#0072B2" stroke="white" stroke-width="1.4"/>
+<circle cx="444.00" cy="456.26" r="5.3" fill="#0072B2" stroke="white" stroke-width="1.4"/>
+<circle cx="844.00" cy="434.90" r="5.3" fill="#0072B2" stroke="white" stroke-width="1.4"/>
+<path d="M 164.00,437.66 L 170.20,443.86 L 164.00,450.06 L 157.80,443.86 Z" fill="#C55A11" stroke="white" stroke-width="1.4"/>
+<path d="M 464.00,353.19 L 470.20,359.39 L 464.00,365.59 L 457.80,359.39 Z" fill="#C55A11" stroke="white" stroke-width="1.4"/>
+<path d="M 864.00,283.81 L 870.20,290.01 L 864.00,296.21 L 857.80,290.01 Z" fill="#C55A11" stroke="white" stroke-width="1.4"/>
+<line x1="100.00" y1="112.00" x2="132.00" y2="112.00" stroke="#0072B2" stroke-width="2" opacity="1"/>
+<circle cx="116.00" cy="112.00" r="5.3" fill="#0072B2" stroke="white" stroke-width="1.4"/>
+<text x="143.00" y="117.00" class="legend">Short · 256 input tokens</text>
+<line x1="400.00" y1="112.00" x2="432.00" y2="112.00" stroke="#C55A11" stroke-width="2" opacity="1"/>
+<path d="M 416.00,105.80 L 422.20,112.00 L 416.00,118.20 L 409.80,112.00 Z" fill="#C55A11" stroke="white" stroke-width="1.4"/>
+<text x="443.00" y="117.00" class="legend">Long · 2048 input tokens</text>
+<metadata>{&quot;concurrency&quot;: [1, 4, 8], &quot;source&quot;: &quot;20261019_014825.json&quot;, &quot;statistics&quot;: {&quot;long&quot;: {&quot;median&quot;: [561.4040000073146, 1406.1420500074746, 2099.9347000033595], &quot;p25&quot;: [557.8104000014719, 1049.9527499996475, 1489.1937749926], &quot;p75&quot;: [564.7954999876674, 1588.594799999555, 2711.0325749890762]}, &quot;short&quot;: {&quot;median&quot;: [306.5519999945536, 437.35955000738613, 651.0410499759018], &quot;p25&quot;: [279.20410002116114, 400.49867500783876, 563.4124749994953], &quot;p75&quot;: [316.8629999854602, 466.74692501255777, 678.2948749896605]}}}</metadata>
 </svg>

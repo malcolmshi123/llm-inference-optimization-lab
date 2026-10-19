@@ -1,3 +1,0 @@
-workload,target_tokens,concurrency,max_num_batched_tokens,trial,request_id,prompt_tokens,completion_tokens,ttft_ms,e2e_ms,batch_time_s,requests_per_sec,output_tokens_per_sec,success,error_type,error_message
-short,256,2,,1,0,256,32,250.0,1200.0,1.2,0.8333,26.6667,True,,
-short,256,2,,1,1,,,,,1.2,0.8333,26.6667,False,ReadTimeout,Request timed out

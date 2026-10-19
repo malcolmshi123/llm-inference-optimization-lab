@@ -1,10 +1,19 @@
-"""Generate four reproducible SVG figures for the LLM Inference Optimization Lab.
+"""Generate the four publication SVGs in the solid-line-and-whisker style.
 
-Run from the project root:
+From the repository root:
     python figures/generate_figures.py
 
-Uses only Python's standard library. Requires the three committed benchmark
-JSON files in results/. Does not contact Modal or require a GPU.
+Uses only Python's standard library and the three committed JSON datasets in
+results/. No live deployment, GPU, or plotting packages are required. Put this
+directory at the repository's figures/ path to use the defaults. Alternative
+locations can be supplied with --results-dir and --output-dir.
+
+This script regenerates SVG only. Matching PNG convenience exports are included
+in the distribution; re-export them after changing the SVGs to keep both formats
+in sync. All canvases are opaque white.
+Markers retain the original summary statistics. Whiskers are descriptive spread,
+not confidence intervals: batch min/max for mean throughput, pooled-request IQR
+for baseline median TTFT, and across-batch IQR at each sorted arrival rank.
 """
 from __future__ import annotations
 
@@ -15,204 +24,282 @@ import statistics
 from html import escape
 from pathlib import Path
 
-FILES = {"baseline": "20261019_014825.json", "control": "20261019_024946.json", "candidate": "20261019_030158.json"}
+FILES = {
+    "baseline": "20261019_014825.json",
+    "control": "20261019_024946.json",
+    "candidate": "20261019_030158.json",
+}
+BLUE = "#0072B2"
+ORANGE = "#C55A11"
+INK = "#17212b"
+WORKLOADS = (
+    ("short", "circle", BLUE, -10, "Short · 256 input tokens"),
+    ("long", "diamond", ORANGE, 10, "Long · 2048 input tokens"),
+)
 
 
 def read_batches(path: Path) -> list[dict]:
-    with path.open(encoding="utf-8") as f:
-        data = json.load(f)
+    data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, list) or not data:
         raise ValueError(f"Expected nonempty benchmark list: {path}")
     return data
 
 
-def groups(data: list[dict], workload: str, concurrent: int) -> list[dict]:
-    group = [b for b in data if b["workload"] == workload and b["concurrency"] == concurrent]
-    if not group or any(b.get("failed_requests", 0) for b in group):
-        raise ValueError(f"Missing or incomplete {workload=} {concurrent=}")
-    return group
+def groups(data: list[dict], workload: str, concurrency: int) -> list[dict]:
+    batches = [b for b in data if b["workload"] == workload and b["concurrency"] == concurrency]
+    if not batches:
+        raise ValueError(f"Missing {workload=}, {concurrency=}")
+    for batch in batches:
+        requests = batch["results"]
+        if (batch.get("failed_requests", 0) or len(requests) != concurrency
+                or not all(r["success"] for r in requests)):
+            raise ValueError(f"Incomplete {workload=}, {concurrency=}, trial={batch.get('trial')}")
+    return batches
 
 
-def get_ttfts(group: list[dict]) -> list[float]:
-    return [r["ttft_ms"] for b in group for r in b["results"] if r["success"] and r["ttft_ms"] is not None]
+def get_ttfts(batches: list[dict]) -> list[float]:
+    values = [r["ttft_ms"] for b in batches for r in b["results"]]
+    if not values or any(v is None or not math.isfinite(v) or v < 0 for v in values):
+        raise ValueError("Expected finite nonnegative TTFT for every successful request")
+    return values
 
 
 def pct(values: list[float], percentile: int) -> float:
     """Linear interpolation, matching numpy.percentile's default method."""
-    values = sorted(values)
-    if not values:
+    ordered = sorted(values)
+    if not ordered:
         raise ValueError("No samples")
-    index = (len(values) - 1) * percentile / 100
-    i, frac = math.floor(index), index % 1
-    return values[i] + frac * (values[min(i + 1, len(values) - 1)] - values[i])
+    index = (len(ordered) - 1) * percentile / 100
+    low = math.floor(index)
+    fraction = index - low
+    return ordered[low] + fraction * (ordered[min(low + 1, len(ordered) - 1)] - ordered[low])
+
+
+def ranked_summary(data: list[dict]) -> tuple[list[float], list[float], list[float]]:
+    """Median, p25, and p75 at each within-batch sorted arrival rank."""
+    trials = [sorted(get_ttfts([batch])) for batch in groups(data, "long", 8)]
+    return tuple([pct([trial[i] for trial in trials], p) for i in range(8)]
+                 for p in (50, 25, 75))
 
 
 class SVG:
     W, H = 960, 610
-    L, R, T, B = 112, 910, 108, 500
+    L, R, T, B = 104, 904, 160, 500
 
-    def __init__(self, title: str, subtitle: str, footer: str):
-        self.parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.W}" height="{self.H}" viewBox="0 0 {self.W} {self.H}" role="img" aria-label="{escape(title, quote=True)}" style="color:#17212b">',
-                      # Opaque white canvas, independent of the viewer's light/dark theme.
-                      '<rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>',
-                      '<style>text{font-family:Arial,Helvetica,sans-serif;fill:currentColor}.title{font-size:25px;font-weight:700}.subtitle{font-size:14px;opacity:.72}.footnote{font-size:12px;opacity:.66}.tick{font-size:13px;opacity:.83}.axislabel{font-size:15px;font-weight:600}.legend{font-size:14px}.value{font-size:14px;font-weight:600}</style>']
-        self.text(44, 44, title, 'title')
-        self.text(44, 72, subtitle, 'subtitle')
-        self.text(44, 575, footer, 'footnote')
+    def __init__(self, title: str, subtitle: str, footer: str, note: str = ""):
+        self.parts = [
+            f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.W}" height="{self.H}" '
+            f'viewBox="0 0 {self.W} {self.H}" role="img" aria-label="{escape(title, quote=True)}">',
+            f'<title>{escape(title)}</title>',
+            f'<desc>{escape(subtitle + ". " + footer + ". " + note)}</desc>',
+            '<rect width="100%" height="100%" fill="#ffffff"/>',
+            '<style>'
+            f'text{{font-family:Arial,Helvetica,sans-serif;fill:{INK}}}'
+            '.title{font-size:25px;font-weight:700}'
+            '.subtitle{font-size:14px;opacity:.72}'
+            '.footnote{font-size:12px;opacity:.66}'
+            '.tick{font-size:13px;opacity:.83}'
+            '.axislabel{font-size:15px;font-weight:600}'
+            '.legend{font-size:14px}'
+            '.value{font-size:14px;font-weight:600}'
+            '</style>',
+        ]
+        self.text(44, 44, title, "title")
+        self.text(44, 72, subtitle, "subtitle")
+        self.text(44, 575, footer, "footnote")
+        # Methodological detail remains in the accessible description.
+        self.marker_layers = []
 
-    def raw(self, s: str):
-        self.parts.append(s)
+    def raw(self, markup: str):
+        self.parts.append(markup)
 
-    def text(self, x, y, t, cls='', anchor=None, rotate=None):
-        attrs = f' x="{x:.2f}" y="{y:.2f}"'
-        if cls: attrs += f' class="{cls}"'
-        if anchor: attrs += f' text-anchor="{anchor}"'
-        if rotate is not None: attrs += f' transform="rotate({rotate} {x:.2f} {y:.2f})"'
-        self.raw(f'<text{attrs}>{escape(str(t))}</text>')
+    def metadata(self, values: dict):
+        self.raw(f'<metadata>{escape(json.dumps(values, sort_keys=True))}</metadata>')
 
-    def line(self, x1, y1, x2, y2, thick=1.5, opacity=1, dash=''):
-        d = f' stroke-dasharray="{dash}"' if dash else ''
-        self.raw(f'<line x1="{x1:.2f}" y1="{y1:.2f}" x2="{x2:.2f}" y2="{y2:.2f}" stroke="currentColor" fill="none" stroke-width="{thick}" opacity="{opacity}"{d}/>')
+    def text(self, x, y, value, css="", anchor=None, rotate=None):
+        attrs = f' x="{x:.2f}" y="{y:.2f}" class="{css}"'
+        if anchor:
+            attrs += f' text-anchor="{anchor}"'
+        if rotate is not None:
+            attrs += f' transform="rotate({rotate} {x:.2f} {y:.2f})"'
+        self.raw(f'<text{attrs}>{escape(str(value))}</text>')
 
-    def rect(self, x, y, w, h, opacity=1):
-        self.raw(f'<rect x="{x:.2f}" y="{y:.2f}" width="{w:.2f}" height="{h:.2f}" fill="currentColor" opacity="{opacity}"/>')
+    def line(self, x1, y1, x2, y2, color=INK, width=1.5, opacity=1):
+        self.raw(f'<line x1="{x1:.2f}" y1="{y1:.2f}" x2="{x2:.2f}" y2="{y2:.2f}" '
+                 f'stroke="{color}" stroke-width="{width}" opacity="{opacity}"/>')
 
-    def point(self, x, y, shape='circle'):
-        if shape == 'circle':
-            self.raw(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="5" fill="white" stroke="currentColor" stroke-width="2.6"/>')
+    def point(self, x, y, shape, color):
+        if shape == "circle":
+            self.raw(f'<circle cx="{x:.2f}" cy="{y:.2f}" r="5.3" fill="{color}" '
+                     'stroke="white" stroke-width="1.4"/>')
         else:
-            self.raw(f'<rect x="{x-5:.2f}" y="{y-5:.2f}" width="10" height="10" fill="white" stroke="currentColor" stroke-width="2.6"/>')
+            d = 6.2
+            self.raw(f'<path d="M {x:.2f},{y-d:.2f} L {x+d:.2f},{y:.2f} '
+                     f'L {x:.2f},{y+d:.2f} L {x-d:.2f},{y:.2f} Z" '
+                     f'fill="{color}" stroke="white" stroke-width="1.4"/>')
 
-    def axes(self, xlabel, ylabel, min_y, max_y, y_ticks, xlabels: list[tuple[float, str]], tick_fmt=lambda y: f'{y:g}'):
+    def whisker(self, x, low, high, color):
+        y1, y2 = self.map_y(low), self.map_y(high)
+        self.line(x, y1, x, y2, color, 1.9)
+        self.line(x-4, y1, x+4, y1, color, 1.9)
+        self.line(x-4, y2, x+4, y2, color, 1.9)
+
+    def axes(self, xlabel, ylabel, min_y, max_y, ticks, xlabels, tick_fmt=lambda value: f"{value:g}"):
         self.min_y, self.max_y = min_y, max_y
-        for value in y_ticks:
+        for value in ticks:
             y = self.map_y(value)
-            self.line(self.L, y, self.R, y, thick=1, opacity=.12)
-            self.text(self.L-16, y+5, tick_fmt(value), 'tick', 'end')
+            self.line(self.L, y, self.R, y, width=1, opacity=.12)
+            self.text(self.L-16, y+5, tick_fmt(value), "tick", "end")
         self.line(self.L, self.T, self.L, self.B, opacity=.65)
         self.line(self.L, self.B, self.R, self.B, opacity=.65)
         for x, label in xlabels:
-            self.text(x, self.B+28, label, 'tick', 'middle')
-        self.text((self.L+self.R)/2, 555, xlabel, 'axislabel', 'middle')
-        self.text(26, (self.T+self.B)/2, ylabel, 'axislabel', 'middle', -90)
+            self.text(x, self.B+28, label, "tick", "middle")
+        self.text((self.L+self.R)/2, 555, xlabel, "axislabel", "middle")
+        self.text(26, (self.T+self.B)/2, ylabel, "axislabel", "middle", -90)
 
     def map_y(self, value):
-        return self.B-(value-self.min_y)/(self.max_y-self.min_y)*(self.B-self.T)
+        return self.B - (value-self.min_y)/(self.max_y-self.min_y)*(self.B-self.T)
 
-    def map_x_number(self, x, min_x, max_x):
-        return self.L+(x-min_x)/(max_x-min_x)*(self.R-self.L)
+    def map_x_number(self, value, minimum, maximum):
+        return self.L + (value-minimum)/(maximum-minimum)*(self.R-self.L)
 
-    def series(self, coords, shape, dash='', offset_label=0):
-        for i in range(len(coords)-1):
-            self.line(*coords[i], *coords[i+1], thick=2.7, dash=dash)
-        for x,y in coords:
-            self.point(x,y,shape)
+    def legend(self, entries, whiskers=True):
+        # Keep both series markers above every connecting line.
+        for xs, medians, shape, color, offset in self.marker_layers:
+            for x, value in zip(xs, medians):
+                self.point(x+offset, self.map_y(value), shape, color)
+        self.marker_layers.clear()
+        for index, (label, shape, color) in enumerate(entries):
+            x = 116 + index*300
+            if whiskers:
+                self.line(x-16, 112, x+16, 112, color, 2)
+            if shape == "bar":
+                self.raw(f'<rect x="{x-6}" y="106" width="12" height="12" fill="{color}"/>')
+            else:
+                self.point(x, 112, shape, color)
+            self.text(x+(27 if whiskers else 16), 117, label, "legend")
 
-    def legend(self, entries):
-        x, y = 618, 120
-        for i,(label,shape,dash) in enumerate(entries):
-            yy=y+i*29
-            self.line(x, yy, x+32, yy, thick=2.5, dash=dash)
-            self.point(x+16,yy,shape)
-            self.text(x+43,yy+5,label,'legend')
+    def paired_intervals(self, xs, medians, lows, highs, shape, color, offset):
+        for x, low, high in zip(xs, lows, highs):
+            self.whisker(x+offset, low, high, color)
+        points = " ".join(f"{x+offset:.2f},{self.map_y(value):.2f}"
+                          for x, value in zip(xs, medians))
+        self.raw(f'<polyline points="{points}" fill="none" stroke="{color}" stroke-width="2" '
+                 'stroke-linecap="round" stroke-linejoin="round"/>')
+        self.marker_layers.append((xs, medians, shape, color, offset))
 
     def save(self, path: Path):
-        path.write_text('\n'.join(self.parts+['</svg>']), encoding='utf-8')
-        print('Saved', path)
+        path.write_text("\n".join(self.parts + ["</svg>", ""]), encoding="utf-8")
+        print("Saved", path)
 
 
 def baseline_throughput(data, out):
-    g=SVG('Aggregate output throughput scales with concurrency',
-          'Initial baseline · Qwen3-4B on NVIDIA L4 · vLLM 0.21.0',
-          '5 measured batches per workload/concurrency · throughput is a mean of batch-level rates')
-    xvals=[1,4,8]
-    coords_x=[g.map_x_number(x,1,8) for x in xvals]
-    g.axes('Concurrent requests','Output tokens / second',0,225,[0,50,100,150,200],list(zip(coords_x,map(str,xvals))))
-    for name,shape,dash,dx,offset in [('short','circle','',-6,-12),('long','square','9 6',6,18)]:
-        yvals=[statistics.mean(b['output_tokens_per_sec'] for b in groups(data,name,c)) for c in xvals]
-        coords=[(x,g.map_y(y)) for x,y in zip(coords_x,yvals)]
-        g.series(coords,shape,dash)
-        for (x,y),value in zip(coords,yvals):
-            g.text(x+dx,y+offset,f'{value:.1f}','value','middle')
-    g.legend([('Short · 256 input tokens','circle',''),('Long · 2,048 input tokens','square','9 6')])
-    g.save(out/'01_baseline_throughput.svg')
+    g = SVG("Aggregate output throughput scales with concurrency",
+            "Initial baseline · Qwen3-4B on NVIDIA L4 · vLLM 0.21.0",
+            "Markers = mean batch throughput · Whiskers = minimum and maximum across 5 batches",
+            "Paired offsets separate workloads at each concurrency · whiskers are descriptive ranges, not confidence intervals")
+    concurrency = [1, 4, 8]
+    xs = [g.map_x_number(c, .5, 8.5) for c in concurrency]
+    g.axes("Concurrent requests", "Output tokens / second", 0, 225,
+           [0, 50, 100, 150, 200], list(zip(xs, map(str, concurrency))))
+    summaries = {}
+    for name, shape, color, offset, label in WORKLOADS:
+        rates = [[b["output_tokens_per_sec"] for b in groups(data, name, c)] for c in concurrency]
+        means = [statistics.mean(values) for values in rates]
+        lows, highs = [min(values) for values in rates], [max(values) for values in rates]
+        g.paired_intervals(xs, means, lows, highs, shape, color, offset)
+        for x, value, low, high in zip(xs, means, lows, highs):
+            y = g.map_y(high)-14 if name == "short" else g.map_y(low)+22
+            g.text(x+offset, y, f"{value:.1f}", "value", "middle")
+        summaries[name] = {"mean": means, "min": lows, "max": highs}
+    g.legend([(label, shape, color) for _, shape, color, _, label in WORKLOADS])
+    g.metadata({"source": FILES["baseline"], "concurrency": concurrency, "statistics": summaries})
+    g.save(out / "01_baseline_throughput.svg")
 
 
-def baseline_ttft(data,out):
-    g=SVG('Higher concurrency increases median first-token latency',
-          'Initial baseline · client-observed TTFT · cold starts excluded',
-          'p50 pooled across successful requests in 5 batches per condition · synthetic prompts')
-    xvals=[1,4,8]
-    xs=[g.map_x_number(x,1,8) for x in xvals]
-    g.axes('Concurrent requests','TTFT p50 (ms)',0,2350,[0,500,1000,1500,2000],list(zip(xs,map(str,xvals))))
-    for name,shape,dash,offset in [('short','circle','',-13),('long','square','9 6',23)]:
-        vals=[pct(get_ttfts(groups(data,name,c)),50) for c in xvals]
-        coords=[(x,g.map_y(y)) for x,y in zip(xs,vals)]
-        g.series(coords,shape,dash)
-        for (x,y),val in zip(coords,vals):
-            g.text(x,y+offset,f'{val:.0f}','value','middle')
-    g.legend([('Short · 256 input tokens','circle',''),('Long · 2,048 input tokens','square','9 6')])
-    g.save(out/'02_baseline_ttft.svg')
+def baseline_ttft(data, out):
+    g = SVG("Median first-token latency rises with concurrency",
+            "Initial baseline · client-observed TTFT · cold starts excluded",
+            "Markers = median TTFT · Whiskers = interquartile range of requests pooled across 5 batches",
+            "Paired offsets separate workloads at each concurrency · IQR describes request spread, not confidence intervals")
+    concurrency = [1, 4, 8]
+    xs = [g.map_x_number(c, .5, 8.5) for c in concurrency]
+    g.axes("Concurrent requests", "TTFT (ms)", 0, 3400,
+           [0, 500, 1000, 1500, 2000, 2500, 3000], list(zip(xs, map(str, concurrency))))
+    summaries = {}
+    for name, shape, color, offset, label in WORKLOADS:
+        requests = [get_ttfts(groups(data, name, c)) for c in concurrency]
+        medians, lows, highs = ([pct(values, p) for values in requests] for p in (50, 25, 75))
+        g.paired_intervals(xs, medians, lows, highs, shape, color, offset)
+        for x, value, low, high in zip(xs, medians, lows, highs):
+            y = g.map_y(low)+22 if name == "short" else g.map_y(high)-14
+            g.text(x+offset, y, f"{value:.0f}", "value", "middle")
+        summaries[name] = {"median": medians, "p25": lows, "p75": highs}
+    g.legend([(label, shape, color) for _, shape, color, _, label in WORKLOADS])
+    g.metadata({"source": FILES["baseline"], "concurrency": concurrency, "statistics": summaries})
+    g.save(out / "02_baseline_ttft.svg")
 
 
-def budget_effect(control,candidate,out):
-    labels,changes=[],[]
-    for work in ('short','long'):
-        for p in (50,95):
-            v0=pct(get_ttfts(groups(control,work,8)),p)
-            v1=pct(get_ttfts(groups(candidate,work,8)),p)
-            labels.append(f'{work.capitalize()} p{p}')
-            changes.append(100*(v1-v0)/v0)
-    g=SVG('Larger scheduling budget did not improve first-token latency',
-          'Relative change when raising max_num_batched_tokens from 2,048 to 4,096',
-          '20 measured batches × 8 requests per workload/config · positive = worse · fixed run order: descriptive only')
-    xs=[g.L+100+i*190 for i in range(4)]
-    g.axes('Workload / TTFT percentile','Change vs. 2,048 (%)',0,16,[0,4,8,12,16],list(zip(xs,labels)),lambda y:f'+{y:g}%' if y else '0%')
-    for x,val in zip(xs,changes):
-        y=g.map_y(val)
-        g.rect(x-35,y,70,g.B-y,opacity=.85)
-        g.text(x,y-13,f'+{val:.2f}%' if val>=0 else f'{val:.2f}%','value','middle')
-    g.save(out/'03_budget_ttft_delta.svg')
+def budget_effect(control, candidate, out):
+    labels, changes = [], []
+    for workload in ("short", "long"):
+        for percentile in (50, 95):
+            old = pct(get_ttfts(groups(control, workload, 8)), percentile)
+            new = pct(get_ttfts(groups(candidate, workload, 8)), percentile)
+            labels.append(f"{workload.capitalize()} p{percentile}")
+            changes.append(100*(new-old)/old)
+    g = SVG("Larger scheduling budget did not improve TTFT",
+            "Relative change when raising max_num_batched_tokens from 2048 to 4096",
+            "Bars = percentage change in TTFT · Positive values = worse performance",
+            "20 measured batches × 8 requests per workload/config; fixed run order; descriptive comparison without confidence intervals.")
+    xs = [g.L+130+i*180 for i in range(4)]
+    g.axes("Workload / TTFT percentile", "Change vs. 2048 (%)", 0, 16,
+           [0, 4, 8, 12, 16], list(zip(xs, labels)), lambda y: f"+{y:g}%" if y else "0%")
+    for index, (x, value) in enumerate(zip(xs, changes)):
+        y = g.map_y(value)
+        color = BLUE if index < 2 else ORANGE
+        g.raw(f'<rect x="{x-30:.2f}" y="{y:.2f}" width="60" height="{g.B-y:.2f}" fill="{color}"/>')
+        g.text(x, y-13, f"{value:+.2f}%", "value", "middle")
+    g.legend([("Short · 256 input tokens", "bar", BLUE),
+              ("Long · 2048 input tokens", "bar", ORANGE)], whiskers=False)
+    g.metadata({"sources": [FILES["control"], FILES["candidate"]], "labels": labels, "change_pct": changes})
+    g.save(out / "03_budget_ttft_delta.svg")
 
 
-def ranked_ttft(control,candidate,out):
-    g=SVG('Long-prompt first-token arrivals are staggered',
-          'Concurrency 8 · 2,048-token inputs · 20 batches per scheduler budget',
-          'Markers = median at each sorted rank · whiskers = interquartile range · sorted ranks do not preserve request identity')
-    xs=[g.map_x_number(i,1,8) for i in range(1,9)]
-    g.axes('First-token arrival rank (fastest to slowest)','TTFT (ms)',0,3400,[0,500,1000,1500,2000,2500,3000],list(zip(xs,map(str,range(1,9)))))
-    for data,shape,dash,xoffset in ((control,'circle','',-6),(candidate,'square','9 6',6)):
-        per_trial=[]
-        for batch in groups(data,'long',8):
-            vals=sorted(r['ttft_ms'] for r in batch['results'] if r['success'] and r['ttft_ms'] is not None)
-            if len(vals)!=8: raise ValueError('Expected 8 valid TTFTs per batch')
-            per_trial.append(vals)
-        med=[pct([t[i] for t in per_trial],50) for i in range(8)]
-        lows=[pct([t[i] for t in per_trial],25) for i in range(8)]
-        highs=[pct([t[i] for t in per_trial],75) for i in range(8)]
-        points=[(x+xoffset,g.map_y(v)) for x,v in zip(xs,med)]
-        g.series(points,shape,dash)
-        for x,low,hi in zip(xs,lows,highs):
-            xx=x+xoffset
-            y1,y2=g.map_y(low),g.map_y(hi)
-            g.line(xx,y1,xx,y2,thick=1.6)
-            g.line(xx-4,y1,xx+4,y1,thick=1.6)
-            g.line(xx-4,y2,xx+4,y2,thick=1.6)
-    g.legend([('2,048-token budget','circle',''),('4,096-token budget','square','9 6')])
-    g.save(out/'04_long_ttft_ranked.svg')
+def ranked_ttft(control, candidate, out):
+    g = SVG("Long-prompt TTFT by arrival rank",
+            "Concurrency 8 · 2048-token inputs · 20 batches per scheduler budget",
+            "Markers = median TTFT at each rank · Whiskers = interquartile range across 20 batches",
+            "Paired offsets separate budgets at each rank · sorted ranks do not preserve request identity")
+    xs = [g.map_x_number(rank, .5, 8.5) for rank in range(1, 9)]
+    g.axes("First-token arrival rank (fastest to slowest)", "TTFT (ms)", 0, 3400,
+           [0, 500, 1000, 1500, 2000, 2500, 3000], list(zip(xs, map(str, range(1, 9)))))
+    summaries = {}
+    for name, data, shape, color, offset in (
+        ("control", control, "circle", BLUE, -10),
+        ("candidate", candidate, "diamond", ORANGE, 10),
+    ):
+        medians, lows, highs = ranked_summary(data)
+        g.paired_intervals(xs, medians, lows, highs, shape, color, offset)
+        summaries[name] = {"median": medians, "p25": lows, "p75": highs}
+    g.legend([("2048-token budget", "circle", BLUE), ("4096-token budget", "diamond", ORANGE)])
+    g.metadata({"sources": [FILES["control"], FILES["candidate"]], "statistics": summaries})
+    g.save(out / "04_long_ttft_ranked.svg")
 
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--results-dir',type=Path,default=Path(__file__).resolve().parent.parent/'results')
-    parser.add_argument('--output-dir',type=Path,default=Path(__file__).resolve().parent)
-    args=parser.parse_args()
-    args.output_dir.mkdir(parents=True,exist_ok=True)
-    data={name:read_batches(args.results_dir/fname) for name,fname in FILES.items()}
-    baseline_throughput(data['baseline'],args.output_dir)
-    baseline_ttft(data['baseline'],args.output_dir)
-    budget_effect(data['control'],data['candidate'],args.output_dir)
-    ranked_ttft(data['control'],data['candidate'],args.output_dir)
+    parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument("--results-dir", type=Path, default=Path(__file__).resolve().parent.parent / "results")
+    parser.add_argument("--output-dir", type=Path, default=Path(__file__).resolve().parent)
+    args = parser.parse_args()
+    # Read inputs before creating output files, so missing datasets fail cleanly.
+    data = {name: read_batches(args.results_dir / filename) for name, filename in FILES.items()}
+    args.output_dir.mkdir(parents=True, exist_ok=True)
+    baseline_throughput(data["baseline"], args.output_dir)
+    baseline_ttft(data["baseline"], args.output_dir)
+    budget_effect(data["control"], data["candidate"], args.output_dir)
+    ranked_ttft(data["control"], data["candidate"], args.output_dir)
 
-if __name__=='__main__':
+
+if __name__ == "__main__":
     main()
