@@ -312,14 +312,6 @@ python figures/generate_figures.py
 
 The generator uses only Python's standard library and the three primary benchmark JSON files listed below. It writes the four SVGs referenced in this README and does not require an active Modal deployment. The committed PNG files are convenience exports; this command does not regenerate them.
 
-To generate only the proposed alternate ranked-TTFT sample for style review:
-
-```bash
-python figures/generate_figures.py --preview-ranked
-```
-
-This writes `figures/style-preview/04_long_ttft_ranked_preview.svg` without replacing any published figure. The sample uses paired colored markers and IQR whiskers with no connecting lines. It preserves the original latency values and y-axis range; horizontal offsets separate the two budgets at each rank. The alternate style is pending approval.
-
 ### 7. Stop the Deployment
 
 ```bash
@@ -336,13 +328,13 @@ Stopping the application terminates its active GPU containers while preserving s
 ├── bench/
 │   ├── client.py
 │   ├── async_client.py
+│   ├── test_async_client.py
 │   ├── workloads.py
 │   ├── results.py
-│   ├── results_test.py
+│   ├── test_results.py
 │   └── compare.py
 ├── results/
 │   ├── 20261019_014825.json
-│   ├── 20261019_021618.json
 │   ├── 20261019_024946.json
 │   └── 20261019_030158.json
 ├── metrics/
@@ -359,21 +351,17 @@ The benchmark datasets, in run-filename order, are:
 | File | Description |
 |---|---|
 | [results/20261019_014825.json](results/20261019_014825.json) | Primary baseline: 5 batches per workload at concurrency 1, 4, and 8; 30 batches and 130 successful requests. Scheduling budget is not recorded in this older file. Sources figures 01 and 02. |
-| [results/20261019_021618.json](results/20261019_021618.json) | Exploratory run: the same workload/concurrency grid, 30 batches and 130 successful requests. Scheduling budget is not recorded. Retained for experiment history; excluded from final A/B summaries and all four figures. |
 | [results/20261019_024946.json](results/20261019_024946.json) | Primary control: 20 batches per workload at concurrency 8, recorded budget 2048; 40 batches and 320 successful requests. Sources figures 03 and 04. |
 | [results/20261019_030158.json](results/20261019_030158.json) | Primary candidate: 20 batches per workload at concurrency 8, recorded budget 4096; 40 batches and 320 successful requests. Sources figures 03 and 04. |
 
-Each timestamped JSON has a corresponding `.csv` request-table export. All CSV rows match the JSON values for their exported fields. The two older CSVs omit the scheduling-budget column; the newer CSVs include it. JSON remains the analysis source because it preserves nested batches and full request records.
+Each timestamped JSON has a corresponding `.csv` request-table export. All CSV rows match the JSON values for their exported fields. The baseline CSV omits the scheduling-budget column; the two A/B CSVs include it. JSON remains the analysis source because it preserves nested batches and full request records.
 
-The remaining diagnostic and test artifacts have different roles:
+The retained diagnostic snapshots have the following roles:
 
 | Files | Role and interpretation |
 |---|---|
 | [metrics/metrics-before-long.txt](metrics/metrics-before-long.txt), [metrics/metrics-after-long.txt](metrics/metrics-after-long.txt) | Paired cumulative counters supporting the eight-request diagnostic above. Keep both snapshots to preserve the subtraction baseline. |
 | [metrics/metrics-repeated.txt](metrics/metrics-repeated.txt) | Two completed requests, 38 prompt tokens, and 16 cached prompt tokens. Supports the separate cache-functionality observation. The exact request payloads and replay command are not committed. |
-| [metrics/metrics-before.txt](metrics/metrics-before.txt), [metrics/metrics-after.txt](metrics/metrics-after.txt) | A separate single-request smoke diagnostic with 19 prompt tokens and no cache hits; not the source of the eight-request table. |
-| [metrics/metrics.txt](metrics/metrics.txt) | An empty vLLM counter snapshot from another server process. Its metric creation timestamp differs from `metrics-repeated.txt`; do not subtract these files as a before/after pair. |
-| [results/test.json](results/test.json), [results/test.csv](results/test.csv) | Generated persistence-test examples: one dummy success and one dummy timeout. They are not measured benchmark results. `python -m bench.results_test` constructs the examples and uses a temporary directory; it does not depend on these committed files. |
 
 The saved metrics reproduce the reported counter calculations, but the repository does not contain a script to replay those diagnostic requests and capture the snapshots. Keep these measurements distinct from the timestamped client benchmark datasets.
 

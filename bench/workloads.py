@@ -56,4 +56,3 @@ if __name__ == "__main__":
                 f"{actual_tokens} tokens "
                 f"(difference: {actual_tokens - target_tokens:+d})"
             )
-

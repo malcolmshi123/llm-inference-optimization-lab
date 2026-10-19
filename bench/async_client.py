@@ -36,6 +36,10 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
+class StreamingResponseError(RuntimeError):
+    """The response did not contain a complete, usable benchmark result."""
+
+
 async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tokens: int = 128):
     payload = {
         "model": MODEL_NAME,
@@ -56,6 +60,8 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
     prompt_tokens = None
     completion_tokens = None
     content_chunks = []
+    finish_reason = None
+    received_done = False
 
     first_token_time = None
     start_time = time.perf_counter()
@@ -70,9 +76,17 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
             data = line.removeprefix("data:").strip()
 
             if data == "[DONE]":
+                received_done = True
                 break
 
             event = json.loads(data)
+            if not isinstance(event, dict):
+                raise StreamingResponseError("Expected a JSON object in SSE data.")
+            if "error" in event:
+                raise StreamingResponseError(
+                    f"Server streamed an error: {event['error']}"
+                )
+
             usage = event.get("usage")
 
             if usage is not None:
@@ -82,7 +96,10 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
             if not event.get("choices"):
                 continue
 
-            content = event["choices"][0]["delta"].get("content")
+            choice = event["choices"][0]
+            if choice.get("finish_reason") is not None:
+                finish_reason = choice["finish_reason"]
+            content = choice.get("delta", {}).get("content")
 
             if content:
                 if first_token_time is None:
@@ -91,6 +108,22 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
                 content_chunks.append(content)
 
         end_time = time.perf_counter()
+
+        if not received_done:
+            raise StreamingResponseError("Stream ended before [DONE].")
+        if finish_reason not in {"stop", "length"}:
+            raise StreamingResponseError(
+                f"Missing or unsuccessful finish_reason: {finish_reason!r}"
+            )
+        if first_token_time is None:
+            raise StreamingResponseError("Stream contained no generated text.")
+        if (
+            type(prompt_tokens) is not int
+            or prompt_tokens < 0
+            or type(completion_tokens) is not int
+            or completion_tokens <= 0
+        ):
+            raise StreamingResponseError("Missing or invalid token usage.")
 
         generated_text = "".join(content_chunks)
         # print("Generated text:", repr(generated_text))
@@ -104,7 +137,8 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
             "ttft_ms": ttft_ms,
             "e2e_ms": e2e_ms,
             "prompt_tokens": prompt_tokens,
-            "completion_tokens": completion_tokens
+            "completion_tokens": completion_tokens,
+            "finish_reason": finish_reason,
         }
 
 async def run_batch(client: httpx.AsyncClient, prompts: list[str], max_tokens: int = 128):
