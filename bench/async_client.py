@@ -1,4 +1,5 @@
 import os
+import argparse
 import asyncio
 import httpx
 import json
@@ -126,6 +127,12 @@ async def run_batch(client: httpx.AsyncClient, prompts: list[str], max_tokens: i
     }
 
 async def main():
+    parser = argparse.ArgumentParser(description="Benchmark vLLM inference.")
+    parser.add_argument("--concurrency", nargs="+", type=int, default=[1, 4, 8])
+    parser.add_argument("--trials", type=int, default=5)
+    parser.add_argument("--max-num-batched-tokens", type=int, default=None)
+    args = parser.parse_args()
+
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     json_path = f"results/{run_id}.json"
@@ -136,7 +143,7 @@ async def main():
 
         # warmup request
         print("=== Warmup Request ===")
-        
+
         result = await send_streaming_request(client, test_prompt)
 
         print("Status: ", result["status_code"])
@@ -156,8 +163,8 @@ async def main():
             "short": 256,
             "long": 2048
         }
-        concurrency_levels = [1, 4, 8]
-        num_trials = 5
+        concurrency_levels = args.concurrency
+        num_trials = args.trials
 
         all_batches = []
 
@@ -166,6 +173,27 @@ async def main():
 
             for concurrency in concurrency_levels:
                 print(f"\n--- Concurrency: {concurrency} ---")
+
+                warmup_prompts = [
+                    generate_prompt(
+                        target_tokens,
+                        seed=(
+                            1_000_000_000_000
+                            + target_tokens * 1_000_000
+                            + concurrency * 10_000
+                            + request_id
+                        ),
+                    )
+                    for request_id in range(concurrency)
+                ]
+                warmup_batch = await run_batch(client, warmup_prompts)
+                warmup_successes = sum(
+                    result["success"] for result in warmup_batch["results"]
+                )
+                print(f"Warmup batch complete: {warmup_successes}/{concurrency} successful.")
+
+                if warmup_successes != concurrency:
+                    raise RuntimeError("Workload warmup failed.")
 
                 for trial in range(num_trials):
                     print(f"\nTrial {trial + 1}/{num_trials}")
@@ -189,6 +217,7 @@ async def main():
                     batch["target_tokens"] = target_tokens
                     batch["concurrency"] = concurrency
                     batch["trial"] = trial + 1
+                    batch["max_num_batched_tokens"] = args.max_num_batched_tokens
 
                     results = batch["results"]
                     batch_time_s = batch["batch_time_s"]

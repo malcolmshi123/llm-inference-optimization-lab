@@ -18,6 +18,7 @@ def save_results_csv(path: str, batches: list[dict]) -> None:
                 "workload": batch["workload"],
                 "concurrency": batch["concurrency"],
                 "trial": batch["trial"],
+                "max_num_batched_tokens": batch.get("max_num_batched_tokens"),
 
                 "request_id": request_id,
                 "ttft_ms": request["ttft_ms"],
@@ -41,6 +42,7 @@ def save_results_csv(path: str, batches: list[dict]) -> None:
         "workload",
         "target_tokens",
         "concurrency",
+        "max_num_batched_tokens",
 
         "trial",
         "request_id",
