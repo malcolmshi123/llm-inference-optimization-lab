@@ -43,7 +43,7 @@ def serve():
         "--max-model-len", str(MAX_MODEL_LENGTH),
         "--dtype", "bfloat16",
         "--gpu-memory-utilization", "0.8",
-        "--max-num-batched-tokens", "4096"
+        "--max-num-batched-tokens", "2048"
     ]
 
     print("Starting vLLM server with command:", " ".join(command), flush=True)
