@@ -4,6 +4,7 @@ import httpx
 import json
 import statistics
 import time
+from bench.workloads import generate_prompt
 
 MODEL_NAME = "Qwen/Qwen3-4B-Instruct-2507"
 
@@ -124,121 +125,147 @@ async def main():
 
         # batch requests
         print("\n=== Concurrent Batch ===")
+        workloads = {
+            "short": 256,
+            "long": 2048
+        }
         concurrency_levels = [1, 4, 8]
         num_trials = 5
         all_batches = []
 
-        for concurrency in concurrency_levels:
-            print(f"\n--- Concurrency: {concurrency} ---")
+        for workload_name, target_tokens in workloads.items():
+            print(f"\n=== Workload: {workload_name} ({target_tokens} tokens) ===")
 
-            for trial in range(num_trials):
-                print(f"\nTrial {trial + 1}/{num_trials}")
+            for concurrency in concurrency_levels:
+                print(f"\n--- Concurrency: {concurrency} ---")
 
-                prompts = [test_prompt] * concurrency
-                batch = await run_batch(client, prompts)
+                for trial in range(num_trials):
+                    print(f"\nTrial {trial + 1}/{num_trials}")
 
-                results = batch["results"]
-                batch_time_s = batch["batch_time_s"]
-                batch["concurrency"] = concurrency
-                batch["trial"] = trial + 1
+                    prompts = []
 
-                output_tokens_per_sec = None
+                    for request_id in range(concurrency):
+                        seed = (
+                            target_tokens * 1_000_000
+                            + concurrency * 10_000
+                            + trial * 100
+                            + request_id
+                        )
 
-                for i, result in enumerate(results):
-                    ttft = result["ttft_ms"]
-                    e2e = result["e2e_ms"]
+                        prompt = generate_prompt(target_tokens, seed)
+                        prompts.append(prompt)
+                        
+                    batch = await run_batch(client, prompts)
 
-                    ttft_display = f"{ttft:.2f}" if ttft is not None else "N/A"
+                    batch["workload"] = workload_name
+                    batch["target_tokens"] = target_tokens
+                    batch["concurrency"] = concurrency
+                    batch["trial"] = trial + 1
 
-                    print(
-                        f"Request {i + 1}: "
-                        f"TTFT={ttft_display} ms, "
-                        f"E2E={e2e:.2f} ms"
-                    )
+                    results = batch["results"]
+                    batch_time_s = batch["batch_time_s"]
 
-                if all(r["completion_tokens"] is not None for r in results):
-                    total_completion_tokens = sum(r["completion_tokens"] for r in results)
-                    output_tokens_per_sec = total_completion_tokens / batch_time_s
-                    print(f"\nOutput tokens per second: {output_tokens_per_sec:.2f} tok/s")
+                    output_tokens_per_sec = None
+
+                    for i, result in enumerate(results):
+                        ttft = result["ttft_ms"]
+                        e2e = result["e2e_ms"]
+
+                        ttft_display = f"{ttft:.2f}" if ttft is not None else "N/A"
+
+                        print(
+                            f"Request {i + 1}: "
+                            f"TTFT={ttft_display} ms, "
+                            f"E2E={e2e:.2f} ms"
+                        )
+
+                    if all(r["completion_tokens"] is not None for r in results):
+                        total_completion_tokens = sum(r["completion_tokens"] for r in results)
+                        output_tokens_per_sec = total_completion_tokens / batch_time_s
+                        print(f"\nOutput tokens per second: {output_tokens_per_sec:.2f} tok/s")
+                    else:
+                        print("\nOutput tokens per second: N/A (missing token counts)")
+                    batch["output_tokens_per_sec"] = output_tokens_per_sec
+
+                    requests_per_sec = concurrency / batch_time_s
+                    batch["requests_per_sec"] = requests_per_sec
+
+                    print(f"Requests per second: {requests_per_sec:.2f} req/s")
+
+                    print(f"Batch time: {(batch_time_s * 1000):.2f} ms")
+
+                    all_batches.append(batch)
+
+            print("Total batches collected so far:", len(all_batches))
+            
+            print("\n=== Latency Summary ===")
+            for concurrency in concurrency_levels:
+
+                selected_batches = [
+                    batch for batch in all_batches 
+                    if batch["workload"] == workload_name
+                    and batch["concurrency"] == concurrency
+                ]
+
+                ttft_values = [
+                    request["ttft_ms"]
+                    for batch in selected_batches
+                    for request in batch["results"]
+                    if request["ttft_ms"] is not None
+                ]
+
+                e2e_values = [
+                    request["e2e_ms"]
+                    for batch in selected_batches
+                    for request in batch["results"]
+                ]
+
+                token_tp_values = [
+                    batch["output_tokens_per_sec"]
+                    for batch in selected_batches
+                    if batch["output_tokens_per_sec"] is not None
+                ]
+
+                request_tp_values = [
+                    batch["requests_per_sec"]
+                    for batch in selected_batches
+                ]
+
+                print(f"\n--- Concurrency: {concurrency} ---")
+                print(f"TTFT samples: {len(ttft_values)}")
+                print(f"E2E samples: {len(e2e_values)}")
+
+                if len(ttft_values) >= 2:
+                    ttft_p50 = statistics.median(ttft_values)
+                    ttft_p95 = statistics.quantiles(ttft_values, n=100, method="inclusive")[94]
+                    print(f"TTFT p50: {ttft_p50:.2f} ms")
+                    print(f"TTFT p95: {ttft_p95:.2f} ms")
                 else:
-                    print("\nOutput tokens per second: N/A (missing token counts)")
-                batch["output_tokens_per_sec"] = output_tokens_per_sec
+                    print("TTFT p50/p95: N/A (insufficient samples)")
 
-                requests_per_sec = concurrency / batch_time_s
-                batch["requests_per_sec"] = requests_per_sec
+                if len(e2e_values) >= 2:
+                    e2e_p50 = statistics.median(e2e_values)
+                    e2e_p95 = statistics.quantiles(e2e_values, n=100, method="inclusive")[94]
+                    print(f"E2E p50: {e2e_p50:.2f} ms")
+                    print(f"E2E p95: {e2e_p95:.2f} ms")
+                else:
+                    print("E2E p50/p95: N/A (insufficient samples)")
 
-                print(f"Requests per second: {requests_per_sec:.2f} req/s")
+                if len(token_tp_values) >= 2:
+                    token_tp_mean = statistics.mean(token_tp_values)
+                    token_tp_stdev = statistics.stdev(token_tp_values)
+                    print(f"Output tokens per second (mean): {token_tp_mean:.2f} tok/s")
+                    print(f"Output tokens per second (stdev): {token_tp_stdev:.2f} tok/s")
+                else:
+                    print("Output tokens per second (mean/stdev): N/A (insufficient samples)")
 
-                print(f"Batch time: {(batch_time_s * 1000):.2f} ms")
-
-                all_batches.append(batch)
-
-        print("Batches collected: ", len(all_batches))
-
-        print("\n=== Latency Summary ===")
-        for concurrency in concurrency_levels:
-
-            selected_batches = [batch for batch in all_batches if batch["concurrency"] == concurrency]
-
-            ttft_values = [
-                request["ttft_ms"]
-                for batch in selected_batches
-                for request in batch["results"]
-                if request["ttft_ms"] is not None
-            ]
-
-            e2e_values = [
-                request["e2e_ms"]
-                for batch in selected_batches
-                for request in batch["results"]
-            ]
-
-            token_tp_values = [
-                batch["output_tokens_per_sec"]
-                for batch in selected_batches
-                if batch["output_tokens_per_sec"] is not None
-            ]
-
-            request_tp_values = [
-                batch["requests_per_sec"]
-                for batch in selected_batches
-            ]
-
-            print(f"\n--- Concurrency: {concurrency} ---")
-            print(f"TTFT samples: {len(ttft_values)}")
-            print(f"E2E samples: {len(e2e_values)}")
-
-            if len(ttft_values) >= 2:
-                ttft_p50 = statistics.median(ttft_values)
-                ttft_p95 = statistics.quantiles(ttft_values, n=100, method="inclusive")[94]
-                print(f"TTFT p50: {ttft_p50:.2f} ms")
-                print(f"TTFT p95: {ttft_p95:.2f} ms")
-            else:
-                print("TTFT p50/p95: N/A (insufficient samples)")
-
-            if len(e2e_values) >= 2:
-                e2e_p50 = statistics.median(e2e_values)
-                e2e_p95 = statistics.quantiles(e2e_values, n=100, method="inclusive")[94]
-                print(f"E2E p50: {e2e_p50:.2f} ms")
-                print(f"E2E p95: {e2e_p95:.2f} ms")
-            else:
-                print("E2E p50/p95: N/A (insufficient samples)")
-
-            if len(token_tp_values) >= 2:
-                token_tp_mean = statistics.mean(token_tp_values)
-                token_tp_stdev = statistics.stdev(token_tp_values)
-                print(f"Output tokens per second (mean): {token_tp_mean:.2f} tok/s")
-                print(f"Output tokens per second (stdev): {token_tp_stdev:.2f} tok/s")
-            else:
-                print("Output tokens per second (mean/stdev): N/A (insufficient samples)")
-
-            if len(request_tp_values) >= 2:
-                request_tp_mean = statistics.mean(request_tp_values)
-                request_tp_stdev = statistics.stdev(request_tp_values)
-                print(f"Requests per second (mean): {request_tp_mean:.2f} req/s")
-                print(f"Requests per second (stdev): {request_tp_stdev:.2f} req/s")
-            else:
-                print("Requests per second (mean/stdev): N/A (insufficient samples)")
+                if len(request_tp_values) >= 2:
+                    request_tp_mean = statistics.mean(request_tp_values)
+                    request_tp_stdev = statistics.stdev(request_tp_values)
+                    print(f"Requests per second (mean): {request_tp_mean:.2f} req/s")
+                    print(f"Requests per second (stdev): {request_tp_stdev:.2f} req/s")
+                else:
+                    print("Requests per second (mean/stdev): N/A (insufficient samples)")
 
 if __name__ == "__main__":
     asyncio.run(main())
