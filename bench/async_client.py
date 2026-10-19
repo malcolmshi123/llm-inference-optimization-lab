@@ -17,16 +17,16 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-async def send_streaming_request(client: httpx.AsyncClient):
+async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tokens: int = 128):
     payload = {
         "model": MODEL_NAME,
         "messages": [
             {
                 "role": "user",
-                "content": "Explain what a KV cache is in one sentence.",
+                "content": prompt,
             }
         ],
-        "max_tokens": 64,
+        "max_tokens": max_tokens,
         "temperature": 0,
         "stream": True,
         "stream_options": {
@@ -88,10 +88,13 @@ async def send_streaming_request(client: httpx.AsyncClient):
             "completion_tokens": completion_tokens
         }
 
-async def run_batch(client: httpx.AsyncClient, num_requests: int):
+async def run_batch(client: httpx.AsyncClient, prompts: list[str], max_tokens: int = 128):
         batch_start = time.perf_counter()
         results = await asyncio.gather(
-            *(send_streaming_request(client) for _ in range(num_requests))
+            *(
+                send_streaming_request(client, prompt, max_tokens)
+                for prompt in prompts
+            )
         )
         batch_end = time.perf_counter()
         batch_time_s = batch_end - batch_start
@@ -103,9 +106,11 @@ async def run_batch(client: httpx.AsyncClient, num_requests: int):
 
 async def main():
     async with httpx.AsyncClient(timeout=600, follow_redirects=True) as client:
+        test_prompt = "Explain what a KV cache is in one sentence."
+
         # warmup request
         print("=== Warmup Request ===")
-        result = await send_streaming_request(client)
+        result = await send_streaming_request(client, test_prompt)
 
         print("Status: ", result["status_code"])
         print("Generated text:", repr(result["generated_text"]))
@@ -129,7 +134,8 @@ async def main():
             for trial in range(num_trials):
                 print(f"\nTrial {trial + 1}/{num_trials}")
 
-                batch = await run_batch(client, concurrency)
+                prompts = [test_prompt] * concurrency
+                batch = await run_batch(client, prompts)
 
                 results = batch["results"]
                 batch_time_s = batch["batch_time_s"]
