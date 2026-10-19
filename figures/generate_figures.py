@@ -52,7 +52,9 @@ class SVG:
     L, R, T, B = 112, 910, 108, 500
 
     def __init__(self, title: str, subtitle: str, footer: str):
-        self.parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.W}" height="{self.H}" viewBox="0 0 {self.W} {self.H}" role="img" aria-label="{escape(title, quote=True)}">',
+        self.parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.W}" height="{self.H}" viewBox="0 0 {self.W} {self.H}" role="img" aria-label="{escape(title, quote=True)}" style="color:#17212b">',
+                      # Opaque white canvas, independent of the viewer's light/dark theme.
+                      '<rect x="0" y="0" width="100%" height="100%" fill="#ffffff"/>',
                       '<style>text{font-family:Arial,Helvetica,sans-serif;fill:currentColor}.title{font-size:25px;font-weight:700}.subtitle{font-size:14px;opacity:.72}.footnote{font-size:12px;opacity:.66}.tick{font-size:13px;opacity:.83}.axislabel{font-size:15px;font-weight:600}.legend{font-size:14px}.value{font-size:14px;font-weight:600}</style>']
         self.text(44, 44, title, 'title')
         self.text(44, 72, subtitle, 'subtitle')
