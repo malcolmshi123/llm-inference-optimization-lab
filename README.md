@@ -4,13 +4,13 @@
 
 This project deploys an open-weight language model on a serverless GPU, implements an asynchronous benchmarking framework, and evaluates the effects of vLLM scheduling configurations on inference latency and throughput.
 
-The goal is to understand how **concurrency, prompt length, and scheduling decisions** affect model-serving performance—and to use measured evidence rather than assumptions when evaluating optimizations.
+The goal is to understand how **concurrency, prompt length, and scheduling decisions** affect model-serving performance and to use measured evidence rather than assumptions when evaluating optimizations.
 
 ## Key Findings
 
 - **Concurrency improved aggregate throughput but increased request latency.** For 256-token prompts, output throughput increased from 28.20 to 194.74 tokens/s as concurrency increased from 1 to 8.
 - **Long prompts exhibited staggered time-to-first-token (TTFT).** At concurrency 8, requests experienced substantially different first-token delays despite having approximately equal input lengths.
-- **Doubling the vLLM scheduling token budget did not improve performance.** Increasing `max_num_batched_tokens` from 2,048 to 4,096 increased median TTFT by 14.04% for short prompts and 1.51% for long prompts in the final comparison.
+- **Doubling the vLLM scheduling token budget did not improve performance.** Increasing `max_num_batched_tokens` from 2048 to 4096 increased median TTFT by 14.04% for short prompts and 1.51% for long prompts in the final comparison.
 - **Server-side metrics provided additional diagnostic evidence.** A targeted eight-request experiment measured an average of 778 ms in queue time and 891 ms in prefill-phase time per request, with no observed prefix-cache hits or KV-cache preemptions.
 
 The outcome is a **negative optimization result**: a plausible scheduling change was tested and rejected based on workload-specific measurements. The project does not claim an inference speedup.
@@ -55,9 +55,9 @@ The benchmark client sends asynchronous requests, processes streamed responses, 
 |---|---|
 | GPU | L4 |
 | Precision | BF16 |
-| Maximum model length | 4,096 tokens |
+| Maximum model length | 4096 tokens |
 | GPU memory utilization target | 0.80 |
-| Scheduling token budget | 2,048 (control), 4,096 (experiment) |
+| Scheduling token budget | 2048 (control), 4096 (experiment) |
 | Chunked prefill | Enabled |
 | Prefix caching | Enabled |
 | vLLM maximum sequences | 256 (resolved default) |
@@ -65,7 +65,7 @@ The benchmark client sends asynchronous requests, processes streamed responses, 
 
 Modal's concurrent-input limit and vLLM's maximum-sequence limit operate at different layers of the serving stack.
 
-The final server configuration retains the 2,048-token scheduling budget, the better-performing of the two tested settings.
+The final server configuration retains the 2048-token scheduling budget, the better-performing of the two tested settings.
 
 ## Benchmark Methodology
 
@@ -76,7 +76,7 @@ Two deterministic synthetic summarization workloads were used:
 | Workload | Approximate input tokens | Maximum output tokens |
 |---|---:|---:|
 | Short | 256 | 128 |
-| Long | 2,048 | 128 |
+| Long | 2048 | 128 |
 
 Prompts consist of seeded sequences of nature-related words. The generator provides repeatable input lengths and workload structure without depending on external datasets.
 
@@ -124,14 +124,14 @@ The initial baseline tested concurrency levels of 1, 4, and 8, with five measure
 | Short | 4 | 437.36 ms | 105.34 tok/s |
 | Short | 8 | 651.04 ms | 194.74 tok/s |
 | Long | 1 | 561.40 ms | 25.62 tok/s |
-| Long | 4 | 1,406.14 ms | 78.42 tok/s |
-| Long | 8 | 2,099.93 ms | 120.04 tok/s |
+| Long | 4 | 1406.14 ms | 78.42 tok/s |
+| Long | 8 | 2099.93 ms | 120.04 tok/s |
 
 ![Baseline median TTFT vs concurrency](figures/02_baseline_ttft.svg)
 
-Increasing concurrency substantially improved aggregate throughput, but each request experienced greater latency—particularly for longer prompts.
+Increasing concurrency substantially improved aggregate throughput, but each request experienced greater latency, particularly for longer prompts.
 
-This established the primary **throughput–latency tradeoff** investigated in subsequent experiments.
+This established the primary **tradeoff between throughput and latency** investigated in subsequent experiments.
 
 ### 2. Scheduling Optimization Hypothesis
 
@@ -139,7 +139,7 @@ vLLM's `max_num_batched_tokens` controls the shared token budget available withi
 
 With chunked prefill enabled, long prompt-prefill operations can be divided across scheduling iterations and interleaved with decoding work.
 
-**Hypothesis:** Increasing the scheduling budget from 2,048 to 4,096 tokens could allow more prefill work to execute per iteration, potentially reducing TTFT for concurrent long prompts.
+**Hypothesis:** Increasing the scheduling budget from 2048 to 4096 tokens could allow more prefill work to execute per iteration, potentially reducing TTFT for concurrent long prompts.
 
 The change could also affect decoding latency and batch efficiency, so improvement was not guaranteed.
 
@@ -148,33 +148,33 @@ Two configurations were evaluated:
 - **Control:** `max_num_batched_tokens=2048`
 - **Experiment A:** `max_num_batched_tokens=4096`
 
-### 3. A/B Experiment: 2,048 vs. 4,096
+### 3. A/B Experiment: 2048 vs. 4096
 
 Following an initial five-trial exploratory comparison, both configurations were evaluated using 20 measured batches per workload at concurrency 8.
 
 Each configuration completed 320 measured requests. Across both configurations, **all 640 requests succeeded**.
 
-#### Short prompts — 256 tokens
+#### Short prompts (256 tokens)
 
 | Metric | Budget 2048 | Budget 4096 | Change |
 |---|---:|---:|---:|
 | TTFT p50 | 587.37 ms | 669.82 ms | +14.04% |
 | TTFT p95 | 653.89 ms | 701.11 ms | +7.22% |
-| E2E p50 | 5,113.10 ms | 5,168.82 ms | +1.09% |
+| E2E p50 | 5113.10 ms | 5168.82 ms | +1.09% |
 | Mean output throughput | 198.11 tok/s | 197.01 tok/s | −0.56% |
 
-#### Long prompts — 2,048 tokens
+#### Long prompts (2048 tokens)
 
 | Metric | Budget 2048 | Budget 4096 | Change |
 |---|---:|---:|---:|
-| TTFT p50 | 2,256.97 ms | 2,291.16 ms | +1.51% |
-| TTFT p95 | 2,972.13 ms | 3,058.97 ms | +2.92% |
-| E2E p50 | 8,442.66 ms | 8,534.67 ms | +1.09% |
+| TTFT p50 | 2256.97 ms | 2291.16 ms | +1.51% |
+| TTFT p95 | 2972.13 ms | 3058.97 ms | +2.92% |
+| E2E p50 | 8442.66 ms | 8534.67 ms | +1.09% |
 | Mean output throughput | 120.13 tok/s | 118.86 tok/s | −1.06% |
 
 ![Scheduling-budget TTFT comparison](figures/03_budget_ttft_delta.svg)
 
-**Result:** Raising the token budget to 4,096 did not improve the targeted long-prompt workload. Median and tail TTFT were slightly worse, while output throughput decreased by approximately 1%.
+**Result:** Raising the token budget to 4096 did not improve the targeted long-prompt workload. Median and tail TTFT were slightly worse, while output throughput decreased by approximately 1%.
 
 The larger budget also produced notably worse short-prompt TTFT in the 20-trial comparison.
 
@@ -194,17 +194,17 @@ A follow-up diagnostic used vLLM's Prometheus metrics to investigate queueing, p
 
 #### Server-side diagnostic
 
-A single measured batch of eight concurrent 2,048-token prompts produced:
+A single measured batch of eight concurrent 2048-token prompts produced:
 
 | Server-side measurement | Mean per request |
 |---|---:|
-| TTFT | 2,142.88 ms |
+| TTFT | 2142.88 ms |
 | Queue time | 777.62 ms |
 | Prefill-phase time | 891.12 ms |
 
 Additional observations:
 
-- **16,384 prompt tokens** were newly processed across eight requests.
+- **16384 prompt tokens** were newly processed across eight requests.
 - **Zero prefix-cache hits** were recorded during the diagnostic batch.
 - **Zero KV-cache preemptions** were recorded.
 - A separate repeated-prompt diagnostic recorded 16 cached prompt tokens across two completed requests, providing evidence that prefix caching was functional.
@@ -272,7 +272,7 @@ This sends one streaming request and reports client-observed latency.
 
 ### 4. Run the Benchmark
 
-For the 2,048-token scheduling-budget configuration:
+For the 2048-token scheduling-budget configuration:
 
 ```bash
 python -m bench.async_client \
@@ -281,7 +281,7 @@ python -m bench.async_client \
   --max-num-batched-tokens 2048
 ```
 
-For the 4,096-token configuration, first update and redeploy the server with that budget, then run:
+For the 4096-token configuration, first update and redeploy the server with that budget, then run:
 
 ```bash
 python -m bench.async_client \
@@ -382,7 +382,7 @@ The experiments have several important constraints:
 
 - **Single hardware and model configuration:** Results were obtained with Qwen3-4B on an NVIDIA L4.
 - **Synthetic workload:** Fixed-length random-word prompts do not represent realistic production requests.
-- **Fixed A/B experiment order:** The 2,048-token configuration was tested before 4,096, leaving potential run-order and deployment-state confounders.
+- **Fixed A/B experiment order:** The 2048-token configuration was tested before 4096, leaving potential run-order and deployment-state confounders.
 - **Limited configuration search:** Only one alternative scheduling budget was formally compared.
 - **Client-observed latency:** Network and HTTP effects were not isolated from model execution in the primary benchmark.
 - **Limited server-side diagnosis:** Prometheus measurements covered a targeted diagnostic batch, not the entire A/B experiment.
@@ -406,4 +406,4 @@ This project demonstrates an end-to-end inference performance engineering workfl
 
 The tested increase in scheduling token budget did not produce the anticipated improvement. The result reinforced an important systems-engineering principle:
 
-**Inference optimization is workload-dependent, and performance changes should be accepted or rejected based on reliable measurements—not configuration intuition alone.**
+**Inference optimization is workload-dependent, and performance changes should be accepted or rejected based on reliable measurements rather than configuration intuition alone.**
