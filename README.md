@@ -207,11 +207,13 @@ Additional observations:
 - **16,384 prompt tokens** were newly processed across eight requests.
 - **Zero prefix-cache hits** were recorded during the diagnostic batch.
 - **Zero KV-cache preemptions** were recorded.
-- A separate identical-prompt experiment confirmed that prefix caching itself was functional.
+- A separate repeated-prompt diagnostic recorded 16 cached prompt tokens across two completed requests, providing evidence that prefix caching was functional.
 
 These findings support scheduling queueing and prefill contention as plausible contributors to staggered TTFT.
 
 However, the aggregate measurements do **not** reconstruct individual scheduler iterations or prove the precise causal contribution of chunked prefill.
+
+The eight-request diagnostic is derived from [metrics-before-long.txt](metrics/metrics-before-long.txt) and [metrics-after-long.txt](metrics/metrics-after-long.txt). Subtract the before counter from the after counter, then divide each latency-sum delta by the completed-request count delta (8) and multiply by 1000 to obtain milliseconds. This gives 2142.88 ms TTFT, 777.62 ms queue time, and 891.12 ms prefill time. The prompt-token delta is 16384; cache-hit and preemption deltas are zero. The pair has matching metric creation timestamps.
 
 ## Reproducing the Experiments
 
@@ -308,7 +310,15 @@ The comparison utility validates the datasets, computes latency percentiles and 
 python figures/generate_figures.py
 ```
 
-The figures use the committed benchmark JSON files and do not require an active Modal deployment.
+The generator uses only Python's standard library and the three primary benchmark JSON files listed below. It writes the four SVGs referenced in this README and does not require an active Modal deployment. The committed PNG files are convenience exports; this command does not regenerate them.
+
+To generate only the proposed alternate ranked-TTFT sample for style review:
+
+```bash
+python figures/generate_figures.py --preview-ranked
+```
+
+This writes `figures/style-preview/04_long_ttft_ranked_preview.svg` without replacing any published figure. The sample uses paired colored markers and IQR whiskers with no connecting lines. It preserves the original latency values and y-axis range; horizontal offsets separate the two budgets at each rank. The alternate style is pending approval.
 
 ### 7. Stop the Deployment
 
@@ -332,6 +342,7 @@ Stopping the application terminates its active GPU containers while preserving s
 │   └── compare.py
 ├── results/
 │   ├── 20261019_014825.json
+│   ├── 20261019_021618.json
 │   ├── 20261019_024946.json
 │   └── 20261019_030158.json
 ├── metrics/
@@ -343,15 +354,28 @@ Stopping the application terminates its active GPU containers while preserving s
     └── ...
 ```
 
-The primary datasets are:
+The benchmark datasets, in run-filename order, are:
 
 | File | Description |
 |---|---|
-| `20261019_014825.json` | Initial baseline: concurrency 1, 4, and 8 |
-| `20261019_024946.json` | 20-trial experiment: scheduling budget 2,048 |
-| `20261019_030158.json` | 20-trial experiment: scheduling budget 4,096 |
+| [results/20261019_014825.json](results/20261019_014825.json) | Primary baseline: 5 batches per workload at concurrency 1, 4, and 8; 30 batches and 130 successful requests. Scheduling budget is not recorded in this older file. Sources figures 01 and 02. |
+| [results/20261019_021618.json](results/20261019_021618.json) | Exploratory run: the same workload/concurrency grid, 30 batches and 130 successful requests. Scheduling budget is not recorded. Retained for experiment history; excluded from final A/B summaries and all four figures. |
+| [results/20261019_024946.json](results/20261019_024946.json) | Primary control: 20 batches per workload at concurrency 8, recorded budget 2048; 40 batches and 320 successful requests. Sources figures 03 and 04. |
+| [results/20261019_030158.json](results/20261019_030158.json) | Primary candidate: 20 batches per workload at concurrency 8, recorded budget 4096; 40 batches and 320 successful requests. Sources figures 03 and 04. |
 
-Additional exploratory runs and diagnostic artifacts are retained in the repository.
+Each timestamped JSON has a corresponding `.csv` request-table export. All CSV rows match the JSON values for their exported fields. The two older CSVs omit the scheduling-budget column; the newer CSVs include it. JSON remains the analysis source because it preserves nested batches and full request records.
+
+The remaining diagnostic and test artifacts have different roles:
+
+| Files | Role and interpretation |
+|---|---|
+| [metrics/metrics-before-long.txt](metrics/metrics-before-long.txt), [metrics/metrics-after-long.txt](metrics/metrics-after-long.txt) | Paired cumulative counters supporting the eight-request diagnostic above. Keep both snapshots to preserve the subtraction baseline. |
+| [metrics/metrics-repeated.txt](metrics/metrics-repeated.txt) | Two completed requests, 38 prompt tokens, and 16 cached prompt tokens. Supports the separate cache-functionality observation. The exact request payloads and replay command are not committed. |
+| [metrics/metrics-before.txt](metrics/metrics-before.txt), [metrics/metrics-after.txt](metrics/metrics-after.txt) | A separate single-request smoke diagnostic with 19 prompt tokens and no cache hits; not the source of the eight-request table. |
+| [metrics/metrics.txt](metrics/metrics.txt) | An empty vLLM counter snapshot from another server process. Its metric creation timestamp differs from `metrics-repeated.txt`; do not subtract these files as a before/after pair. |
+| [results/test.json](results/test.json), [results/test.csv](results/test.csv) | Generated persistence-test examples: one dummy success and one dummy timeout. They are not measured benchmark results. `python -m bench.results_test` constructs the examples and uses a temporary directory; it does not depend on these committed files. |
+
+The saved metrics reproduce the reported counter calculations, but the repository does not contain a script to replay those diagnostic requests and capture the snapshots. Keep these measurements distinct from the timestamped client benchmark datasets.
 
 ## Limitations
 
