@@ -429,6 +429,8 @@ python -m unittest discover -s tests -v
 
 These tests cover server configuration, JSON/CSV persistence, streaming-response validation, historical comparisons, document manifests, and cache-study execution against a fake server. They run locally without a Modal deployment or GPU. A tokenizer integration check uses the pinned tokenizer only when it is already cached locally.
 
+The [CPU tests workflow](.github/workflows/tests.yml) runs on pushes and pull requests using Python 3.11. It first runs the suite offline with an isolated Hugging Face cache. It then downloads the pinned tokenizer files and runs the tokenizer integration check separately, also offline. That step sets `INFERENCE_LAB_REQUIRE_TOKENIZER=true`, so an unavailable tokenizer fails instead of skipping. Model weights, GPUs, and Modal credentials are not needed; dependency installation and the tokenizer download require network access. CI checks the tooling without rerunning the live performance experiments.
+
 The pilot checker also validates saved request results and raw snapshots, rather than relying only on a completed status:
 
 ```bash

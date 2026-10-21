@@ -1,0 +1,53 @@
+name: CPU tests
+
+"on":
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      HF_HOME: ${{ runner.temp }}/inference-lab-hf
+      MPLBACKEND: Agg
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Run offline tests
+        env:
+          HF_HUB_OFFLINE: "1"
+          TRANSFORMERS_OFFLINE: "1"
+        run: python -m unittest discover -s tests -v
+
+      - name: Download pinned tokenizer
+        run: |
+          python - <<'PY'
+          from transformers import AutoTokenizer
+          from server_config import MODEL_NAME, MODEL_REVISION
+
+          AutoTokenizer.from_pretrained(MODEL_NAME, revision=MODEL_REVISION)
+          PY
+
+      - name: Check pinned tokenizer (required)
+        env:
+          HF_HUB_OFFLINE: "1"
+          TRANSFORMERS_OFFLINE: "1"
+          INFERENCE_LAB_REQUIRE_TOKENIZER: "true"
+        run: >-
+          python -m unittest
+          tests.test_cache_workloads.CacheWorkloadTests.test_cached_model_tokenizer_confirms_real_lengths_and_prefixes
+          -v

@@ -1,6 +1,7 @@
 import copy
 import hashlib
 import json
+import os
 import re
 import unittest
 from pathlib import Path
@@ -136,6 +137,8 @@ class CacheWorkloadTests(unittest.TestCase):
                 MODEL_NAME, revision=MODEL_REVISION, local_files_only=True
             )
         except OSError:
+            if os.environ.get("INFERENCE_LAB_REQUIRE_TOKENIZER") == "true":
+                raise
             self.skipTest("Pinned tokenizer is not cached locally")
 
         for seed in (42, 43):
