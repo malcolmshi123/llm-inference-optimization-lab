@@ -1,0 +1,16 @@
+{
+  "kind": "profile_trace_check",
+  "checked_at": "2026-10-21T21:44:36.833158+00:00",
+  "traces": [
+    {
+      "path": "traces/shared-c8-on-01/modal_4.async_llm.1792619059353102307.pt.trace.json.gz",
+      "sha256": "67d40703caec124c045d0deb69a02dd089a8bdabad4fcb032dbaa95e0eb2d855",
+      "gpu_kernel_events": 0
+    },
+    {
+      "path": "traces/shared-c8-on-01/rank0.1792619060050134970.pt.trace.json.gz",
+      "sha256": "74146b08c658bc550a86fa57e0b80fdfb94c67ccdc10392c092f3dfcca12b59b",
+      "gpu_kernel_events": 72663
+    }
+  ]
+}

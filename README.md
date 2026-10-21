@@ -323,6 +323,8 @@ The deployment's prefix-caching setting and profile session must match these arg
 
 Each output contains `capture.json`, the original manifest as `workload.json`, `server.log`, and raw metric snapshots. `capture.json` records preparation and captured request results, timestamps, profiler start/stop outcomes, and the expected remote trace directory. Its `kind` is `profile_capture`, separate from benchmark results. A `completed` capture means requests and profiler shutdown validated; it does not verify that trace files persisted or contain GPU events. `trace_files_verified` remains false until trace inspection is performed separately. The driver neither deploys nor stops Modal apps nor downloads traces.
 
+Follow the [profiling runbook](docs/profiling.md) for the two manual deployments, readiness checks, bounded trace downloads, GPU-event checks, and automatic app shutdown. The runbook uses Git Bash and the existing saved workload; no new benchmark study is required.
+
 Set the endpoint and proxy-authentication credentials in the client environment:
 
 ```bash
