@@ -22,7 +22,7 @@ dummy_batches = [
                 "ttft_ms": 250.0,
                 "e2e_ms": 1200.0,
                 "prompt_tokens": 256,
-                "completion_tokens": 32
+                "completion_tokens": 32,
             },
             {
                 "success": False,
@@ -31,11 +31,12 @@ dummy_batches = [
                 "ttft_ms": None,
                 "e2e_ms": None,
                 "prompt_tokens": None,
-                "completion_tokens": None
-            }
-        ]
+                "completion_tokens": None,
+            },
+        ],
     }
 ]
+
 
 class BatchResultsTests(unittest.TestCase):
     def test_json_preserves_successful_and_failed_requests(self):
@@ -43,7 +44,9 @@ class BatchResultsTests(unittest.TestCase):
             path = Path(directory) / "nested" / "test.json"
             save_results_json(path, dummy_batches)
 
-            self.assertEqual(json.loads(path.read_text(encoding="utf-8")), dummy_batches)
+            self.assertEqual(
+                json.loads(path.read_text(encoding="utf-8")), dummy_batches
+            )
 
     def test_csv_preserves_request_fields_and_empty_failure_values(self):
         with TemporaryDirectory() as directory:
@@ -65,6 +68,7 @@ class BatchResultsTests(unittest.TestCase):
         self.assertEqual(rows[0]["prompt_tokens"], "256")
         self.assertEqual(rows[0]["completion_tokens"], "32")
         self.assertEqual(float(rows[0]["batch_time_s"]), 1.2)
+
 
 if __name__ == "__main__":
     unittest.main()

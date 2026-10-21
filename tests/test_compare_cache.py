@@ -16,11 +16,17 @@ import httpx
 from bench.cache_metrics import cache_configuration, interval_summary, parse_metrics
 from bench.cache_study import run_study, write_json
 from bench.cache_workloads import create_manifest, manifest_digest
-from bench.compare_cache import compare_runs, export_comparison, load_run, summarize_scenario
+from bench.compare_cache import (
+    compare_runs,
+    export_comparison,
+    load_run,
+    summarize_scenario,
+)
 from server_config import GPU_TYPE, VLLM_VERSION, ServerConfig
 from tests.test_cache_metrics import metric_text
 from tests.test_cache_study import StudyServer
 from tests.test_cache_workloads import WordTokenizer
+
 
 def result(prompt_tokens, index=0, scale=1):
     return {
@@ -29,8 +35,9 @@ def result(prompt_tokens, index=0, scale=1):
         "completion_tokens": index + 1,
         "finish_reason": "stop",
         "ttft_ms": (index + 1) * 10 * scale,
-        "e2e_ms": (index + 10) * 10 * scale
+        "e2e_ms": (index + 10) * 10 * scale,
     }
+
 
 def create_run(directory: Path, manifest: dict, *, expected: bool, session: int):
     directory.mkdir(parents=True)
@@ -48,33 +55,64 @@ def create_run(directory: Path, manifest: dict, *, expected: bool, session: int)
         "manifest_sha256": manifest["sha256"],
         "started_at": when(0),
         "ended_at": when(50),
-        "client": {"git_revision": "a" * 40, "git_dirty": False, "python": "3.11.9", "packages": {"httpx": "0.28.1"}},
+        "client": {
+            "git_revision": "a" * 40,
+            "git_dirty": False,
+            "python": "3.11.9",
+            "packages": {
+                "httpx": "0.28.1",
+            },
+        },
         "server": {
             "expected_prefix_caching": expected,
             "startup_command_from_log": command,
             "vllm_version_declared": VLLM_VERSION,
             "gpu_declared": GPU_TYPE,
             "process_start_time_seconds": identity,
-            "previous_process_start_time_seconds": 99 + session if session else None
+            "previous_process_start_time_seconds": 99 + session if session else None,
         },
         "warmup": {
-            "messages": [[{"role": "user", "content": f"Unrelated warmup {manifest['seed']} request {index}"}] for index in range(8)],
+            "messages": [
+                [
+                    {
+                        "role": "user",
+                        "content": f"Unrelated warmup {manifest['seed']} request {index}",
+                    }
+                ]
+                for index in range(8)
+            ],
             "max_tokens": 128,
             "results": [result(100) for _ in range(8)],
             "started_at": when(0.1),
-            "ended_at": when(0.5)
+            "ended_at": when(0.5),
         },
         "snapshots": {},
-        "scenarios": []
+        "scenarios": [],
     }
     tokens, hits = 0, 0
-    completed = Counter({"stop": 0})
+    completed = Counter(
+        {
+            "stop": 0,
+        }
+    )
 
     def snapshot(name, seconds):
-        text = metric_text(tokens=tokens, hits=hits, prefill=tokens - hits, identity=identity, expected=expected, finished=completed)
+        text = metric_text(
+            tokens=tokens,
+            hits=hits,
+            prefill=tokens - hits,
+            identity=identity,
+            expected=expected,
+            finished=completed,
+        )
         (directory / (name + ".prom")).write_text(text, encoding="utf-8")
-        run["snapshots"][name] = {"path": name + ".prom", "captured_at": when(seconds)}
-        run["server"]["observed_cache_config"] = cache_configuration(parse_metrics(text), expected)
+        run["snapshots"][name] = {
+            "path": name + ".prom",
+            "captured_at": when(seconds),
+        }
+        run["server"]["observed_cache_config"] = cache_configuration(
+            parse_metrics(text), expected
+        )
 
         return parse_metrics(text)
 
@@ -93,54 +131,77 @@ def create_run(directory: Path, manifest: dict, *, expected: bool, session: int)
             primer = {
                 "results": [result(source["primer"]["prompt_tokens"])],
                 "started_at": when(seconds + 0.01),
-                "ended_at": when(seconds + 0.05)
+                "ended_at": when(seconds + 0.05),
             }
 
         before_name, after_name = source["name"] + "-before", source["name"] + "-after"
         before = snapshot(before_name, seconds + 0.1)
-        requests = [result(request["prompt_tokens"], index, 0.5 if expected else 1) for index, request in enumerate(source["requests"])]
+        requests = [
+            result(request["prompt_tokens"], index, 0.5 if expected else 1)
+            for index, request in enumerate(source["requests"])
+        ]
         tokens += sum(request["prompt_tokens"] for request in source["requests"])
-        hits += sum(request["shared_prefix_tokens"] or 0 for request in source["requests"]) if expected else 0
+        hits += (
+            sum(request["shared_prefix_tokens"] or 0 for request in source["requests"])
+            if expected
+            else 0
+        )
         completed["stop"] += len(requests)
         after = snapshot(after_name, seconds + 2.3)
         batches = []
 
         for offset in range(0, len(requests), source["concurrency"]):
-            selected = source["requests"][offset:offset + source["concurrency"]]
-            batches.append({
-                "request_ids": [request["request_id"] for request in selected],
-                "results": requests[offset:offset + source["concurrency"]],
-                "batch_time_s": 0.2
-            })
+            selected = source["requests"][offset : offset + source["concurrency"]]
+            batches.append(
+                {
+                    "request_ids": [request["request_id"] for request in selected],
+                    "results": requests[offset : offset + source["concurrency"]],
+                    "batch_time_s": 0.2,
+                }
+            )
 
-        run["scenarios"].append({
-            "name": source["name"],
-            "case": source["case"],
-            "concurrency": source["concurrency"],
-            "status": "completed",
-            "priming": primer,
-            "started_at": when(seconds + 0.2),
-            "ended_at": when(seconds + 2.2),
-            "elapsed_s": 1 if expected else 2,
-            "before_snapshot": before_name,
-            "after_snapshot": after_name,
-            "batches": batches,
-            "metrics": interval_summary(before, after)
-        })
+        run["scenarios"].append(
+            {
+                "name": source["name"],
+                "case": source["case"],
+                "concurrency": source["concurrency"],
+                "status": "completed",
+                "priming": primer,
+                "started_at": when(seconds + 0.2),
+                "ended_at": when(seconds + 2.2),
+                "elapsed_s": 1 if expected else 2,
+                "before_snapshot": before_name,
+                "after_snapshot": after_name,
+                "batches": batches,
+                "metrics": interval_summary(before, after),
+            }
+        )
 
     write_json(directory / "workload.json", manifest)
     write_json(directory / "run.json", run)
-    (directory / "server.log").write_text("Starting vLLM server with command: " + " ".join(command), encoding="utf-8")
+    (directory / "server.log").write_text(
+        "Starting vLLM server with command: " + " ".join(command), encoding="utf-8"
+    )
+
 
 def create_pairs(root: Path) -> list[Path]:
     first = create_manifest(WordTokenizer(), seed=42, count=4)
     second = create_manifest(WordTokenizer(), seed=43, count=4)
-    directories = [root / name for name in ("round-1-off", "round-1-on", "round-2-off", "round-2-on")]
+    directories = [
+        root / name
+        for name in ("round-1-off", "round-1-on", "round-2-off", "round-2-on")
+    ]
 
-    for directory, manifest, expected, session in zip(directories, (first, first, second, second), (False, True, False, True), (0, 1, 3, 2)):
+    for directory, manifest, expected, session in zip(
+        directories,
+        (first, first, second, second),
+        (False, True, False, True),
+        (0, 1, 3, 2),
+    ):
         create_run(directory, manifest, expected=expected, session=session)
 
     return directories
+
 
 class CompareCacheTests(unittest.TestCase):
     def setUp(self):
@@ -168,13 +229,31 @@ class CompareCacheTests(unittest.TestCase):
         self.assertEqual(row["output_tokens_per_s"], 5)
         self.assertEqual(row["requests_per_s"], 2)
         self.assertEqual(comparison["rows"][8]["order"], "on-off")
-        self.assertEqual(comparison["changes"][0]["cache_on_change_pct"]["ttft_p50_ms"], -50)
-        self.assertEqual(comparison["changes"][0]["cache_on_change_pct"]["output_tokens_per_s"], 100)
+        self.assertEqual(
+            comparison["changes"][0]["cache_on_change_pct"]["ttft_p50_ms"], -50
+        )
+        self.assertEqual(
+            comparison["changes"][0]["cache_on_change_pct"]["output_tokens_per_s"], 100
+        )
         self.assertEqual(row["new_prefill_tokens"], row["prompt_tokens"])
         self.assertGreater(comparison["rows"][5]["token_cache_hit_rate"], 0.85)
 
     def test_failures_stay_in_attempts_and_elapsed_time(self):
-        scenario = {"name": "unique-c1", "concurrency": 1, "elapsed_s": 2, "batches": [{"results": [result(2048), {"success": False}]}]}
+        scenario = {
+            "name": "unique-c1",
+            "concurrency": 1,
+            "elapsed_s": 2,
+            "batches": [
+                {
+                    "results": [
+                        result(2048),
+                        {
+                            "success": False,
+                        },
+                    ],
+                }
+            ],
+        }
         summary = summarize_scenario(scenario, {})
 
         self.assertEqual(summary["attempted"], 2)
@@ -205,7 +284,9 @@ class CompareCacheTests(unittest.TestCase):
             lambda run: run["client"].update(git_revision="b" * 40),
             lambda run: run["client"]["packages"].update(httpx="changed"),
             lambda run: run["scenarios"][0]["batches"].pop(),
-            lambda run: run["scenarios"][0]["batches"][0]["results"][0].update(ttft_ms=float("nan"))
+            lambda run: run["scenarios"][0]["batches"][0]["results"][0].update(
+                ttft_ms=float("nan")
+            ),
         ):
             changed = copy.deepcopy(original)
             mutate(changed)
@@ -215,10 +296,17 @@ class CompareCacheTests(unittest.TestCase):
                 compare_runs(*self.directories)
 
     def test_reused_server_process_is_rejected_even_with_consistent_snapshots(self):
-        self.edit_run(1, lambda run: run["server"].update(process_start_time_seconds=100))
+        self.edit_run(
+            1, lambda run: run["server"].update(process_start_time_seconds=100)
+        )
 
         for path in self.directories[1].glob("*.prom"):
-            path.write_text(path.read_text(encoding="utf-8").replace("process_start_time_seconds 101", "process_start_time_seconds 100"), encoding="utf-8")
+            path.write_text(
+                path.read_text(encoding="utf-8").replace(
+                    "process_start_time_seconds 101", "process_start_time_seconds 100"
+                ),
+                encoding="utf-8",
+            )
 
         with self.assertRaisesRegex(ValueError, "different server processes"):
             compare_runs(*self.directories)
@@ -232,13 +320,18 @@ class CompareCacheTests(unittest.TestCase):
             compare_runs(*self.directories)
 
         write_json(path, original)
-        self.edit_run(1, lambda run: run["scenarios"][1]["priming"].update(ended_at=run["ended_at"]))
+        self.edit_run(
+            1,
+            lambda run: run["scenarios"][1]["priming"].update(ended_at=run["ended_at"]),
+        )
 
         with self.assertRaisesRegex(ValueError, "Priming"):
             compare_runs(*self.directories)
 
     def test_raw_metric_disagreement_is_rejected(self):
-        self.edit_run(1, lambda run: run["scenarios"][0]["metrics"].update(new_prefill_tokens=0))
+        self.edit_run(
+            1, lambda run: run["scenarios"][0]["metrics"].update(new_prefill_tokens=0)
+        )
 
         with self.assertRaisesRegex(ValueError, "raw snapshots"):
             compare_runs(*self.directories)
@@ -246,7 +339,10 @@ class CompareCacheTests(unittest.TestCase):
     def test_completed_request_contamination_is_rejected_from_raw_snapshots(self):
         path = self.directories[0] / "unique-c1-after.prom"
         text = path.read_text(encoding="utf-8")
-        path.write_text(text.replace('finished_reason="stop"} 12', 'finished_reason="stop"} 13'), encoding="utf-8")
+        path.write_text(
+            text.replace('finished_reason="stop"} 12', 'finished_reason="stop"} 13'),
+            encoding="utf-8",
+        )
 
         with self.assertRaisesRegex(ValueError, "Completed-request counters disagree"):
             compare_runs(*self.directories)
@@ -257,7 +353,7 @@ class CompareCacheTests(unittest.TestCase):
 
         for mutate in (
             lambda run: run["scenarios"][0]["batches"][0].update(request_ids=["wrong"]),
-            lambda run: run["scenarios"][0].update(elapsed_s=0.01)
+            lambda run: run["scenarios"][0].update(elapsed_s=0.01),
         ):
             changed = copy.deepcopy(original)
             mutate(changed)
@@ -271,7 +367,7 @@ class CompareCacheTests(unittest.TestCase):
             *self.directories,
             require_cache_metrics=True,
         )
-        directory = self.root / "analysis"
+        directory = self.root / "comparison"
         arguments = [
             sys.executable,
             "-m",
@@ -279,7 +375,10 @@ class CompareCacheTests(unittest.TestCase):
             "--require-cache-metrics",
         ]
 
-        for flag, path in zip(("--round-1-off", "--round-1-on", "--round-2-off", "--round-2-on"), self.directories):
+        for flag, path in zip(
+            ("--round-1-off", "--round-1-on", "--round-2-off", "--round-2-on"),
+            self.directories,
+        ):
             arguments.extend((flag, str(path)))
 
         completed = subprocess.run(
@@ -287,7 +386,7 @@ class CompareCacheTests(unittest.TestCase):
             cwd=Path(__file__).resolve().parents[1],
             capture_output=True,
             text=True,
-            check=True
+            check=True,
         )
         self.assertIn("Round 2", completed.stdout)
         self.assertIn("failures 0/4", completed.stdout)
@@ -296,21 +395,64 @@ class CompareCacheTests(unittest.TestCase):
             rows = list(csv.DictReader(handle))
 
         self.assertEqual(len(rows), 16)
-        self.assertEqual(json.loads(rows[0]["finish_reasons"]), {"stop": 4})
-        self.assertEqual(json.loads((directory / "comparison.json").read_text(encoding="utf-8")), comparison)
+        self.assertEqual(
+            json.loads(rows[0]["finish_reasons"]),
+            {
+                "stop": 4,
+            },
+        )
+        self.assertEqual(
+            json.loads((directory / "comparison.json").read_text(encoding="utf-8")),
+            comparison,
+        )
 
         for name in ("01_cache_latency", "02_cache_prefill"):
-            self.assertEqual((directory / (name + ".png")).read_bytes()[:8], b"\x89PNG\r\n\x1a\n")
-            self.assertIn("<svg", (directory / (name + ".svg")).read_text(encoding="utf-8"))
+            self.assertEqual(
+                (directory / (name + ".png")).read_bytes()[:8], b"\x89PNG\r\n\x1a\n"
+            )
+            self.assertIn(
+                "<svg", (directory / (name + ".svg")).read_text(encoding="utf-8")
+            )
 
         with self.assertRaises(FileExistsError):
             export_comparison(comparison, directory)
 
     def test_zero_latency_baseline_has_no_percentage_change(self):
-        self.edit_run(0, lambda run: [request.update(ttft_ms=0) for batch in run["scenarios"][0]["batches"] for request in batch["results"]])
+        self.edit_run(
+            0,
+            lambda run: [
+                request.update(ttft_ms=0)
+                for batch in run["scenarios"][0]["batches"]
+                for request in batch["results"]
+            ],
+        )
         comparison = compare_runs(*self.directories)
 
-        self.assertIsNone(comparison["changes"][0]["cache_on_change_pct"]["ttft_p50_ms"])
+        self.assertIsNone(
+            comparison["changes"][0]["cache_on_change_pct"]["ttft_p50_ms"]
+        )
+
+    def test_archived_gpu_declarations_are_independent_of_current_deployment(self):
+        for index in range(4):
+            self.edit_run(
+                index, lambda run: run["server"].update(gpu_declared="archived-gpu")
+            )
+        self.assertEqual(len(compare_runs(*self.directories)["rows"]), 16)
+
+        self.edit_run(1, lambda run: run["server"].update(gpu_declared="different-gpu"))
+        with self.assertRaisesRegex(ValueError, "changed between sessions"):
+            compare_runs(*self.directories)
+
+    def test_mismatched_or_missing_server_versions_are_rejected(self):
+        self.edit_run(
+            1,
+            lambda run: run["server"].update(vllm_version_declared="different-version"),
+        )
+        with self.assertRaisesRegex(ValueError, "changed between sessions"):
+            compare_runs(*self.directories)
+        self.edit_run(1, lambda run: run["server"].update(vllm_version_declared=None))
+        with self.assertRaisesRegex(ValueError, "are required"):
+            compare_runs(*self.directories)
 
     def test_reused_round_seed_is_rejected(self):
         for index in (2, 3):
@@ -319,7 +461,9 @@ class CompareCacheTests(unittest.TestCase):
             manifest["seed"] = 42
             manifest["sha256"] = manifest_digest(manifest)
             write_json(path, manifest)
-            self.edit_run(index, lambda run: run.update(manifest_sha256=manifest["sha256"]))
+            self.edit_run(
+                index, lambda run: run.update(manifest_sha256=manifest["sha256"])
+            )
 
         with self.assertRaisesRegex(ValueError, "different workload seeds"):
             compare_runs(*self.directories)
@@ -329,55 +473,153 @@ class CompareCacheTests(unittest.TestCase):
 
         for path in directory.glob("*.prom"):
             lines = path.read_text(encoding="utf-8").splitlines()
-            path.write_text("\n".join(line for line in lines if "prefix_cache_hits" not in line) + "\n", encoding="utf-8")
+            path.write_text(
+                "\n".join(line for line in lines if "prefix_cache_hits" not in line)
+                + "\n",
+                encoding="utf-8",
+            )
 
         run = json.loads((directory / "run.json").read_text(encoding="utf-8"))
 
         for scenario in run["scenarios"]:
-            before = parse_metrics((directory / (scenario["before_snapshot"] + ".prom")).read_text(encoding="utf-8"))
-            after = parse_metrics((directory / (scenario["after_snapshot"] + ".prom")).read_text(encoding="utf-8"))
+            before = parse_metrics(
+                (directory / (scenario["before_snapshot"] + ".prom")).read_text(
+                    encoding="utf-8"
+                )
+            )
+            after = parse_metrics(
+                (directory / (scenario["after_snapshot"] + ".prom")).read_text(
+                    encoding="utf-8"
+                )
+            )
             scenario["metrics"] = interval_summary(before, after)
 
         write_json(directory / "run.json", run)
         _, _, summaries = load_run(directory, True)
 
-        self.assertTrue(all(row["prefix_hits_tokens"] is None and row["token_cache_hit_rate"] is None for row in summaries))
+        self.assertTrue(
+            all(
+                row["prefix_hits_tokens"] is None
+                and row["token_cache_hit_rate"] is None
+                for row in summaries
+            )
+        )
 
         comparison = compare_runs(*self.directories)
         output = self.root / "missing-telemetry"
         export_comparison(comparison, output)
-        self.assertGreaterEqual((output / "02_cache_prefill.svg").read_text(encoding="utf-8").count("N/A"), 4)
+        self.assertGreaterEqual(
+            (output / "02_cache_prefill.svg").read_text(encoding="utf-8").count("N/A"),
+            4,
+        )
 
         with self.assertRaisesRegex(ValueError, "prefix_hits_tokens"):
             compare_runs(*self.directories, require_cache_metrics=True)
+
+    def test_strict_analysis_requires_each_cache_counter(self):
+        directory = self.directories[1]
+        snapshots = {
+            path: path.read_text(encoding="utf-8") for path in directory.glob("*.prom")
+        }
+        original = json.loads((directory / "run.json").read_text(encoding="utf-8"))
+
+        for metric, field in (
+            ("vllm:prefix_cache_queries_total", "prefix_queries_tokens"),
+            ("vllm:prefix_cache_hits_total", "prefix_hits_tokens"),
+            ("vllm:request_prefill_kv_computed_tokens_sum", "new_prefill_tokens"),
+        ):
+            with self.subTest(metric=metric):
+                for path, text in snapshots.items():
+                    path.write_text(
+                        "\n".join(
+                            line
+                            for line in text.splitlines()
+                            if not line.startswith(metric + "{")
+                        )
+                        + "\n",
+                        encoding="utf-8",
+                    )
+                run = copy.deepcopy(original)
+                for scenario in run["scenarios"]:
+                    before = parse_metrics(
+                        (directory / (scenario["before_snapshot"] + ".prom")).read_text(
+                            encoding="utf-8"
+                        )
+                    )
+                    after = parse_metrics(
+                        (directory / (scenario["after_snapshot"] + ".prom")).read_text(
+                            encoding="utf-8"
+                        )
+                    )
+                    scenario["metrics"] = interval_summary(before, after)
+                write_json(directory / "run.json", run)
+
+                comparison = compare_runs(*self.directories)
+                self.assertTrue(
+                    all(
+                        row[field] is None
+                        for row in comparison["rows"]
+                        if row["round"] == 1 and row["cache"] == "on"
+                    )
+                )
+                with self.assertRaisesRegex(ValueError, field):
+                    compare_runs(*self.directories, require_cache_metrics=True)
 
     def test_real_runner_outputs_are_accepted_without_schema_translation(self):
         async def execute():
             for session, index in enumerate((0, 1, 3, 2)):
                 expected = index in (1, 3)
-                manifest = create_manifest(WordTokenizer(), seed=42 if index < 2 else 43, count=2)
+                manifest = create_manifest(
+                    WordTokenizer(), seed=42 if index < 2 else 43, count=2
+                )
                 server = StudyServer(manifest, expected=expected)
 
                 def transport(request):
                     response = server(request)
 
                     if request.url.path == "/metrics":
-                        return httpx.Response(200, text=response.text.replace("process_start_time_seconds 100", f"process_start_time_seconds {100 + session}"))
+                        return httpx.Response(
+                            200,
+                            text=response.text.replace(
+                                "process_start_time_seconds 100",
+                                f"process_start_time_seconds {100 + session}",
+                            ),
+                        )
 
                     return response
 
                 log = self.root / f"runner-{session}.log"
-                log.write_text("Starting vLLM server with command: " + " ".join(ServerConfig(prefix_caching=expected).command()), encoding="utf-8")
+                log.write_text(
+                    "Starting vLLM server with command: "
+                    + " ".join(ServerConfig(prefix_caching=expected).command()),
+                    encoding="utf-8",
+                )
 
-                async with httpx.AsyncClient(transport=httpx.MockTransport(transport), base_url="http://lab") as client:
-                    await run_study(client, manifest, directory=self.root / f"runner-{index}", expected=expected, server_log=log)
+                async with httpx.AsyncClient(
+                    transport=httpx.MockTransport(transport), base_url="http://lab"
+                ) as client:
+                    await run_study(
+                        client,
+                        manifest,
+                        directory=self.root / f"runner-{index}",
+                        expected=expected,
+                        server_log=log,
+                    )
 
         with patch("bench.async_client.VLLM_BASE_URL", "http://lab"):
             asyncio.run(execute())
 
-        comparison = compare_runs(*(self.root / f"runner-{index}" for index in range(4)))
+        comparison = compare_runs(
+            *(self.root / f"runner-{index}" for index in range(4))
+        )
         self.assertEqual(len(comparison["rows"]), 16)
-        self.assertTrue(all(row["attempted"] == 2 and row["failed"] == 0 for row in comparison["rows"]))
+        self.assertTrue(
+            all(
+                row["attempted"] == 2 and row["failed"] == 0
+                for row in comparison["rows"]
+            )
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

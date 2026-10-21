@@ -1,29 +1,46 @@
 import random
 
+
 def generate_prompt(target_tokens: int, seed: int) -> str:
     if target_tokens <= 0:
         return ""
 
     words = (
-        "river", "tree", "cloud", "stone", "wind", "rain", "sun", "moon",
-        "bird", "field", "forest", "road", "garden", "water", "light", "night",
+        "river",
+        "tree",
+        "cloud",
+        "stone",
+        "wind",
+        "rain",
+        "sun",
+        "moon",
+        "bird",
+        "field",
+        "forest",
+        "road",
+        "garden",
+        "water",
+        "light",
+        "night",
     )
     content = " ".join(random.Random(seed).choices(words, k=max(0, target_tokens - 15)))
     return "Summarize the following text:\n\n" + content
 
+
 def count_prompt_tokens(tokenizer, prompt: str) -> int:
     messages = [
-        {"role": "user", "content": prompt}
+        {
+            "role": "user",
+            "content": prompt,
+        }
     ]
 
     encoded = tokenizer.apply_chat_template(
-        messages, 
-        tokenize=True, 
-        add_generation_prompt=True, 
-        return_dict=True
+        messages, tokenize=True, add_generation_prompt=True, return_dict=True
     )
 
     return len(encoded["input_ids"])
+
 
 if __name__ == "__main__":
     from transformers import AutoTokenizer
@@ -42,7 +59,6 @@ if __name__ == "__main__":
 
     print("Short:", count_prompt_tokens(tokenizer, prompt_a))
     print("Long:", count_prompt_tokens(tokenizer, prompt_long))
-
 
     for target_tokens in [256, 2048]:
         print(f"\nTarget: {target_tokens} tokens")

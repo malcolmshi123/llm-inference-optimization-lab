@@ -1,6 +1,20 @@
 run_treatment() (
   set -euo pipefail
 
+  if (( $# < 3 || $# > 4 )); then
+    printf 'Usage: run_treatment NAME off|on WORKLOAD [PREVIOUS]\n' >&2
+    exit 1
+  fi
+
+  : "${PY:?Set PY to the existing virtual-environment interpreter}"
+  : "${APP:?Set APP to the Modal app name}"
+  : "${LAB_DIR:?Set LAB_DIR to the study directory}"
+  : "${VLLM_BASE_URL:?Set VLLM_BASE_URL to the endpoint root}"
+  : "${MODAL_PROXY_KEY:?Set MODAL_PROXY_KEY}"
+  : "${MODAL_PROXY_SECRET:?Set MODAL_PROXY_SECRET}"
+  test -f modal_app.py
+  test -f server_config.py
+
   name="$1"
   expected="$2"
   workload="$3"
@@ -19,6 +33,7 @@ run_treatment() (
   fi
 
   test -f "$LAB_DIR/workloads/$workload.json"
+  mkdir -p "$LAB_DIR/logs"
 
   previous_args=()
   if [[ -n "$previous" ]]; then

@@ -6,8 +6,15 @@ import unittest
 from pathlib import Path
 from tempfile import TemporaryDirectory
 
-from bench.cache_workloads import common_prefix, create_manifest, load_manifest, manifest_digest, token_ids
+from bench.cache_workloads import (
+    common_prefix,
+    create_manifest,
+    load_manifest,
+    manifest_digest,
+    token_ids,
+)
 from server_config import MODEL_NAME, MODEL_REVISION
+
 
 class WordTokenizer:
     chat_template = "word-tokenizer-template"
@@ -16,7 +23,10 @@ class WordTokenizer:
         words = re.findall(r"\w+|[^\w\s]", messages[0]["content"])
         ids = [int(hashlib.sha256(word.encode()).hexdigest()[:8], 16) for word in words]
 
-        return {"input_ids": [1, *ids, 2]}
+        return {
+            "input_ids": [1, *ids, 2],
+        }
+
 
 class CacheWorkloadTests(unittest.TestCase):
     def test_seed_replays_identical_payloads_and_other_seeds_change_them(self):
@@ -47,12 +57,21 @@ class CacheWorkloadTests(unittest.TestCase):
                 seen_payloads.add(payload)
 
                 if scenario["primer"]:
-                    shared = common_prefix(ids, token_ids(tokenizer, scenario["primer"]["messages"]))
+                    shared = common_prefix(
+                        ids, token_ids(tokenizer, scenario["primer"]["messages"])
+                    )
 
                     self.assertEqual(shared, request["shared_prefix_tokens"])
                     self.assertLessEqual(abs(shared / len(ids) - 0.9), 0.05)
                 else:
-                    self.assertLessEqual(common_prefix(ids, token_ids(tokenizer, requests[0]["messages"])) if request is not requests[0] else 0, 102)
+                    self.assertLessEqual(
+                        common_prefix(
+                            ids, token_ids(tokenizer, requests[0]["messages"])
+                        )
+                        if request is not requests[0]
+                        else 0,
+                        102,
+                    )
 
             prefixes.append(token_ids(tokenizer, requests[0]["messages"]))
 
@@ -67,7 +86,9 @@ class CacheWorkloadTests(unittest.TestCase):
             path = Path(directory) / "workload.json"
             path.write_text(json.dumps(manifest), encoding="utf-8")
             self.assertEqual(load_manifest(path), manifest)
-            manifest["scenarios"][0]["requests"][0]["messages"][0]["content"] += " changed"
+            manifest["scenarios"][0]["requests"][0]["messages"][0]["content"] += (
+                " changed"
+            )
             path.write_text(json.dumps(manifest), encoding="utf-8")
 
             with self.assertRaisesRegex(ValueError, "digest"):
@@ -79,7 +100,11 @@ class CacheWorkloadTests(unittest.TestCase):
         with TemporaryDirectory() as directory:
             path = Path(directory) / "workload.json"
 
-            for field, value in (("prompt_tokens", 4096), ("max_tokens", 256), ("request_id", "")):
+            for field, value in (
+                ("prompt_tokens", 4096),
+                ("max_tokens", 256),
+                ("request_id", ""),
+            ):
                 manifest = copy.deepcopy(original)
                 manifest["scenarios"][0]["requests"][0][field] = value
                 manifest["sha256"] = manifest_digest(manifest)
@@ -89,7 +114,17 @@ class CacheWorkloadTests(unittest.TestCase):
                     load_manifest(path)
 
     def test_invalid_generator_arguments_are_rejected(self):
-        for options in ({"count": 0}, {"count": True}, {"seed": False}):
+        for options in (
+            {
+                "count": 0,
+            },
+            {
+                "count": True,
+            },
+            {
+                "seed": False,
+            },
+        ):
             with self.subTest(options=options), self.assertRaises(ValueError):
                 create_manifest(WordTokenizer(), **options)
 
@@ -97,7 +132,9 @@ class CacheWorkloadTests(unittest.TestCase):
         from transformers import AutoTokenizer
 
         try:
-            tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, revision=MODEL_REVISION, local_files_only=True)
+            tokenizer = AutoTokenizer.from_pretrained(
+                MODEL_NAME, revision=MODEL_REVISION, local_files_only=True
+            )
         except OSError:
             self.skipTest("Pinned tokenizer is not cached locally")
 
@@ -111,7 +148,20 @@ class CacheWorkloadTests(unittest.TestCase):
                     self.assertLessEqual(abs(len(ids) - 2048), 2048 * 0.05)
 
                     if scenario["primer"]:
-                        self.assertLessEqual(abs(common_prefix(ids, token_ids(tokenizer, scenario["primer"]["messages"])) / len(ids) - 0.9), 0.05)
+                        self.assertLessEqual(
+                            abs(
+                                common_prefix(
+                                    ids,
+                                    token_ids(
+                                        tokenizer, scenario["primer"]["messages"]
+                                    ),
+                                )
+                                / len(ids)
+                                - 0.9
+                            ),
+                            0.05,
+                        )
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -4,6 +4,7 @@ import modal
 
 app = modal.App("hello-modal")
 
+
 # TODO 1: Create a remote function named greet
 # It should accept name: str and return str
 @app.function()
@@ -16,6 +17,7 @@ def greet(name: str) -> str:
         f"Hello, {name}!"
     )
     return result
+
 
 # TODO 2: Create a local entrypoint named main
 # Invoke greet remotely and print the returned value

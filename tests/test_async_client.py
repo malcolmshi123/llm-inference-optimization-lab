@@ -1,21 +1,42 @@
 import json
 import unittest
 
-from bench.async_client import run_batch
+from bench.async_client import batch_statistics, run_batch
 
 
 def sse(*events):
-    return "\n\n".join(
-        "data: " + (event if isinstance(event, str) else json.dumps(event))
-        for event in events
-    ) + "\n\n"
+    return (
+        "\n\n".join(
+            "data: " + (event if isinstance(event, str) else json.dumps(event))
+            for event in events
+        )
+        + "\n\n"
+    )
 
 
-CONTENT = {"choices": [{"delta": {"content": "Hello"}}]}
-FINISH = {"choices": [{"delta": {}, "finish_reason": "stop"}]}
+CONTENT = {
+    "choices": [
+        {
+            "delta": {
+                "content": "Hello",
+            },
+        }
+    ],
+}
+FINISH = {
+    "choices": [
+        {
+            "delta": {},
+            "finish_reason": "stop",
+        }
+    ],
+}
 USAGE = {
     "choices": [],
-    "usage": {"prompt_tokens": 256, "completion_tokens": 1},
+    "usage": {
+        "prompt_tokens": 256,
+        "completion_tokens": 1,
+    },
 }
 
 
@@ -48,6 +69,46 @@ class FakeClient:
         return FakeResponse(self.body)
 
 
+class BatchStatisticsTests(unittest.TestCase):
+    def test_successful_work_is_counted_over_the_entire_batch(self):
+        summary = batch_statistics(
+            [
+                {
+                    "success": True,
+                    "completion_tokens": 20,
+                },
+                {
+                    "success": False,
+                    "completion_tokens": None,
+                },
+                {
+                    "success": True,
+                    "completion_tokens": 10,
+                },
+            ],
+            2,
+        )
+        self.assertEqual(summary["successful_requests"], 2)
+        self.assertEqual(summary["failed_requests"], 1)
+        self.assertEqual(summary["output_tokens_per_sec"], 15)
+        self.assertEqual(summary["requests_per_sec"], 1)
+
+    def test_all_failed_requests_produce_zero_completed_work(self):
+        summary = batch_statistics(
+            [
+                {
+                    "success": False,
+                    "completion_tokens": None,
+                }
+            ],
+            2,
+        )
+        self.assertEqual(summary["successful_requests"], 0)
+        self.assertEqual(summary["failed_requests"], 1)
+        self.assertEqual(summary["output_tokens_per_sec"], 0)
+        self.assertEqual(summary["requests_per_sec"], 0)
+
+
 class StreamingTests(unittest.IsolatedAsyncioTestCase):
     async def result_for(self, body):
         batch = await run_batch(FakeClient(body), ["prompt"])
@@ -62,7 +123,12 @@ class StreamingTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_saved_messages_are_sent_without_rewriting_them(self):
         client = FakeClient(sse(CONTENT, FINISH, USAGE, "[DONE]"))
-        messages = [{"role": "user", "content": "Saved document and question"}]
+        messages = [
+            {
+                "role": "user",
+                "content": "Saved document and question",
+            }
+        ]
         batch = await run_batch(client, [messages], max_tokens=128)
 
         self.assertTrue(batch["results"][0]["success"])
@@ -73,10 +139,15 @@ class StreamingTests(unittest.IsolatedAsyncioTestCase):
     async def test_complete_streams_succeed(self):
         for reason in ("stop", "length"):
             with self.subTest(finish_reason=reason):
-                finish = {"choices": [{"delta": {}, "finish_reason": reason}]}
-                result = await self.result_for(
-                    sse(CONTENT, finish, USAGE, "[DONE]")
-                )
+                finish = {
+                    "choices": [
+                        {
+                            "delta": {},
+                            "finish_reason": reason,
+                        }
+                    ],
+                }
+                result = await self.result_for(sse(CONTENT, finish, USAGE, "[DONE]"))
                 self.assertTrue(result["success"])
                 self.assertEqual(result["generated_text"], "Hello")
                 self.assertEqual(result["finish_reason"], reason)
@@ -86,7 +157,12 @@ class StreamingTests(unittest.IsolatedAsyncioTestCase):
                 self.assertGreaterEqual(result["e2e_ms"], result["ttft_ms"])
 
     async def test_incomplete_and_error_streams_fail(self):
-        error = {"error": {"message": "engine failed", "type": "server_error"}}
+        error = {
+            "error": {
+                "message": "engine failed",
+                "type": "server_error",
+            },
+        }
         cases = {
             "empty body": "",
             "partial content then EOF": sse(CONTENT),
@@ -100,7 +176,14 @@ class StreamingTests(unittest.IsolatedAsyncioTestCase):
             "no generated text": sse(FINISH, USAGE, "[DONE]"),
             "error finish reason": sse(
                 CONTENT,
-                {"choices": [{"delta": {}, "finish_reason": "error"}]},
+                {
+                    "choices": [
+                        {
+                            "delta": {},
+                            "finish_reason": "error",
+                        }
+                    ],
+                },
                 USAGE,
                 "[DONE]",
             ),
@@ -111,8 +194,14 @@ class StreamingTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_invalid_token_usage_fails(self):
         for prompt_tokens, completion_tokens in (
-            (None, 1), (256, None), (-1, 1), (256, -1),
-            (256, 0), (True, 1), (256, True), (256, 1.5),
+            (None, 1),
+            (256, None),
+            (-1, 1),
+            (256, -1),
+            (256, 0),
+            (True, 1),
+            (256, True),
+            (256, 1.5),
         ):
             with self.subTest(
                 prompt_tokens=prompt_tokens, completion_tokens=completion_tokens
@@ -124,9 +213,9 @@ class StreamingTests(unittest.IsolatedAsyncioTestCase):
                         "completion_tokens": completion_tokens,
                     },
                 }
-                self.assert_failed(await self.result_for(
-                    sse(CONTENT, FINISH, usage, "[DONE]")
-                ))
+                self.assert_failed(
+                    await self.result_for(sse(CONTENT, FINISH, usage, "[DONE]"))
+                )
 
 
 if __name__ == "__main__":

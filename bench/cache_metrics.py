@@ -12,8 +12,9 @@ COUNTERS = {
     "prefix_queries_tokens": "vllm:prefix_cache_queries_total",
     "prefix_hits_tokens": "vllm:prefix_cache_hits_total",
     "new_prefill_tokens": "vllm:request_prefill_kv_computed_tokens_sum",
-    "preemptions": "vllm:num_preemptions_total"
+    "preemptions": "vllm:num_preemptions_total",
 }
+
 
 def parse_metrics(text: str) -> dict:
     samples = {}
@@ -29,13 +30,17 @@ def parse_metrics(text: str) -> dict:
 
     return samples
 
+
 def series(samples: dict, name: str) -> dict:
-    values = {labels: value for (metric, labels), value in samples.items() if metric == name}
+    values = {
+        labels: value for (metric, labels), value in samples.items() if metric == name
+    }
 
     if any(not math.isfinite(value) or value < 0 for value in values.values()):
         raise ValueError(f"Invalid metric value: {name}")
 
     return values
+
 
 def process_identity(samples: dict) -> float:
     values = series(samples, "process_start_time_seconds")
@@ -45,11 +50,14 @@ def process_identity(samples: dict) -> float:
 
     return next(iter(values.values()))
 
+
 def cache_configuration(samples: dict, expected: bool) -> dict:
     configs = series(samples, "vllm:cache_config_info")
 
     if len(configs) != 1:
-        raise ValueError("A single cache_config_info series is required to verify the treatment")
+        raise ValueError(
+            "A single cache_config_info series is required to verify the treatment"
+        )
 
     labels, value = next(iter(configs.items()))
     config = dict(labels)
@@ -62,6 +70,7 @@ def cache_configuration(samples: dict, expected: bool) -> dict:
 
     return config
 
+
 def is_idle(samples: dict) -> bool:
     running = series(samples, "vllm:num_requests_running")
     waiting = series(samples, "vllm:num_requests_waiting")
@@ -73,6 +82,7 @@ def is_idle(samples: dict) -> bool:
         raise ValueError("Request gauges do not match the study model")
 
     return not any(running.values()) and not any(waiting.values())
+
 
 def counter_changes(before: dict, after: dict, name: str) -> dict | None:
     initial, final = series(before, name), series(after, name)
@@ -98,7 +108,10 @@ def counter_changes(before: dict, after: dict, name: str) -> dict | None:
 
     return changes
 
-def validate_completed_requests(before: dict, after: dict, requests: list[dict]) -> dict:
+
+def validate_completed_requests(
+    before: dict, after: dict, requests: list[dict]
+) -> dict:
     """Reconcile a clean measured window with the client's finish reasons."""
     if process_identity(before) != process_identity(after):
         raise ValueError("Server restarted during the metric interval")
@@ -107,9 +120,14 @@ def validate_completed_requests(before: dict, after: dict, requests: list[dict])
     changes = counter_changes(before, after, name)
 
     if changes is None:
-        raise ValueError("Completed-request counters are required for each measured interval")
+        raise ValueError(
+            "Completed-request counters are required for each measured interval"
+        )
 
-    if any(value % 1 for value in (*series(before, name).values(), *series(after, name).values())):
+    if any(
+        value % 1
+        for value in (*series(before, name).values(), *series(after, name).values())
+    ):
         raise ValueError("Completed-request counters must contain integer counts")
 
     observed = Counter()
@@ -118,26 +136,40 @@ def validate_completed_requests(before: dict, after: dict, requests: list[dict])
         reason = dict(labels).get("finished_reason")
 
         if not reason:
-            raise ValueError("Completed-request counters require finished_reason labels")
+            raise ValueError(
+                "Completed-request counters require finished_reason labels"
+            )
 
         if count:
             observed[reason] += int(count)
 
-    if any(request.get("success") is not True or request.get("finish_reason") not in ("stop", "length") for request in requests):
-        raise ValueError("Completed-request reconciliation requires successful measured requests")
+    if any(
+        request.get("success") is not True
+        or request.get("finish_reason") not in ("stop", "length")
+        for request in requests
+    ):
+        raise ValueError(
+            "Completed-request reconciliation requires successful measured requests"
+        )
 
     expected = Counter(request["finish_reason"] for request in requests)
 
     if observed != expected:
-        raise ValueError(f"Completed-request counters disagree with recorded requests: server={dict(observed)}, client={dict(expected)}")
+        raise ValueError(
+            "Completed-request counters disagree with recorded requests: "
+            f"server={dict(observed)}, client={dict(expected)}"
+        )
 
     return dict(observed)
+
 
 def interval_summary(before: dict, after: dict) -> dict:
     if process_identity(before) != process_identity(after):
         raise ValueError("Server restarted during the metric interval")
 
-    if series(before, "vllm:cache_config_info") != series(after, "vllm:cache_config_info"):
+    if series(before, "vllm:cache_config_info") != series(
+        after, "vllm:cache_config_info"
+    ):
         raise ValueError("Cache configuration changed during the metric interval")
 
     result = {}
@@ -149,18 +181,26 @@ def interval_summary(before: dict, after: dict) -> dict:
     queries, hits = result["prefix_queries_tokens"], result["prefix_hits_tokens"]
 
     if queries is not None and hits is not None:
-        if series(before, COUNTERS["prefix_queries_tokens"]).keys() != series(before, COUNTERS["prefix_hits_tokens"]).keys():
+        if (
+            series(before, COUNTERS["prefix_queries_tokens"]).keys()
+            != series(before, COUNTERS["prefix_hits_tokens"]).keys()
+        ):
             raise ValueError("Prefix query/hit labels do not match")
 
         if hits > queries:
             raise ValueError("Prefix hits exceed queries")
 
-    result["token_cache_hit_rate"] = hits / queries if queries and hits is not None else None
+    result["token_cache_hit_rate"] = (
+        hits / queries if queries and hits is not None else None
+    )
 
     return result
 
+
 def main():
-    parser = argparse.ArgumentParser(description="Inspect prefix-cache counter changes between two saved snapshots.")
+    parser = argparse.ArgumentParser(
+        description="Inspect prefix-cache counter changes between two saved snapshots."
+    )
     parser.add_argument("before", type=Path)
     parser.add_argument("after", type=Path)
     args = parser.parse_args()
@@ -168,12 +208,13 @@ def main():
     try:
         summary = interval_summary(
             parse_metrics(args.before.read_text(encoding="utf-8")),
-            parse_metrics(args.after.read_text(encoding="utf-8"))
+            parse_metrics(args.after.read_text(encoding="utf-8")),
         )
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
 
     print(json.dumps(summary, indent=2, allow_nan=False))
+
 
 if __name__ == "__main__":
     main()

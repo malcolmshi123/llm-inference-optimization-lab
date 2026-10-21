@@ -13,23 +13,30 @@ vllm_image = (
     modal.Image.from_registry("nvidia/cuda:12.9.0-devel-ubuntu22.04", add_python="3.12")
     .entrypoint([])
     .uv_pip_install(f"vllm=={VLLM_VERSION}")
-    .env({
-        "HF_HOME": HF_CACHE_PATH,
-        "VLLM_CACHE_ROOT": VLLM_CACHE_PATH,
-        **SERVER_CONFIG.environment()
-    })
+    .env(
+        {
+            "HF_HOME": HF_CACHE_PATH,
+            "VLLM_CACHE_ROOT": VLLM_CACHE_PATH,
+            **SERVER_CONFIG.environment(),
+        }
+    )
     .add_local_python_source("server_config")
 )
 
 hf_cache_vol = modal.Volume.from_name("inference-lab-hf-cache", create_if_missing=True)
-vllm_cache_vol = modal.Volume.from_name("inference-lab-vllm-cache", create_if_missing=True)
+vllm_cache_vol = modal.Volume.from_name(
+    "inference-lab-vllm-cache", create_if_missing=True
+)
 
 cache_mounts = {
     HF_CACHE_PATH: hf_cache_vol,
-    VLLM_CACHE_PATH: vllm_cache_vol
+    VLLM_CACHE_PATH: vllm_cache_vol,
 }
 
-@app.function(gpu=GPU_TYPE, image=vllm_image, volumes=cache_mounts, timeout=900, max_containers=1)
+
+@app.function(
+    gpu=GPU_TYPE, image=vllm_image, volumes=cache_mounts, timeout=900, max_containers=1
+)
 @modal.concurrent(max_inputs=8)
 @modal.web_server(port=VLLM_PORT, startup_timeout=600, requires_proxy_auth=True)
 def serve():
