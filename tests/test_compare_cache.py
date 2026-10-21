@@ -22,10 +22,12 @@ from bench.compare_cache import (
     load_run,
     summarize_scenario,
 )
+from bench.server_timings import TIMING_METRICS
 from server_config import GPU_TYPE, VLLM_VERSION, ServerConfig
 from tests.test_cache_metrics import metric_text
 from tests.test_cache_study import StudyServer
 from tests.test_cache_workloads import WordTokenizer
+from tests.test_server_timings import histogram_text
 
 
 def result(prompt_tokens, index=0, scale=1):
@@ -391,10 +393,19 @@ class CompareCacheTests(unittest.TestCase):
         self.assertIn("Round 2", completed.stdout)
         self.assertIn("failures 0/4", completed.stdout)
 
-        with (directory / "comparison.csv").open(encoding="utf-8", newline="") as handle:
+        with (directory / "comparison.csv").open(
+            encoding="utf-8", newline=""
+        ) as handle:
             rows = list(csv.DictReader(handle))
 
         self.assertEqual(len(rows), 16)
+
+        for phase in TIMING_METRICS:
+            for suffix in ("mean_ms", "observations"):
+                field = f"server_{phase}_{suffix}"
+                self.assertTrue(all(row[field] is None for row in comparison["rows"]))
+                self.assertTrue(all(row[field] == "" for row in rows))
+
         self.assertEqual(
             json.loads(rows[0]["finish_reasons"]),
             {
@@ -416,6 +427,91 @@ class CompareCacheTests(unittest.TestCase):
 
         with self.assertRaises(FileExistsError):
             export_comparison(comparison, directory)
+
+    def test_server_timing_exports_preserve_existing_metrics_and_saved_runs(self):
+        baseline = compare_runs(*self.directories)
+        saved_runs = [
+            (directory / "run.json").read_bytes() for directory in self.directories
+        ]
+
+        for directory in self.directories:
+            run = json.loads((directory / "run.json").read_text(encoding="utf-8"))
+            scale = 0.5 if run["server"]["expected_prefix_caching"] else 1
+
+            for index, scenario in enumerate(run["scenarios"]):
+                count_before = 8 + index * 10
+                count_after = count_before + sum(
+                    len(batch["results"]) for batch in scenario["batches"]
+                )
+
+                for key, count in (
+                    ("before_snapshot", count_before),
+                    ("after_snapshot", count_after),
+                ):
+                    path = directory / (scenario[key] + ".prom")
+                    timings = "".join(
+                        histogram_text(
+                            seconds=count * phase_index * 0.1 * scale,
+                            count=count,
+                            metric=metric,
+                        )
+                        for phase_index, metric in enumerate(
+                            TIMING_METRICS.values(), start=1
+                        )
+                    )
+                    path.write_text(
+                        path.read_text(encoding="utf-8") + timings, encoding="utf-8"
+                    )
+
+        comparison = compare_runs(*self.directories)
+        directory = self.root / "timing-comparison"
+        export_comparison(comparison, directory)
+        exported = json.loads(
+            (directory / "comparison.json").read_text(encoding="utf-8")
+        )
+
+        with (directory / "comparison.csv").open(
+            encoding="utf-8", newline=""
+        ) as handle:
+            rows = list(csv.DictReader(handle))
+
+        self.assertEqual(exported, comparison)
+        self.assertEqual(comparison["changes"], baseline["changes"])
+
+        for before, after, csv_row in zip(baseline["rows"], exported["rows"], rows):
+            for field, value in before.items():
+                if not field.startswith("server_"):
+                    self.assertEqual(after[field], value)
+
+            scale = 0.5 if after["cache"] == "on" else 1
+
+            for phase_index, phase in enumerate(TIMING_METRICS, start=1):
+                mean = f"server_{phase}_mean_ms"
+                count = f"server_{phase}_observations"
+                self.assertAlmostEqual(after[mean], phase_index * 100 * scale)
+                self.assertAlmostEqual(float(csv_row[mean]), after[mean])
+                self.assertEqual(after[count], 4)
+                self.assertEqual(int(csv_row[count]), 4)
+
+        self.assertEqual(
+            [(directory / "run.json").read_bytes() for directory in self.directories],
+            saved_runs,
+        )
+
+    def test_comparison_rejects_invalid_server_timing_windows(self):
+        directory = self.directories[0]
+        metric = TIMING_METRICS["queue"]
+
+        for suffix, count in (("before", 8), ("after", 7)):
+            path = directory / f"unique-c1-{suffix}.prom"
+            path.write_text(
+                path.read_text(encoding="utf-8")
+                + histogram_text(seconds=1, count=count, metric=metric),
+                encoding="utf-8",
+            )
+
+        with self.assertRaisesRegex(ValueError, "Counter decreased"):
+            compare_runs(*self.directories)
 
     def test_zero_latency_baseline_has_no_percentage_change(self):
         self.edit_run(

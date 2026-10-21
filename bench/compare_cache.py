@@ -18,6 +18,7 @@ from bench.cache_metrics import (
 )
 from bench.cache_study import startup_command, write_json
 from bench.cache_workloads import SCENARIOS, load_manifest
+from bench.server_timings import timing_summary
 
 LATENCIES = ("ttft_p50_ms", "ttft_p95_ms", "e2e_p50_ms", "e2e_p95_ms")
 PERFORMANCE = (*LATENCIES, "requests_per_s", "output_tokens_per_s")
@@ -321,7 +322,13 @@ def load_run(directory: Path, expected: bool) -> tuple:
             samples[after],
             [request for batch in scenario["batches"] for request in batch["results"]],
         )
-        summaries.append(summarize_scenario(scenario, metrics))
+        summary = summarize_scenario(scenario, metrics)
+
+        for phase, timing in timing_summary(samples[before], samples[after]).items():
+            summary[f"server_{phase}_mean_ms"] = timing["mean_ms"]
+            summary[f"server_{phase}_observations"] = timing["observations"]
+
+        summaries.append(summary)
 
     return run, manifest, summaries
 
@@ -453,6 +460,10 @@ def compare_runs(
         "and output throughput also count successful requests only.",
         "Throughput uses the full measured elapsed time, including "
         "failed-request time and client checkpoint overhead.",
+        "Server timing means use histogram sum/count deltas with observation "
+        "counts reported separately. TPOT averages per-request observations. "
+        "These are not client percentiles or GPU kernel timings, and the "
+        "server phases need not sum to client E2E latency.",
         "Warmup and priming are excluded. Missing telemetry is unavailable. "
         "No bootstrap confidence intervals are computed.",
         "GPU identity and server software versions are declared settings "
@@ -637,7 +648,9 @@ def export_comparison(comparison: dict, directory: Path):
     directory.mkdir(parents=True, exist_ok=False)
     write_json(directory / "comparison.json", comparison)
 
-    with (directory / "comparison.csv").open("w", encoding="utf-8", newline="") as handle:
+    with (directory / "comparison.csv").open(
+        "w", encoding="utf-8", newline=""
+    ) as handle:
         writer = csv.DictWriter(handle, fieldnames=list(comparison["rows"][0]))
         writer.writeheader()
         writer.writerows(
