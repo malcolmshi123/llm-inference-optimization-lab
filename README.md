@@ -336,7 +336,7 @@ These tests cover server configuration, JSON/CSV persistence, streaming-response
 
 ## Prefix-Cache Study
 
-The `cache-study` branch adds a focused document/Q&A experiment. Its runner and offline tests are implemented; live measurements and the comparison/figure command remain pending. The historical scheduling findings above are unchanged.
+The `cache-study` branch adds a focused document/Q&A experiment. Its runner, comparison command, figures, and offline tests are implemented. Live measurements and new empirical findings remain pending. The historical scheduling findings above are unchanged.
 
 Prepare two saved workloads, with 32 requests per scenario and different seeds between rounds:
 
@@ -371,6 +371,23 @@ python -m bench.cache_metrics metrics/metrics-before-long.txt metrics/metrics-af
 
 This reports 16,384 prefix queries, zero hits, 16,384 newly computed prefill tokens, and zero preemptions. Missing counters remain unavailable. Counter resets, changed process identities, and incompatible labels are rejected. New cache-study measurements must be collected before adding performance conclusions.
 
+After completing all four fresh treatment sessions, compare them without redeploying the server:
+
+```bash
+python -m bench.compare_cache \
+  --round-1-off results/cache-study/round-1-off \
+  --round-1-on results/cache-study/round-1-on \
+  --round-2-off results/cache-study/round-2-off \
+  --round-2-on results/cache-study/round-2-on \
+  --output-dir figures/cache-study
+```
+
+The comparison validates identical workloads within each pair, distinct seeds between rounds, matching client versions and declared server controls, four distinct server process identities, and the off→on/on→off execution order. It recomputes counter deltas from raw snapshots and rejects partial sessions, request mismatches, and inconsistent preparation or measurement phases. Dirty client worktrees are flagged because a shared Git revision cannot prove identical uncommitted code.
+
+The output contains `comparison.json`, `comparison.csv`, and two figures exported as PNG and SVG: `01_cache_latency` and `02_cache_prefill`. JSON preserves per-round cache-on percentage changes; CSV contains each treatment's latency p50/p95, completed-work throughput, actual token totals, failures, finish reasons, and metric changes. Throughput uses the full measured elapsed time. Latency percentiles and token totals use successful requests; failures remain in the attempted-request count. Existing output directories are not overwritten.
+
+Both rounds remain separate. Two paired rounds support an exploratory comparison; requests within one session are not independent replications. No confidence intervals or pooled speedup are reported. Missing telemetry remains unavailable and is marked `N/A` in the cache figure. Workloads with fewer than the planned 32 requests per scenario are identified as pilots. Publish findings only after collecting live evidence; offline figure tests use synthetic data.
+
 ## Repository Structure
 
 ```text
@@ -386,6 +403,7 @@ This reports 16,384 prefix queries, zero hits, 16,384 newly computed prefill tok
 │   ├── cache_workloads.py
 │   ├── cache_metrics.py
 │   ├── cache_study.py
+│   ├── compare_cache.py
 │   ├── batch_results.py
 │   └── compare_batches.py
 ├── tests/
@@ -395,6 +413,7 @@ This reports 16,384 prefix queries, zero hits, 16,384 newly computed prefill tok
 │   ├── test_cache_metrics.py
 │   ├── test_cache_study.py
 │   ├── test_compare_batches.py
+│   ├── test_compare_cache.py
 │   └── test_server_config.py
 ├── results/
 │   ├── 20261019_014825.json
