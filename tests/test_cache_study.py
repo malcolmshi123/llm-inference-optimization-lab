@@ -26,6 +26,7 @@ class StudyServer:
         self.tokens = 0
         self.hits = 0
         self.measured = 0
+        self.completed = 0
         self.cached = set()
         self.measured_requests = {
             request["messages"][0]["content"]: request
@@ -39,7 +40,8 @@ class StudyServer:
                 hits=self.hits,
                 prefill=self.tokens - self.hits,
                 identity=101 if self.restart and self.measured else 100,
-                expected=self.expected
+                expected=self.expected,
+                finished={"stop": self.completed}
             )
 
             if self.busy_reads:
@@ -68,6 +70,7 @@ class StudyServer:
             if self.measured == self.fail_request:
                 return httpx.Response(200, text='data: {"error": {"message": "test failure"}}\n\n')
 
+        self.completed += 1
         events = [
             {"choices": [{"delta": {"content": "Answer"}}]},
             {"choices": [{"delta": {}, "finish_reason": "stop"}]},
@@ -144,6 +147,30 @@ class CacheStudyTests(unittest.IsolatedAsyncioTestCase):
         self.assertFalse(scenario["batches"][-1]["results"][0]["success"])
         self.assertIn("metrics", scenario)
         self.assertEqual(len(saved["scenarios"]), 1)
+
+    async def test_extra_server_request_fails_and_retains_measured_results(self):
+        server = StudyServer(self.manifest)
+
+        def contaminated(request):
+            response = server(request)
+            if request.url.path == "/metrics" and server.measured:
+                lines = response.text.splitlines()
+                lines = [
+                    line.rsplit(" ", 1)[0] + f" {server.completed + 1}"
+                    if line.startswith("vllm:request_success_total{") else line
+                    for line in lines
+                ]
+                return httpx.Response(200, text="\n".join(lines) + "\n")
+            return response
+
+        with self.assertRaisesRegex(ValueError, "Completed-request counters disagree"):
+            await self.execute(contaminated)
+
+        saved = json.loads((self.root / "session" / "run.json").read_text(encoding="utf-8"))
+        self.assertEqual(saved["status"], "failed")
+        self.assertEqual(saved["scenarios"][0]["status"], "failed")
+        self.assertEqual(len(saved["scenarios"][0]["batches"]), 2)
+        self.assertIn("unique-c1-after", saved["snapshots"])
 
     async def test_wrong_running_treatment_stops_before_warmup(self):
         server = StudyServer(self.manifest, expected=False)

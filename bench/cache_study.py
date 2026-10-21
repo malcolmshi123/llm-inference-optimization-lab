@@ -16,7 +16,7 @@ from pathlib import Path
 import httpx
 
 from bench.async_client import positive_int, run_batch
-from bench.cache_metrics import cache_configuration, interval_summary, is_idle, parse_metrics, process_identity
+from bench.cache_metrics import cache_configuration, interval_summary, is_idle, parse_metrics, process_identity, validate_completed_requests
 from bench.cache_workloads import create_manifest, load_manifest
 from bench.workloads import generate_prompt
 from server_config import GPU_TYPE, VLLM_VERSION, ServerConfig
@@ -226,6 +226,7 @@ async def run_study(client, manifest: dict, *, directory: Path, expected: bool, 
                 scenario["status"] = "failed"
                 raise ValueError("Measured requests failed; retained partial results")
 
+            validate_completed_requests(before, after, [request for batch in scenario["batches"] for request in batch["results"]])
             scenario["status"] = "completed"
             save_run(directory, run)
 

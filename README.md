@@ -359,6 +359,8 @@ python -m bench.cache_study run \
 
 The runner verifies the cache flag and memory target through `/metrics`, warms the engine with eight unrelated requests, primes each shared prefix, and captures snapshots around measured batches. Cache-off receives the same primers as cache-on. The startup log provides command evidence; GPU identity and software versions on the server remain declared deployment settings rather than independent runtime measurements.
 
+Each measured window must also reconcile the `vllm:request_success_total` deltas, grouped by `finished_reason`, with the recorded successful requests. The runner and offline comparison reject missing counters, mismatched counts or finish reasons, and unexpected server-side completions such as aborts or errors. This checks the saved snapshots without changing historical result files; matching aggregate counts cannot prove request identity.
+
 Run four fresh treatment sessions in order: round 1 off→on, then round 2 on→off. Replay the same manifest within each round. For each session after the first, pass `--previous-run` with the preceding session's `run.json` to reject a reused server process. Stop and redeploy between sessions; changing the expected flag does not change the server.
 
 Each output directory contains `workload.json`, `run.json`, `requests.csv`, `server.log`, and raw `.prom` snapshots. Warmup and priming are stored separately from measured batches and CSV rows. Checkpoints retain completed batches and failures if the session stops. Do not resume a partially measured session as a full comparison; use a new directory and a fresh server.

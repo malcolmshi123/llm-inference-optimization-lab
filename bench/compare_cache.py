@@ -8,7 +8,7 @@ from pathlib import Path
 
 import numpy as np
 
-from bench.cache_metrics import cache_configuration, interval_summary, is_idle, parse_metrics, process_identity
+from bench.cache_metrics import cache_configuration, interval_summary, is_idle, parse_metrics, process_identity, validate_completed_requests
 from bench.cache_study import startup_command, write_json
 from bench.cache_workloads import SCENARIOS, load_manifest
 from server_config import GPU_TYPE, VLLM_VERSION
@@ -218,6 +218,7 @@ def load_run(directory: Path, expected: bool) -> tuple:
         if scenario.get("metrics") != metrics:
             raise ValueError("Saved metric deltas disagree with raw snapshots")
 
+        validate_completed_requests(samples[before], samples[after], [request for batch in scenario["batches"] for request in batch["results"]])
         summaries.append(summarize_scenario(scenario, metrics))
 
     return run, manifest, summaries

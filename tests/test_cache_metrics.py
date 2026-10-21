@@ -1,12 +1,12 @@
 import unittest
 from pathlib import Path
 
-from bench.cache_metrics import cache_configuration, interval_summary, is_idle, parse_metrics, process_identity
+from bench.cache_metrics import cache_configuration, interval_summary, is_idle, parse_metrics, process_identity, validate_completed_requests
 from server_config import MODEL_NAME
 
 ROOT = Path(__file__).resolve().parents[1]
 
-def metric_text(*, tokens=0, hits=0, prefill=0, preemptions=0, identity=100, expected=True):
+def metric_text(*, tokens=0, hits=0, prefill=0, preemptions=0, identity=100, expected=True, finished=None):
     labels = f'model_name="{MODEL_NAME}",engine="0"'
 
     return "\n".join([
@@ -18,9 +18,55 @@ def metric_text(*, tokens=0, hits=0, prefill=0, preemptions=0, identity=100, exp
         f"vllm:prefix_cache_hits_total{{{labels}}} {hits}",
         f"vllm:request_prefill_kv_computed_tokens_sum{{{labels}}} {prefill}",
         f"vllm:num_preemptions_total{{{labels}}} {preemptions}"
+    ] + [
+        f'vllm:request_success_total{{{labels},finished_reason="{reason}"}} {count}'
+        for reason, count in (finished if finished is not None else {"stop": 0}).items()
     ]) + "\n"
 
 class CacheMetricsTests(unittest.TestCase):
+    def test_completed_requests_exclude_baseline_and_match_finish_reasons(self):
+        before = parse_metrics(metric_text(finished={"stop": 9, "length": 8, "abort": 0}))
+        after = parse_metrics(metric_text(finished={"stop": 10, "length": 9, "abort": 0}))
+        requests = [{"success": True, "finish_reason": reason} for reason in ("stop", "length")]
+
+        self.assertEqual(validate_completed_requests(before, after, requests), {"stop": 1, "length": 1})
+
+    def test_missing_contaminated_or_incomplete_request_windows_are_rejected(self):
+        before = parse_metrics(metric_text(finished={"stop": 8, "length": 0, "abort": 0}))
+        requests = [{"success": True, "finish_reason": "stop"}]
+
+        for finished in (
+            {}, {"stop": 8, "length": 0, "abort": 0},
+            {"stop": 10, "length": 0, "abort": 0},
+            {"stop": 8, "length": 1, "abort": 0},
+            {"stop": 8, "length": 0, "abort": 1},
+            {"stop": 9, "length": 0, "abort": 1},
+            {"stop": 7, "length": 0, "abort": 0},
+            {"stop": 8.5, "length": 0, "abort": 0},
+        ):
+            with self.subTest(finished=finished), self.assertRaises(ValueError):
+                validate_completed_requests(before, parse_metrics(metric_text(finished=finished)), requests)
+
+    def test_request_counter_identity_labels_and_creation_are_checked(self):
+        before_text = metric_text(finished={"stop": 8})
+        after_text = metric_text(finished={"stop": 9})
+        requests = [{"success": True, "finish_reason": "stop"}]
+
+        for changed in (
+            after_text.replace("process_start_time_seconds 100", "process_start_time_seconds 101"),
+            after_text.replace('finished_reason="stop"', 'finished_reason="length"'),
+            after_text.replace('finished_reason="stop"', 'extra="changed",finished_reason="stop"'),
+            after_text + 'vllm:request_success_created{engine="0"} 101\n',
+            after_text.replace(f'model_name="{MODEL_NAME}"', 'model_name="other"'),
+            after_text.replace(',finished_reason="stop"', ''),
+        ):
+            with self.subTest(changed=changed), self.assertRaises(ValueError):
+                validate_completed_requests(parse_metrics(before_text), parse_metrics(changed), requests)
+
+        missing_reason = before_text.replace(',finished_reason="stop"', '')
+        with self.assertRaisesRegex(ValueError, "finished_reason"):
+            validate_completed_requests(parse_metrics(missing_reason), parse_metrics(missing_reason), [])
+
     def test_historical_eight_request_diagnostic(self):
         before = parse_metrics((ROOT / "metrics" / "metrics-before-long.txt").read_text(encoding="utf-8"))
         after = parse_metrics((ROOT / "metrics" / "metrics-after-long.txt").read_text(encoding="utf-8"))

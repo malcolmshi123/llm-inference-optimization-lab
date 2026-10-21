@@ -1,6 +1,7 @@
 import argparse
 import json
 import math
+from collections import Counter
 from pathlib import Path
 
 from prometheus_client.parser import text_string_to_metric_families
@@ -73,6 +74,65 @@ def is_idle(samples: dict) -> bool:
 
     return not any(running.values()) and not any(waiting.values())
 
+def counter_changes(before: dict, after: dict, name: str) -> dict | None:
+    initial, final = series(before, name), series(after, name)
+
+    if not initial or not final:
+        return None
+
+    if initial.keys() != final.keys():
+        raise ValueError(f"Incompatible metric labels: {name}")
+
+    if any(dict(labels).get("model_name") != MODEL_NAME for labels in initial):
+        raise ValueError(f"Counter does not match the study model: {name}")
+
+    created = name.removesuffix("_total").removesuffix("_sum") + "_created"
+
+    if series(before, created) != series(after, created):
+        raise ValueError(f"Counter creation time changed: {name}")
+
+    changes = {labels: final[labels] - value for labels, value in initial.items()}
+
+    if any(value < 0 for value in changes.values()):
+        raise ValueError(f"Counter decreased: {name}")
+
+    return changes
+
+def validate_completed_requests(before: dict, after: dict, requests: list[dict]) -> dict:
+    """Reconcile a clean measured window with the client's finish reasons."""
+    if process_identity(before) != process_identity(after):
+        raise ValueError("Server restarted during the metric interval")
+
+    name = "vllm:request_success_total"
+    changes = counter_changes(before, after, name)
+
+    if changes is None:
+        raise ValueError("Completed-request counters are required for each measured interval")
+
+    if any(value % 1 for value in (*series(before, name).values(), *series(after, name).values())):
+        raise ValueError("Completed-request counters must contain integer counts")
+
+    observed = Counter()
+
+    for labels, count in changes.items():
+        reason = dict(labels).get("finished_reason")
+
+        if not reason:
+            raise ValueError("Completed-request counters require finished_reason labels")
+
+        if count:
+            observed[reason] += int(count)
+
+    if any(request.get("success") is not True or request.get("finish_reason") not in ("stop", "length") for request in requests):
+        raise ValueError("Completed-request reconciliation requires successful measured requests")
+
+    expected = Counter(request["finish_reason"] for request in requests)
+
+    if observed != expected:
+        raise ValueError(f"Completed-request counters disagree with recorded requests: server={dict(observed)}, client={dict(expected)}")
+
+    return dict(observed)
+
 def interval_summary(before: dict, after: dict) -> dict:
     if process_identity(before) != process_identity(after):
         raise ValueError("Server restarted during the metric interval")
@@ -83,29 +143,8 @@ def interval_summary(before: dict, after: dict) -> dict:
     result = {}
 
     for field, name in COUNTERS.items():
-        initial, final = series(before, name), series(after, name)
-
-        if not initial or not final:
-            result[field] = None
-            continue
-
-        if initial.keys() != final.keys():
-            raise ValueError(f"Incompatible metric labels: {name}")
-
-        if any(dict(labels).get("model_name") != MODEL_NAME for labels in initial):
-            raise ValueError(f"Counter does not match the study model: {name}")
-
-        created = name.removesuffix("_total").removesuffix("_sum") + "_created"
-
-        if series(before, created) != series(after, created):
-            raise ValueError(f"Counter creation time changed: {name}")
-
-        changes = [final[labels] - value for labels, value in initial.items()]
-
-        if any(value < 0 for value in changes):
-            raise ValueError(f"Counter decreased: {name}")
-
-        result[field] = sum(changes)
+        changes = counter_changes(before, after, name)
+        result[field] = sum(changes.values()) if changes is not None else None
 
     queries, hits = result["prefix_queries_tokens"], result["prefix_hits_tokens"]
 

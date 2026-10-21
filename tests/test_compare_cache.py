@@ -5,6 +5,7 @@ import json
 import subprocess
 import sys
 import unittest
+from collections import Counter
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -67,9 +68,10 @@ def create_run(directory: Path, manifest: dict, *, expected: bool, session: int)
         "scenarios": []
     }
     tokens, hits = 0, 0
+    completed = Counter({"stop": 0})
 
     def snapshot(name, seconds):
-        text = metric_text(tokens=tokens, hits=hits, prefill=tokens - hits, identity=identity, expected=expected)
+        text = metric_text(tokens=tokens, hits=hits, prefill=tokens - hits, identity=identity, expected=expected, finished=completed)
         (directory / (name + ".prom")).write_text(text, encoding="utf-8")
         run["snapshots"][name] = {"path": name + ".prom", "captured_at": when(seconds)}
         run["server"]["observed_cache_config"] = cache_configuration(parse_metrics(text), expected)
@@ -78,6 +80,7 @@ def create_run(directory: Path, manifest: dict, *, expected: bool, session: int)
 
     snapshot("session-start", 0.05)
     tokens += 800
+    completed["stop"] += 8
     snapshot("warmup-after", 0.6)
 
     for index, source in enumerate(manifest["scenarios"], start=1):
@@ -86,6 +89,7 @@ def create_run(directory: Path, manifest: dict, *, expected: bool, session: int)
 
         if source["primer"]:
             tokens += source["primer"]["prompt_tokens"]
+            completed["stop"] += 1
             primer = {
                 "results": [result(source["primer"]["prompt_tokens"])],
                 "started_at": when(seconds + 0.01),
@@ -97,6 +101,7 @@ def create_run(directory: Path, manifest: dict, *, expected: bool, session: int)
         requests = [result(request["prompt_tokens"], index, 0.5 if expected else 1) for index, request in enumerate(source["requests"])]
         tokens += sum(request["prompt_tokens"] for request in source["requests"])
         hits += sum(request["shared_prefix_tokens"] or 0 for request in source["requests"]) if expected else 0
+        completed["stop"] += len(requests)
         after = snapshot(after_name, seconds + 2.3)
         batches = []
 
@@ -236,6 +241,14 @@ class CompareCacheTests(unittest.TestCase):
         self.edit_run(1, lambda run: run["scenarios"][0]["metrics"].update(new_prefill_tokens=0))
 
         with self.assertRaisesRegex(ValueError, "raw snapshots"):
+            compare_runs(*self.directories)
+
+    def test_completed_request_contamination_is_rejected_from_raw_snapshots(self):
+        path = self.directories[0] / "unique-c1-after.prom"
+        text = path.read_text(encoding="utf-8")
+        path.write_text(text.replace('finished_reason="stop"} 12', 'finished_reason="stop"} 13'), encoding="utf-8")
+
+        with self.assertRaisesRegex(ValueError, "Completed-request counters disagree"):
             compare_runs(*self.directories)
 
     def test_request_ids_and_duration_must_match_the_saved_work(self):
