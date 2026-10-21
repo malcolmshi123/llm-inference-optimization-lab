@@ -306,7 +306,7 @@ python -m bench.compare_batches \
   results/20261019_030158.json
 ```
 
-The comparison utility validates the datasets, computes latency percentiles and mean throughput, reports percentage differences, and analyzes within-batch TTFT gaps. The historical `python -m bench.compare` command remains available, and imports from `bench.results` still use the batch result writers.
+The comparison utility validates the datasets, computes latency percentiles and mean throughput, reports percentage differences, and analyzes within-batch TTFT gaps. Use `bench.compare_batches` for comparisons and `bench.batch_results` for JSON/CSV persistence.
 
 ### 6. Regenerate Figures
 
@@ -332,7 +332,7 @@ From the repository root with local dependencies installed:
 python -m unittest discover -s tests -v
 ```
 
-These tests cover server configuration, JSON/CSV persistence, streaming-response validation, and compatibility with historical datasets and commands. They run locally without a Modal deployment or GPU.
+These tests cover server configuration, JSON/CSV persistence, streaming-response validation, and comparison of the historical datasets. They run locally without a Modal deployment or GPU.
 
 ## Repository Structure
 
@@ -345,13 +345,11 @@ These tests cover server configuration, JSON/CSV persistence, streaming-response
 │   ├── async_client.py
 │   ├── workloads.py
 │   ├── batch_results.py
-│   ├── compare_batches.py
-│   ├── results.py
-│   └── compare.py
+│   └── compare_batches.py
 ├── tests/
 │   ├── test_async_client.py
 │   ├── test_batch_results.py
-│   ├── test_compatibility.py
+│   ├── test_compare_batches.py
 │   └── test_server_config.py
 ├── results/
 │   ├── 20261019_014825.json
