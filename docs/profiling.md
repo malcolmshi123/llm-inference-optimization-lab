@@ -245,6 +245,25 @@ Open the GPU-containing `.json.gz` files identified by each `trace-check.json` i
 
 Retain the raw traces and receipts. Kernel-event presence does not prove that every expected operation was captured, nor does a profile establish an uninstrumented speedup. Keep these captures separate from the published cache-study results. The driver leaves `trace_files_verified` false; the separate receipt records the download check without rewriting the original capture record.
 
+## Offline analysis
+
+After downloading both captures, run this locally. It does not contact Modal or allocate a GPU. Use a new output directory: existing outputs are not overwritten.
+
+```bash
+"$PY" -m bench.profile_summary \
+  --off "$PROFILE_DIR/shared-c8-off-01" \
+  --on "$PROFILE_DIR/shared-c8-on-01" \
+  --output-dir "$PROFILE_DIR/comparison"
+```
+
+The export contains `summary.json`, `kernels.csv`, `annotations.csv`, and `01_gpu_timeline.png` / `.svg`. Kernel names remain complete in CSV and JSON. The loader revalidates the selected requests, raw metric windows, fresh server identities, observed GPU properties, trace hashes, receipt kernel counts, and coverage of downloaded trace files. It supports one GPU worker trace per capture, with CPU-only frontend traces retained in the inventory. Annotated context tokens must reconcile with available new-prefill counters.
+
+Chrome JSON `ts` and `dur` use microseconds even when `displayTimeUnit` is `ms`; the summarizer converts durations to milliseconds. Summed kernel durations can double-count overlap. The interval union merges overlap on the single GPU, while the span runs from the first kernel start to the final kernel end. Neither measures SM utilization. The plot coalesces gaps below 0.5 ms only for display; exact sums, spans, and union durations are preserved. [Chrome trace format](https://perfetto.dev/docs/getting-started/other-formats)
+
+vLLM 0.21 labels each worker execution with context request/token counts and generation request/token counts. A context request has not yet generated an output token, so later chunks of prefill remain context work. The analysis labels host scopes as `context_only`, `mixed`, `generation_only`, or `empty`, and exports their original names and counts. These are host ranges around model execution, not GPU phase durations. GPU kernels are not assigned to a phase by overlapping CPU timestamps. [Worker annotations](https://github.com/vllm-project/vllm/blob/v0.21.0/vllm/v1/worker/gpu_worker.py#L682), [iteration counts](https://github.com/vllm-project/vllm/blob/v0.21.0/vllm/v1/utils.py#L433)
+
+See the [README case study](../README.md#gpu-profiling-case-study) for interpretation. Preserve the raw captures and receipts; analysis outputs do not rewrite them or change the original benchmark comparison.
+
 ## Recovery and returning to benchmarks
 
 If the shell closes or automatic shutdown reports an error, stop the app explicitly:

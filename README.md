@@ -50,7 +50,31 @@ The same saved measurement windows contain queue, prefill, decode, and time-per-
 
 At concurrency 1, shared-prefix prefill means fell by approximately 83–84%, while decode means and TPOT stayed nearly unchanged. Decode remained over two seconds per request, consistent with a smaller E2E improvement than TTFT improvement. At concurrency 8, cache-on shared-prefix windows also showed queue means falling from approximately 512–515 ms to below 0.1 ms, plus lower decode means and TPOT. These observations are consistent with reduced prefill work changing contention among requests; they do not isolate GPU execution or prove a particular scheduling mechanism.
 
-Unique-prefix windows recorded no cache hits and no corresponding prefill reduction: server prefill means were approximately unchanged or higher with cache-on, even where client median TTFT improved. This reinforces the evidence of session variability. Server histogram means are distinct from client medians and do not provide an exact decomposition of those medians. TPOT averages per-request observations, and decode durations also depend on generated output length. The phases are not GPU kernel timings; no GPU timeline was captured.
+Unique-prefix windows recorded no cache hits and no corresponding prefill reduction: server prefill means were approximately unchanged or higher with cache-on, even where client median TTFT improved. This reinforces the evidence of session variability. Server histogram means are distinct from client medians and do not provide an exact decomposition of those medians. TPOT averages per-request observations, and decode durations also depend on generated output length. These are server phase means; the separate diagnostic pair below adds GPU traces.
+
+### GPU Profiling Case Study
+
+A separate cache-off/cache-on pair profiled the same eight shared-prefix requests at concurrency 8, using fresh server processes. Both worker traces report **NVIDIA A10** in their device metadata. The downloaded traces were verified against SHA-256 receipts and reconciled with raw request counters and cache metrics.
+
+| Diagnostic observation | Cache off | Cache on |
+|---|---:|---:|
+| Newly computed prefill / annotated context tokens | 16,384 | 1,792 |
+| Host iterations containing context work | 9 | 4 |
+| GPU kernel events | 70,472 | 72,663 |
+| Summed GPU kernel duration | 5,188.9 ms | 3,328.7 ms |
+| Union of GPU kernel intervals | 5,184.8 ms | 3,324.4 ms |
+| First-to-last GPU kernel span | 5,224.8 ms | 3,363.2 ms |
+| Generated output tokens | 879 | 882 |
+
+![GPU kernel activity and host execution scopes for the diagnostic profiling pair](inference-runs/profiling/comparison/01_gpu_timeline.png)
+
+Cache-on reused 89.1% of input tokens. Context work appeared in one context-only and three mixed context/generation host iterations, compared with one context-only and eight mixed iterations with cache-off. Their annotated context-token totals exactly match the measured new-prefill counters. These iteration counts include chunked prefill and are not request counts.
+
+The kernel table shows a change in execution mix. For example, the large-tile `cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8` kernel fell from 864 calls / 1,410.4 ms to 72 calls / 62.1 ms. Meanwhile, the `ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x6_tn` kernel increased from 9,000 calls / 1,311.3 ms to 9,432 calls / 1,373.6 ms. Lower total kernel duration alongside a higher overall kernel count shows why counting launches alone does not characterize GPU work. The observations are consistent with reduced prefill computation changing the kernel mix.
+
+Host annotations describe CPU execution scopes; asynchronous GPU work can outlive them. The analysis keeps the two lanes separate and does not assign GPU phase durations by timestamp overlap. GPU gaps below 0.5 ms are merged for display only; exact duration totals remain in the summary. Neither the summed durations nor their interval union measures SM utilization. This is one instrumented batch per treatment, with slightly different output lengths and fixed off→on order; it is diagnostic evidence, not an additional benchmark speedup estimate. The original 512-request comparison is unchanged.
+
+[Profiling summary](inference-runs/profiling/comparison/summary.json) · [Full kernel names and durations](inference-runs/profiling/comparison/kernels.csv) · [Execution annotations](inference-runs/profiling/comparison/annotations.csv) · [Reproduce the offline analysis](docs/profiling.md#offline-analysis)
 
 ## Historical Scheduling Findings (L4)
 
@@ -306,7 +330,7 @@ This adds vLLM's `--profiler-config` for PyTorch Profiler and mounts the persist
 
 Wait for `/stop_profile` to finish flushing and for the trace files to appear on the Volume before stopping the deployment. Modal commits Volume changes in the background and at container shutdown. Download completed traces with `python -m modal volume get inference-lab-profiles <session-label> <local-directory> --env main`. See [Modal Volume persistence](https://modal.com/docs/guide/volumes#background-commits) and [Volume CLI commands](https://modal.com/docs/reference/cli/volume).
 
-Use a fresh label for each treatment and retry so old and new traces remain distinguishable. Profiling captures belong outside the measured cache-study sessions: profiling adds overhead, and the cache-study runner rejects startup commands containing profiling flags. Before returning to normal benchmarks, unset `INFERENCE_LAB_PROFILE_SESSION` and redeploy. No profiling measurements are included in the current results.
+Use a fresh label for each treatment and retry so old and new traces remain distinguishable. Profiling captures belong outside the measured cache-study sessions: profiling adds overhead, and the cache-study runner rejects startup commands containing profiling flags. Before returning to normal benchmarks, unset `INFERENCE_LAB_PROFILE_SESSION` and redeploy. The profiling pair is separate from the 512-request benchmark comparison.
 
 `bench.profile_capture` captures one treatment against an already ready profiling deployment. It reuses the first eight `shared-c8` requests from a saved cache-study manifest; manifests with fewer than eight requests per scenario are rejected. After eight unrelated warmup requests and one prefix-primer request, it starts profiling, sends one concurrent eight-request batch, and stops profiling. Preparation is outside the trace.
 

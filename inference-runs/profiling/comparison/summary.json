@@ -1,0 +1,3614 @@
+{
+  "schema_version": 1,
+  "kind": "profile_summary",
+  "notes": [
+    "One profiled batch per treatment; output lengths can differ. No benchmark speedup is estimated.",
+    "Kernel totals sum event durations and may double-count overlap. Union duration merges overlapping kernel intervals on one GPU; neither is SM utilization.",
+    "GPU gaps under 0.5 ms are merged for timeline display only; exact kernel sums, spans, and union durations are unchanged.",
+    "Chrome JSON ts/dur are microseconds, regardless of displayTimeUnit. Timelines are aligned independently within each worker trace.",
+    "Execution annotations are host CPU scopes. Context-only, mixed, and generation-only labels describe scheduled work, not GPU phase durations. Kernels are not attributed to phases by timestamp overlap.",
+    "Context request counts can repeat across chunked prefill iterations; generation tokens are scheduled tokens, not necessarily emitted completion tokens."
+  ],
+  "captures": [
+    {
+      "cache": "off",
+      "input": "C:\\Users\\mshi\\vscode-ws\\llm-inference-optimization-lab\\inference-runs\\profiling\\shared-c8-off-01",
+      "manifest_sha256": "3ec2c0e2ced6cb49bf456e50c0fe572d8ab071cf43d7eaa874d2b6f44605647b",
+      "request_ids": [
+        "shared-c8-0a59069a06f0a176",
+        "shared-c8-5b0dc0fcde1317d4",
+        "shared-c8-0e3c3a99583f568e",
+        "shared-c8-3a2dcfc0f02458fc",
+        "shared-c8-02256644f74b8977",
+        "shared-c8-131c623c0173d241",
+        "shared-c8-7e2769d646fa39ab",
+        "shared-c8-d208087c3aaade67"
+      ],
+      "server_identity": 1792618708.13,
+      "completion_tokens": 879,
+      "metrics": {
+        "prefix_queries_tokens": 0.0,
+        "prefix_hits_tokens": 0.0,
+        "new_prefill_tokens": 16384.0,
+        "preemptions": 0.0,
+        "token_cache_hit_rate": null
+      },
+      "trace_inventory": [
+        {
+          "path": "traces/shared-c8-off-01/modal_4.async_llm.1792618855953560685.pt.trace.json.gz",
+          "sha256": "e456da53a58975359244cd7a1a047f493b4ca66b9ecc357a1c3bb89038df06ce",
+          "gpu_kernel_events": 0,
+          "device_properties": [
+            {
+              "id": 0,
+              "name": "NVIDIA A10",
+              "totalGlobalMem": 23684186112,
+              "computeMajor": 8,
+              "computeMinor": 6,
+              "maxThreadsPerBlock": 1024,
+              "maxThreadsPerMultiprocessor": 1536,
+              "regsPerBlock": 65536,
+              "warpSize": 32,
+              "sharedMemPerBlock": 49152,
+              "numSms": 72,
+              "regsPerMultiprocessor": 65536,
+              "sharedMemPerBlockOptin": 101376,
+              "sharedMemPerMultiprocessor": 102400
+            }
+          ]
+        },
+        {
+          "path": "traces/shared-c8-off-01/rank0.1792618856683721821.pt.trace.json.gz",
+          "sha256": "b34897b6c0a18b98cd318a537eed8f767a9fe84d1a27f0a0f1e64f5ecf4b0517",
+          "gpu_kernel_events": 70472,
+          "device_properties": [
+            {
+              "id": 0,
+              "name": "NVIDIA A10",
+              "totalGlobalMem": 23684186112,
+              "computeMajor": 8,
+              "computeMinor": 6,
+              "maxThreadsPerBlock": 1024,
+              "maxThreadsPerMultiprocessor": 1536,
+              "regsPerBlock": 65536,
+              "warpSize": 32,
+              "sharedMemPerBlock": 49152,
+              "numSms": 72,
+              "regsPerMultiprocessor": 65536,
+              "sharedMemPerBlockOptin": 101376,
+              "sharedMemPerMultiprocessor": 102400
+            }
+          ]
+        }
+      ],
+      "context_tokens": 16384,
+      "kernel_count": 70472,
+      "summed_kernel_ms": 5188.884006,
+      "kernel_span_ms": 5224.76507397461,
+      "kernel_union_ms": 5184.797895263672,
+      "timeline_gap_ms": 0.5,
+      "timeline_kernel_intervals_ms": [
+        [
+          1.28434912109375,
+          0.615236083984375
+        ],
+        [
+          3.067816162109375,
+          5222.981606933594
+        ]
+      ],
+      "device_properties": [
+        {
+          "id": 0,
+          "name": "NVIDIA A10",
+          "totalGlobalMem": 23684186112,
+          "computeMajor": 8,
+          "computeMinor": 6,
+          "maxThreadsPerBlock": 1024,
+          "maxThreadsPerMultiprocessor": 1536,
+          "regsPerBlock": 65536,
+          "warpSize": 32,
+          "sharedMemPerBlock": 49152,
+          "numSms": 72,
+          "regsPerMultiprocessor": 65536,
+          "sharedMemPerBlockOptin": 101376,
+          "sharedMemPerMultiprocessor": 102400
+        }
+      ],
+      "kernels": [
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8::Params)",
+          "calls": 864,
+          "total_ms": 1410.4445190000001,
+          "mean_ms": 1.6324589340277778
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x6_tn",
+          "calls": 9000,
+          "total_ms": 1311.296698,
+          "mean_ms": 0.14569963311111112
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, false, false, false, false, true, false, true, false>(flash::Flash_fwd_params)",
+          "calls": 4608,
+          "total_ms": 570.138006,
+          "mean_ms": 0.12372786588541668
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x3_tn",
+          "calls": 4608,
+          "total_ms": 541.2218349999999,
+          "mean_ms": 0.11745265516493054
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, true, false, false, false, true, false, false, false>(flash::Flash_fwd_params)",
+          "calls": 324,
+          "total_ms": 283.46047999999996,
+          "mean_ms": 0.874878024691358
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+          "calls": 288,
+          "total_ms": 262.213326,
+          "mean_ms": 0.9104629375
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x5_tn",
+          "calls": 4500,
+          "total_ms": 220.85183600000002,
+          "mean_ms": 0.04907818577777778
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_64x64_ldg8_f2f_stages_64x6_tn",
+          "calls": 133,
+          "total_ms": 213.746909,
+          "mean_ms": 1.6071196165413533
+        },
+        {
+          "name": "triton_poi_fused_mul_silu_slice_1",
+          "calls": 4932,
+          "total_ms": 81.50064599999999,
+          "mean_ms": 0.016524867396593673
+        },
+        {
+          "name": "triton_red_fused_fused_add_rms_norm_2",
+          "calls": 4932,
+          "total_ms": 47.372493000000006,
+          "mean_ms": 0.009605128345498783
+        },
+        {
+          "name": "triton_poi_fused_4",
+          "calls": 4795,
+          "total_ms": 35.716368,
+          "mean_ms": 0.007448669030239834
+        },
+        {
+          "name": "triton_red_fused_fused_add_rms_norm_0",
+          "calls": 4932,
+          "total_ms": 31.519401,
+          "mean_ms": 0.0063907950121654495
+        },
+        {
+          "name": "void vllm::reshape_and_cache_flash_kernel<__nv_bfloat16, __nv_bfloat16, (vllm::Fp8KVCacheDataType)0>(__nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, __nv_bfloat16*, long const*, long, long, long, long, long, int, int, int, float const*, float const*, int)",
+          "calls": 4932,
+          "total_ms": 28.907007,
+          "mean_ms": 0.005861112530413625
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 1, true>(flash::Flash_fwd_params)",
+          "calls": 4392,
+          "total_ms": 25.643907,
+          "mean_ms": 0.005838776639344262
+        },
+        {
+          "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+          "calls": 9000,
+          "total_ms": 25.162658,
+          "mean_ms": 0.002795850888888889
+        },
+        {
+          "name": "triton_red_fused_3",
+          "calls": 4795,
+          "total_ms": 23.616344,
+          "mean_ms": 0.004925202085505735
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_64x64_ldg8_f2f_stages_64x5_tn",
+          "calls": 108,
+          "total_ms": 22.782844,
+          "mean_ms": 0.21095225925925928
+        },
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)",
+          "calls": 216,
+          "total_ms": 17.564152000000004,
+          "mean_ms": 0.08131551851851854
+        },
+        {
+          "name": "void gemv2T_kernel_val<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, 128, 16, 4, 4, false, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>, float, float)",
+          "calls": 112,
+          "total_ms": 13.919641,
+          "mean_ms": 0.12428250892857143
+        },
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x64_32x6_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x64_32x6_tn_align8::Params)",
+          "calls": 36,
+          "total_ms": 8.975101,
+          "mean_ms": 0.24930836111111113
+        },
+        {
+          "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<float>, unsigned int, long, 4, 4> >(at::native::ReduceOp<float, at::native::ArgMaxOps<float>, unsigned int, long, 4, 4>)",
+          "calls": 137,
+          "total_ms": 1.92645,
+          "mean_ms": 0.014061678832116788
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+          "calls": 137,
+          "total_ms": 1.7003320000000002,
+          "mean_ms": 0.012411182481751826
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 4, true>(flash::Flash_fwd_params)",
+          "calls": 108,
+          "total_ms": 1.09745,
+          "mean_ms": 0.010161574074074075
+        },
+        {
+          "name": "triton_red_fused__to_copy_embedding_rms_norm_0",
+          "calls": 137,
+          "total_ms": 1.0400399999999999,
+          "mean_ms": 0.007591532846715328
+        },
+        {
+          "name": "triton_poi_fused_2",
+          "calls": 137,
+          "total_ms": 1.019459,
+          "mean_ms": 0.007441306569343065
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+          "calls": 274,
+          "total_ms": 0.7401089999999999,
+          "mean_ms": 0.0027011277372262768
+        },
+        {
+          "name": "triton_red_fused_1",
+          "calls": 137,
+          "total_ms": 0.6672100000000001,
+          "mean_ms": 0.00487014598540146
+        },
+        {
+          "name": "void cublasLt::splitKreduce_kernel<32, 16, int, __nv_bfloat16, __nv_bfloat16, float, __nv_bfloat16, false, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, true, false, false, false>(cublasLt::cublasSplitKParams<float>, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, __nv_bfloat16*, float const*, float const*, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)",
+          "calls": 216,
+          "total_ms": 0.558693,
+          "mean_ms": 0.0025865416666666667
+        },
+        {
+          "name": "void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<4> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<4> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1}>(long, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<4> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<4> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1})",
+          "calls": 140,
+          "total_ms": 0.556547,
+          "mean_ms": 0.003975335714285715
+        },
+        {
+          "name": "_compute_slot_mapping_kernel",
+          "calls": 137,
+          "total_ms": 0.51789,
+          "mean_ms": 0.0037802189781021896
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 2, true>(flash::Flash_fwd_params)",
+          "calls": 72,
+          "total_ms": 0.44521999999999995,
+          "mean_ms": 0.00618361111111111
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+          "calls": 264,
+          "total_ms": 0.39437900000000004,
+          "mean_ms": 0.0014938598484848487
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#3}::operator()() const::{lambda(int)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#3}::operator()() const::{lambda(int)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+          "calls": 137,
+          "total_ms": 0.332458,
+          "mean_ms": 0.0024267007299270072
+        },
+        {
+          "name": "void at::native::vectorized_gather_kernel<16, long>(char*, char*, long*, int, long, long, long, long, bool)",
+          "calls": 133,
+          "total_ms": 0.32307400000000003,
+          "mean_ms": 0.002429127819548872
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<2, at::native::CUDAFunctor_add<long>, std::array<char*, 3ul> >(int, at::native::CUDAFunctor_add<long>, std::array<char*, 3ul>)",
+          "calls": 137,
+          "total_ms": 0.272387,
+          "mean_ms": 0.001988226277372263
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<int>, std::array<char*, 3ul> >(int, at::native::CUDAFunctor_add<int>, std::array<char*, 3ul>)",
+          "calls": 137,
+          "total_ms": 0.24205000000000002,
+          "mean_ms": 0.0017667883211678831
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 3, true>(flash::Flash_fwd_params)",
+          "calls": 36,
+          "total_ms": 0.24013299999999999,
+          "mean_ms": 0.00667036111111111
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::CUDAFunctorOnSelf_add<int>, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, at::native::CUDAFunctorOnSelf_add<int>, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast)",
+          "calls": 137,
+          "total_ms": 0.21328999999999998,
+          "mean_ms": 0.001556861313868613
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::array<char*, 1ul> >(int, at::native::FillFunctor<long>, std::array<char*, 1ul>)",
+          "calls": 126,
+          "total_ms": 0.18128,
+          "mean_ms": 0.0014387301587301586
+        },
+        {
+          "name": "memcpy32_post",
+          "calls": 108,
+          "total_ms": 0.16316999999999998,
+          "mean_ms": 0.0015108333333333332
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+          "calls": 66,
+          "total_ms": 0.101508,
+          "mean_ms": 0.001538
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<long>, std::array<char*, 1ul>, 4, TrivialOffsetCalculator<0, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, at::native::FillFunctor<long>, std::array<char*, 1ul>, TrivialOffsetCalculator<0, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast)",
+          "calls": 26,
+          "total_ms": 0.03536,
+          "mean_ms": 0.0013599999999999999
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<int>, std::array<char*, 1ul>, 4, TrivialOffsetCalculator<0, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, at::native::FillFunctor<int>, std::array<char*, 1ul>, TrivialOffsetCalculator<0, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast)",
+          "calls": 19,
+          "total_ms": 0.027424999999999998,
+          "mean_ms": 0.0014434210526315786
+        },
+        {
+          "name": "void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1}>(long, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1})",
+          "calls": 4,
+          "total_ms": 0.024960999999999997,
+          "mean_ms": 0.006240249999999999
+        },
+        {
+          "name": "void at::native::_scatter_gather_elementwise_kernel<128, 8, at::native::_cuda_scatter_gather_internal_kernel<true, at::native::OpaqueType<4>, long>::operator()<at::native::TensorAssign>(at::TensorIterator&, long, long, long, at::native::TensorAssign const&)::{lambda(int)#1}>(int, at::native::_cuda_scatter_gather_internal_kernel<true, at::native::OpaqueType<4>, long>::operator()<at::native::TensorAssign>(at::TensorIterator&, long, long, long, at::native::TensorAssign const&)::{lambda(int)#1})",
+          "calls": 3,
+          "total_ms": 0.008960000000000001,
+          "mean_ms": 0.002986666666666667
+        }
+      ],
+      "annotations": [
+        {
+          "name": "execute_context_1(2048)_generation_0(0)",
+          "phase": "context_only",
+          "duration_ms": 28.759242999999998,
+          "context_requests": 1,
+          "context_tokens": 2048,
+          "generation_requests": 0,
+          "generation_tokens": 0,
+          "start_ms": 0.0
+        },
+        {
+          "name": "execute_context_0(0)_generation_1(1)",
+          "phase": "generation_only",
+          "duration_ms": 2.738924,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 29.527083984375
+        },
+        {
+          "name": "execute_context_1(2047)_generation_1(1)",
+          "phase": "mixed",
+          "duration_ms": 28.526839,
+          "context_requests": 1,
+          "context_tokens": 2047,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 254.07465502929688
+        },
+        {
+          "name": "execute_context_2(2047)_generation_1(1)",
+          "phase": "mixed",
+          "duration_ms": 27.826091,
+          "context_requests": 2,
+          "context_tokens": 2047,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 283.6102661132812
+        },
+        {
+          "name": "execute_context_2(2046)_generation_2(2)",
+          "phase": "mixed",
+          "duration_ms": 27.520037,
+          "context_requests": 2,
+          "context_tokens": 2046,
+          "generation_requests": 2,
+          "generation_tokens": 2,
+          "start_ms": 532.0942390136719
+        },
+        {
+          "name": "execute_context_2(2045)_generation_3(3)",
+          "phase": "mixed",
+          "duration_ms": 27.632393,
+          "context_requests": 2,
+          "context_tokens": 2045,
+          "generation_requests": 3,
+          "generation_tokens": 3,
+          "start_ms": 792.3945161132813
+        },
+        {
+          "name": "execute_context_2(2044)_generation_4(4)",
+          "phase": "mixed",
+          "duration_ms": 27.981667,
+          "context_requests": 2,
+          "context_tokens": 2044,
+          "generation_requests": 4,
+          "generation_tokens": 4,
+          "start_ms": 1069.0609501953124
+        },
+        {
+          "name": "execute_context_2(2043)_generation_5(5)",
+          "phase": "mixed",
+          "duration_ms": 27.769632,
+          "context_requests": 2,
+          "context_tokens": 2043,
+          "generation_requests": 5,
+          "generation_tokens": 5,
+          "start_ms": 1334.0023481445312
+        },
+        {
+          "name": "execute_context_2(2042)_generation_6(6)",
+          "phase": "mixed",
+          "duration_ms": 27.460345,
+          "context_requests": 2,
+          "context_tokens": 2042,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1602.8234260253905
+        },
+        {
+          "name": "execute_context_1(22)_generation_7(7)",
+          "phase": "mixed",
+          "duration_ms": 10.790823,
+          "context_requests": 1,
+          "context_tokens": 22,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1881.4075739746095
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.9692939999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2160.0097080078126
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.841962,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2194.8136540527344
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.767389,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2219.7643239746094
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.928671,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2244.5913481445314
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 3.114937,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2269.066826171875
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.8989520000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2293.577270996094
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.901395,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2317.875356201172
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.922286,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2342.2066350097657
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.825153,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2366.4203571777343
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.709689,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2390.751791015625
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.490712,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2415.130875
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.6733719999999996,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2439.4827421875
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.443736,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2463.84766015625
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.9857739999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2488.1645310058593
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 3.860128,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2512.5893310546876
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.453683,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2536.9040939941406
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.390072,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2561.2622360839846
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.411824,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2585.576208984375
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.618411,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2610.173549072266
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.759127,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2634.4501420898437
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.497011,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2658.7386779785156
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.416152,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2683.000684082031
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.3944140000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2707.352830078125
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.372275,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2731.730718017578
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.38767,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2756.0921162109375
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.808136,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2780.4800122070315
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.34502,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2804.9195710449217
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.486258,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2829.3889250488282
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.392967,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2853.856524169922
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.4127289999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2878.3151010742185
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.3908110000000002,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2902.8052001953124
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.395257,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2927.272140136719
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.600136,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2951.7081220703126
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.426991,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 2976.1813051757813
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.6347240000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3000.6418681640625
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.6034859999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3025.113504150391
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.401718,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3049.602721191406
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.502952,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3074.14620703125
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.508949,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3098.6755900878907
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.981589,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3123.8083481445315
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.677136,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3148.147287109375
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.5560709999999998,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3172.6731560058593
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.4770410000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3197.2565390625
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.4465250000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3221.830335205078
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.476125,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3246.3537060546873
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.436247,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3270.8523010253907
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.447437,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3295.3710751953126
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.864279,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 3319.881391113281
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.760237,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 3346.851935058594
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.4306550000000002,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 3368.825427001953
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.437876,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 3392.814701171875
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.462987,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 3416.657422119141
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.4346819999999996,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 3440.556018066406
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.3792890000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 3464.41012109375
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.4642310000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 3488.2649921875
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.412902,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 3512.1549240722657
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.506577,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3536.0713361816406
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.704102,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3559.9866171875
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3786709999999998,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3583.516912109375
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.4036880000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3607.096759033203
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.490453,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3630.6432321777343
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.497788,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3654.256869140625
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.6290210000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3677.7999011230468
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3959479999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3701.3210361328124
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.4132849999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3724.8491520996095
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.4387939999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3748.390864013672
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.4285949999999996,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3772.0017509765626
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.518795,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3795.5564821777343
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3946579999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3819.1967231445315
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3953960000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3842.766753173828
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.362358,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3866.3563481445312
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.6336239999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3889.942472167969
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.7763020000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3913.583078125
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.395812,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3937.1722919921876
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.358073,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3960.7553759765624
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.398606,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3984.400169189453
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.415233,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4008.0672580566406
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.473557,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4031.796875
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.440623,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4055.574278076172
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3793189999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4079.3114169921873
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 4.178597,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4103.082373046875
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 4.592093,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4126.860145996094
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.378689,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4150.593208007813
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.630988,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4174.523004150391
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.698995,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4198.3566669921875
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.731414,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4222.160536132813
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.8011280000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4245.925869140625
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.6673899999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4269.605912109375
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.837813,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4293.4948969726565
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 3.0636439999999996,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4317.258304199218
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.982322,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4340.7639731445315
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.9122939999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4364.416432128906
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.775649,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4388.01429296875
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.53816,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4411.654255126953
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.398903,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4435.2555451660155
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3887910000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4458.858349121094
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.33492,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4482.533578125
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.328297,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4506.152201171875
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3692919999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4529.8128850097655
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.383294,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4553.4561030273435
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.382206,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4577.091560058594
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.358482,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4600.725802978515
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.45121,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4624.40898413086
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.456544,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4648.111377197266
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.426383,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4671.77187109375
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.450424,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4695.446750976563
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.438956,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4719.129541015625
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.4839879999999996,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4742.796801025391
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.400674,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4766.467971191406
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.476712,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4790.167909179688
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.396935,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4813.841393066406
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.480477,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4837.507737060547
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.385544,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4861.196097167969
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.388776,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4884.853097167968
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 4.228073,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4908.570818115234
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 4.837832000000001,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4932.356193115234
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3706080000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4956.142306152344
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.416089,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 4979.927714111328
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.458616,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 5003.7031640625
+        },
+        {
+          "name": "execute_context_0(0)_generation_5(5)",
+          "phase": "generation_only",
+          "duration_ms": 2.842286,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 5,
+          "generation_tokens": 5,
+          "start_ms": 5027.603366210938
+        },
+        {
+          "name": "execute_context_0(0)_generation_5(5)",
+          "phase": "generation_only",
+          "duration_ms": 2.6516170000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 5,
+          "generation_tokens": 5,
+          "start_ms": 5051.353322021484
+        },
+        {
+          "name": "execute_context_0(0)_generation_5(5)",
+          "phase": "generation_only",
+          "duration_ms": 2.3543339999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 5,
+          "generation_tokens": 5,
+          "start_ms": 5074.980394042968
+        },
+        {
+          "name": "execute_context_0(0)_generation_4(4)",
+          "phase": "generation_only",
+          "duration_ms": 2.6247779999999996,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 4,
+          "generation_tokens": 4,
+          "start_ms": 5098.57783203125
+        },
+        {
+          "name": "execute_context_0(0)_generation_3(3)",
+          "phase": "generation_only",
+          "duration_ms": 2.7413499999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 3,
+          "generation_tokens": 3,
+          "start_ms": 5122.262760009766
+        },
+        {
+          "name": "execute_context_0(0)_generation_2(2)",
+          "phase": "generation_only",
+          "duration_ms": 2.471479,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 2,
+          "generation_tokens": 2,
+          "start_ms": 5144.4322841796875
+        },
+        {
+          "name": "execute_context_0(0)_generation_1(1)",
+          "phase": "generation_only",
+          "duration_ms": 2.5107269999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 5166.277703125
+        },
+        {
+          "name": "execute_context_0(0)_generation_1(1)",
+          "phase": "generation_only",
+          "duration_ms": 2.51331,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 5187.208051025391
+        },
+        {
+          "name": "execute_context_0(0)_generation_0(0)",
+          "phase": "empty",
+          "duration_ms": 0.150499,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 0,
+          "generation_tokens": 0,
+          "start_ms": 5206.848506103515
+        },
+        {
+          "name": "execute_context_0(0)_generation_0(0)",
+          "phase": "empty",
+          "duration_ms": 0.418692,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 0,
+          "generation_tokens": 0,
+          "start_ms": 5226.259291015625
+        }
+      ]
+    },
+    {
+      "cache": "on",
+      "input": "C:\\Users\\mshi\\vscode-ws\\llm-inference-optimization-lab\\inference-runs\\profiling\\shared-c8-on-01",
+      "manifest_sha256": "3ec2c0e2ced6cb49bf456e50c0fe572d8ab071cf43d7eaa874d2b6f44605647b",
+      "request_ids": [
+        "shared-c8-0a59069a06f0a176",
+        "shared-c8-5b0dc0fcde1317d4",
+        "shared-c8-0e3c3a99583f568e",
+        "shared-c8-3a2dcfc0f02458fc",
+        "shared-c8-02256644f74b8977",
+        "shared-c8-131c623c0173d241",
+        "shared-c8-7e2769d646fa39ab",
+        "shared-c8-d208087c3aaade67"
+      ],
+      "server_identity": 1792618915.13,
+      "completion_tokens": 882,
+      "metrics": {
+        "prefix_queries_tokens": 16384.0,
+        "prefix_hits_tokens": 14592.0,
+        "new_prefill_tokens": 1792.0,
+        "preemptions": 0.0,
+        "token_cache_hit_rate": 0.890625
+      },
+      "trace_inventory": [
+        {
+          "path": "traces/shared-c8-on-01/modal_4.async_llm.1792619059353102307.pt.trace.json.gz",
+          "sha256": "67d40703caec124c045d0deb69a02dd089a8bdabad4fcb032dbaa95e0eb2d855",
+          "gpu_kernel_events": 0,
+          "device_properties": [
+            {
+              "id": 0,
+              "name": "NVIDIA A10",
+              "totalGlobalMem": 23684186112,
+              "computeMajor": 8,
+              "computeMinor": 6,
+              "maxThreadsPerBlock": 1024,
+              "maxThreadsPerMultiprocessor": 1536,
+              "regsPerBlock": 65536,
+              "warpSize": 32,
+              "sharedMemPerBlock": 49152,
+              "numSms": 72,
+              "regsPerMultiprocessor": 65536,
+              "sharedMemPerBlockOptin": 101376,
+              "sharedMemPerMultiprocessor": 102400
+            }
+          ]
+        },
+        {
+          "path": "traces/shared-c8-on-01/rank0.1792619060050134970.pt.trace.json.gz",
+          "sha256": "74146b08c658bc550a86fa57e0b80fdfb94c67ccdc10392c092f3dfcca12b59b",
+          "gpu_kernel_events": 72663,
+          "device_properties": [
+            {
+              "id": 0,
+              "name": "NVIDIA A10",
+              "totalGlobalMem": 23684186112,
+              "computeMajor": 8,
+              "computeMinor": 6,
+              "maxThreadsPerBlock": 1024,
+              "maxThreadsPerMultiprocessor": 1536,
+              "regsPerBlock": 65536,
+              "warpSize": 32,
+              "sharedMemPerBlock": 49152,
+              "numSms": 72,
+              "regsPerMultiprocessor": 65536,
+              "sharedMemPerBlockOptin": 101376,
+              "sharedMemPerMultiprocessor": 102400
+            }
+          ]
+        }
+      ],
+      "context_tokens": 1792,
+      "kernel_count": 72663,
+      "summed_kernel_ms": 3328.742365,
+      "kernel_span_ms": 3363.203328857422,
+      "kernel_union_ms": 3324.356938720703,
+      "timeline_gap_ms": 0.5,
+      "timeline_kernel_intervals_ms": [
+        [
+          1.26548095703125,
+          0.59318505859375
+        ],
+        [
+          2.645548828125,
+          3361.823260986328
+        ]
+      ],
+      "device_properties": [
+        {
+          "id": 0,
+          "name": "NVIDIA A10",
+          "totalGlobalMem": 23684186112,
+          "computeMajor": 8,
+          "computeMinor": 6,
+          "maxThreadsPerBlock": 1024,
+          "maxThreadsPerMultiprocessor": 1536,
+          "regsPerBlock": 65536,
+          "warpSize": 32,
+          "sharedMemPerBlock": 49152,
+          "numSms": 72,
+          "regsPerMultiprocessor": 65536,
+          "sharedMemPerBlockOptin": 101376,
+          "sharedMemPerMultiprocessor": 102400
+        }
+      ],
+      "kernels": [
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x6_tn",
+          "calls": 9432,
+          "total_ms": 1373.564711,
+          "mean_ms": 0.14562815002120438
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_64x3_tn",
+          "calls": 4716,
+          "total_ms": 557.977568,
+          "mean_ms": 0.11831585411365564
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, false, false, false, false, true, false, true, false>(flash::Flash_fwd_params)",
+          "calls": 4896,
+          "total_ms": 415.507051,
+          "mean_ms": 0.08486663623366013
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x5_tn",
+          "calls": 4716,
+          "total_ms": 230.58446700000002,
+          "mean_ms": 0.048894076972010175
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_64x64_ldg8_f2f_stages_64x6_tn",
+          "calls": 134,
+          "total_ms": 215.172752,
+          "mean_ms": 1.6057668059701493
+        },
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8::Params)",
+          "calls": 72,
+          "total_ms": 62.077246,
+          "mean_ms": 0.8621839722222222
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, true, false, false, false, true, false, false, false>(flash::Flash_fwd_params)",
+          "calls": 144,
+          "total_ms": 55.926146,
+          "mean_ms": 0.3883760138888889
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_64x64_ldg8_f2f_stages_64x5_tn",
+          "calls": 180,
+          "total_ms": 37.959323,
+          "mean_ms": 0.21088512777777776
+        },
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x256_32x3_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_128x256_32x3_tn_align8::Params)",
+          "calls": 36,
+          "total_ms": 37.450244,
+          "mean_ms": 1.0402845555555555
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_256x128_ldg8_f2f_stages_32x3_tn",
+          "calls": 108,
+          "total_ms": 35.823871,
+          "mean_ms": 0.33170250925925926
+        },
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8>(cutlass_80_wmma_tensorop_bf16_s161616gemm_bf16_16x16_128x2_tn_align8::Params)",
+          "calls": 360,
+          "total_ms": 29.099518,
+          "mean_ms": 0.08083199444444444
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_128x128_ldg8_f2f_stages_32x5_tn",
+          "calls": 72,
+          "total_ms": 26.426071,
+          "mean_ms": 0.3670287638888889
+        },
+        {
+          "name": "void at::native::elementwise_kernel<128, 4, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1}>(int, at::native::gpu_kernel_impl_nocast<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1}>(at::TensorIteratorBase&, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#12}::operator()() const::{lambda(c10::BFloat16)#1} const&)::{lambda(int)#1})",
+          "calls": 9432,
+          "total_ms": 26.378022,
+          "mean_ms": 0.0027966520356234098
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 1, true>(flash::Flash_fwd_params)",
+          "calls": 4536,
+          "total_ms": 26.096117,
+          "mean_ms": 0.00575311221340388
+        },
+        {
+          "name": "void cutlass::Kernel2<cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x64_32x4_tn_align8>(cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x64_32x4_tn_align8::Params)",
+          "calls": 36,
+          "total_ms": 25.079515,
+          "mean_ms": 0.6966531944444445
+        },
+        {
+          "name": "void gemv2T_kernel_val<int, int, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, float, 128, 16, 4, 4, false, false, cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float> >(cublasGemvParamsEx<int, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16 const>, cublasGemvTensorStridedBatched<__nv_bfloat16>, float>, float, float)",
+          "calls": 186,
+          "total_ms": 22.11912,
+          "mean_ms": 0.11891999999999998
+        },
+        {
+          "name": "ampere_bf16_s1688gemm_bf16_128x128_ldg8_f2f_stages_32x1_tn",
+          "calls": 144,
+          "total_ms": 19.687329000000002,
+          "mean_ms": 0.1367175625
+        },
+        {
+          "name": "triton_poi_fused_mul_silu_slice_1",
+          "calls": 5040,
+          "total_ms": 19.366885999999997,
+          "mean_ms": 0.0038426361111111107
+        },
+        {
+          "name": "triton_red_fused_fused_add_rms_norm_2",
+          "calls": 5040,
+          "total_ms": 18.889381,
+          "mean_ms": 0.003747893055555556
+        },
+        {
+          "name": "triton_red_fused_fused_add_rms_norm_0",
+          "calls": 5040,
+          "total_ms": 16.442042,
+          "mean_ms": 0.003262309920634921
+        },
+        {
+          "name": "void vllm::reshape_and_cache_flash_kernel<__nv_bfloat16, __nv_bfloat16, (vllm::Fp8KVCacheDataType)0>(__nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, __nv_bfloat16*, long const*, long, long, long, long, long, int, int, int, float const*, float const*, int)",
+          "calls": 5040,
+          "total_ms": 16.259413000000002,
+          "mean_ms": 0.003226074007936508
+        },
+        {
+          "name": "triton_poi_fused_4",
+          "calls": 4900,
+          "total_ms": 13.349907,
+          "mean_ms": 0.0027244708163265303
+        },
+        {
+          "name": "ampere_bf16_s16816gemm_bf16_128x64_ldg8_f2f_stages_32x6_tn",
+          "calls": 36,
+          "total_ms": 12.844044,
+          "mean_ms": 0.356779
+        },
+        {
+          "name": "triton_red_fused_3",
+          "calls": 4900,
+          "total_ms": 12.119091000000001,
+          "mean_ms": 0.0024732838775510207
+        },
+        {
+          "name": "ampere_bf16_s1688gemm_bf16_128x128_ldg8_f2f_tn",
+          "calls": 72,
+          "total_ms": 9.346144,
+          "mean_ms": 0.12980755555555556
+        },
+        {
+          "name": "void at::native::reduce_kernel<512, 1, at::native::ReduceOp<float, at::native::ArgMaxOps<float>, unsigned int, long, 4, 4> >(at::native::ReduceOp<float, at::native::ArgMaxOps<float>, unsigned int, long, 4, 4>)",
+          "calls": 140,
+          "total_ms": 1.908397,
+          "mean_ms": 0.013631407142857143
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 4, true>(flash::Flash_fwd_params)",
+          "calls": 180,
+          "total_ms": 1.8122580000000001,
+          "mean_ms": 0.0100681
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#7}::operator()() const::{lambda(float)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+          "calls": 140,
+          "total_ms": 1.691587,
+          "mean_ms": 0.012082764285714285
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 3, true>(flash::Flash_fwd_params)",
+          "calls": 144,
+          "total_ms": 1.00627,
+          "mean_ms": 0.006987986111111111
+        },
+        {
+          "name": "void cublasLt::splitKreduce_kernel<32, 16, int, __nv_bfloat16, __nv_bfloat16, float, __nv_bfloat16, false, __nv_bfloat16, __nv_bfloat16, __nv_bfloat16, true, false, false, false>(cublasLt::cublasSplitKParams<float>, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, __nv_bfloat16*, float const*, float const*, __nv_bfloat16 const*, __nv_bfloat16 const*, __nv_bfloat16*, void*, long, float*, int*, float*, float*, float const*, float const*, float const*, float const*, float const*)",
+          "calls": 360,
+          "total_ms": 0.918157,
+          "mean_ms": 0.0025504361111111113
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#4}::operator()() const::{lambda(long)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+          "calls": 280,
+          "total_ms": 0.758452,
+          "mean_ms": 0.002708757142857143
+        },
+        {
+          "name": "triton_red_fused__to_copy_embedding_rms_norm_0",
+          "calls": 140,
+          "total_ms": 0.627933,
+          "mean_ms": 0.0044852357142857145
+        },
+        {
+          "name": "void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<4> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<4> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1}>(long, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<4> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<4> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1})",
+          "calls": 144,
+          "total_ms": 0.549578,
+          "mean_ms": 0.003816513888888889
+        },
+        {
+          "name": "_compute_slot_mapping_kernel",
+          "calls": 140,
+          "total_ms": 0.48287599999999997,
+          "mean_ms": 0.003449114285714285
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<4, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+          "calls": 269,
+          "total_ms": 0.396393,
+          "mean_ms": 0.0014735799256505575
+        },
+        {
+          "name": "triton_poi_fused_2",
+          "calls": 140,
+          "total_ms": 0.38083100000000003,
+          "mean_ms": 0.0027202214285714284
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#3}::operator()() const::{lambda(int)#1}, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1> >(int, at::native::direct_copy_kernel_cuda(at::TensorIteratorBase&)::{lambda()#3}::operator()() const::{lambda()#3}::operator()() const::{lambda(int)#1}, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithCast<1>, at::native::memory::StoreWithCast<1>)",
+          "calls": 140,
+          "total_ms": 0.345704,
+          "mean_ms": 0.002469314285714286
+        },
+        {
+          "name": "triton_red_fused_1",
+          "calls": 140,
+          "total_ms": 0.343645,
+          "mean_ms": 0.002454607142857143
+        },
+        {
+          "name": "void at::native::vectorized_gather_kernel<16, long>(char*, char*, long*, int, long, long, long, long, bool)",
+          "calls": 134,
+          "total_ms": 0.32349,
+          "mean_ms": 0.0024141044776119403
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<2, at::native::CUDAFunctor_add<long>, std::array<char*, 3ul> >(int, at::native::CUDAFunctor_add<long>, std::array<char*, 3ul>)",
+          "calls": 140,
+          "total_ms": 0.27954,
+          "mean_ms": 0.0019967142857142857
+        },
+        {
+          "name": "memcpy32_post",
+          "calls": 180,
+          "total_ms": 0.26800599999999997,
+          "mean_ms": 0.0014889222222222221
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<4, at::native::CUDAFunctor_add<int>, std::array<char*, 3ul> >(int, at::native::CUDAFunctor_add<int>, std::array<char*, 3ul>)",
+          "calls": 140,
+          "total_ms": 0.24374099999999999,
+          "mean_ms": 0.0017410071428571427
+        },
+        {
+          "name": "void flash::flash_fwd_splitkv_combine_kernel<Flash_fwd_kernel_traits<128, 64, 128, 4, false, false, cutlass::bfloat16_t, Flash_kernel_traits<128, 64, 128, 4, cutlass::bfloat16_t> >, 4, 2, true>(flash::Flash_fwd_params)",
+          "calls": 36,
+          "total_ms": 0.225149,
+          "mean_ms": 0.006254138888888889
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::CUDAFunctorOnSelf_add<int>, std::array<char*, 2ul>, 4, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, at::native::CUDAFunctorOnSelf_add<int>, std::array<char*, 2ul>, TrivialOffsetCalculator<1, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast)",
+          "calls": 140,
+          "total_ms": 0.21628999999999998,
+          "mean_ms": 0.0015449285714285714
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<long>, std::array<char*, 1ul> >(int, at::native::FillFunctor<long>, std::array<char*, 1ul>)",
+          "calls": 132,
+          "total_ms": 0.188004,
+          "mean_ms": 0.0014242727272727271
+        },
+        {
+          "name": "void at::native::vectorized_elementwise_kernel<2, at::native::FillFunctor<int>, std::array<char*, 1ul> >(int, at::native::FillFunctor<int>, std::array<char*, 1ul>)",
+          "calls": 70,
+          "total_ms": 0.107299,
+          "mean_ms": 0.001532842857142857
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<long>, std::array<char*, 1ul>, 4, TrivialOffsetCalculator<0, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, at::native::FillFunctor<long>, std::array<char*, 1ul>, TrivialOffsetCalculator<0, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast)",
+          "calls": 34,
+          "total_ms": 0.045188,
+          "mean_ms": 0.001329058823529412
+        },
+        {
+          "name": "void at::native::index_elementwise_kernel<128, 4, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1}>(long, at::native::gpu_index_kernel<at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1}>(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>, at::native::index_kernel_impl<at::native::OpaqueType<2> >(at::TensorIteratorBase&, c10::ArrayRef<long>, c10::ArrayRef<long>)::{lambda(char*, char const*, long)#1} const&, bool)::{lambda(int)#1})",
+          "calls": 6,
+          "total_ms": 0.035199,
+          "mean_ms": 0.005866499999999999
+        },
+        {
+          "name": "void at::native::unrolled_elementwise_kernel<at::native::FillFunctor<int>, std::array<char*, 1ul>, 4, TrivialOffsetCalculator<0, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast>(int, at::native::FillFunctor<int>, std::array<char*, 1ul>, TrivialOffsetCalculator<0, unsigned int>, TrivialOffsetCalculator<1, unsigned int>, at::native::memory::LoadWithoutCast, at::native::memory::StoreWithoutCast)",
+          "calls": 22,
+          "total_ms": 0.030943,
+          "mean_ms": 0.0014064999999999998
+        },
+        {
+          "name": "void at::native::_scatter_gather_elementwise_kernel<128, 8, at::native::_cuda_scatter_gather_internal_kernel<true, at::native::OpaqueType<4>, long>::operator()<at::native::TensorAssign>(at::TensorIterator&, long, long, long, at::native::TensorAssign const&)::{lambda(int)#1}>(int, at::native::_cuda_scatter_gather_internal_kernel<true, at::native::OpaqueType<4>, long>::operator()<at::native::TensorAssign>(at::TensorIterator&, long, long, long, at::native::TensorAssign const&)::{lambda(int)#1})",
+          "calls": 4,
+          "total_ms": 0.011456,
+          "mean_ms": 0.002864
+        }
+      ],
+      "annotations": [
+        {
+          "name": "execute_context_1(224)_generation_0(0)",
+          "phase": "context_only",
+          "duration_ms": 11.128333000000001,
+          "context_requests": 1,
+          "context_tokens": 224,
+          "generation_requests": 0,
+          "generation_tokens": 0,
+          "start_ms": 0.0
+        },
+        {
+          "name": "execute_context_0(0)_generation_1(1)",
+          "phase": "generation_only",
+          "duration_ms": 2.286292,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 11.798885009765625
+        },
+        {
+          "name": "execute_context_0(0)_generation_1(1)",
+          "phase": "generation_only",
+          "duration_ms": 2.3345700000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 39.762433837890626
+        },
+        {
+          "name": "execute_context_0(0)_generation_1(1)",
+          "phase": "generation_only",
+          "duration_ms": 2.423555,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 59.84574584960937
+        },
+        {
+          "name": "execute_context_0(0)_generation_1(1)",
+          "phase": "generation_only",
+          "duration_ms": 2.724767,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 80.01978491210937
+        },
+        {
+          "name": "execute_context_0(0)_generation_1(1)",
+          "phase": "generation_only",
+          "duration_ms": 2.491843,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 99.85656884765625
+        },
+        {
+          "name": "execute_context_1(224)_generation_1(1)",
+          "phase": "mixed",
+          "duration_ms": 10.448989,
+          "context_requests": 1,
+          "context_tokens": 224,
+          "generation_requests": 1,
+          "generation_tokens": 1,
+          "start_ms": 119.78780004882813
+        },
+        {
+          "name": "execute_context_0(0)_generation_2(2)",
+          "phase": "generation_only",
+          "duration_ms": 2.6926680000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 2,
+          "generation_tokens": 2,
+          "start_ms": 139.41480395507813
+        },
+        {
+          "name": "execute_context_0(0)_generation_2(2)",
+          "phase": "generation_only",
+          "duration_ms": 3.713832,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 2,
+          "generation_tokens": 2,
+          "start_ms": 181.87576196289064
+        },
+        {
+          "name": "execute_context_0(0)_generation_2(2)",
+          "phase": "generation_only",
+          "duration_ms": 2.5195100000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 2,
+          "generation_tokens": 2,
+          "start_ms": 202.8576418457031
+        },
+        {
+          "name": "execute_context_0(0)_generation_2(2)",
+          "phase": "generation_only",
+          "duration_ms": 2.42734,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 2,
+          "generation_tokens": 2,
+          "start_ms": 223.79072705078124
+        },
+        {
+          "name": "execute_context_2(448)_generation_2(2)",
+          "phase": "mixed",
+          "duration_ms": 12.830182,
+          "context_requests": 2,
+          "context_tokens": 448,
+          "generation_requests": 2,
+          "generation_tokens": 2,
+          "start_ms": 245.10399194335938
+        },
+        {
+          "name": "execute_context_4(896)_generation_4(4)",
+          "phase": "mixed",
+          "duration_ms": 27.721393,
+          "context_requests": 4,
+          "context_tokens": 896,
+          "generation_requests": 4,
+          "generation_tokens": 4,
+          "start_ms": 266.3465158691406
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.305674,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 346.54481201171876
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.812346,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 499.10744604492186
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.430107,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 522.2873640136719
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.273631,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 545.5447438964844
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.1300100000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 568.5814709472656
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.2096869999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 591.2596350097656
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.075589,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 614.0163908691407
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.063987,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 636.6864428710937
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.2793490000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 659.4189299316406
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.1375189999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 682.0497700195313
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.537925,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 704.8083059082031
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.434621,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 727.4156518554687
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.0504119999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 749.9727419433593
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.03816,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 772.6157338867188
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.169565,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 795.2735798339844
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.016287,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 818.0242878417969
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.3042759999999998,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 840.6830910644532
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.287156,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 863.4305329589844
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.051015,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 886.6757600097657
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 3.9011460000000002,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 909.8090649414063
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.503538,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 934.7324108886719
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.212358,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 955.6656008300781
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.487507,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 978.675423828125
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.108645,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1001.3060209960937
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 1.995425,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1024.0060290527344
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.0384510000000002,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1046.689428955078
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.680353,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1069.4186508789062
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.118019,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1092.080969970703
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.09969,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1114.7894528808595
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.08904,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1137.65729296875
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.299607,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1160.4573249511718
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.118487,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1183.2517568359376
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.074523,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1205.926837890625
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.066178,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1228.5253928222655
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.1206810000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1251.1196550292968
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.3707249999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1273.7791508789062
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.300945,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1296.4553239746094
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.045218,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1319.042255859375
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.08274,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1341.6805268554688
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.103698,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1364.3515178222656
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.05311,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1386.9491970214845
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.081438,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1409.6158649902343
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.313148,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1432.5491579589843
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.186658,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1455.1586330566406
+        },
+        {
+          "name": "execute_context_0(0)_generation_8(8)",
+          "phase": "generation_only",
+          "duration_ms": 2.121264,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 8,
+          "generation_tokens": 8,
+          "start_ms": 1477.9083840332032
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.506259,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1500.7483469238282
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.1174899999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1523.5291789550781
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.133457,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1546.2448210449218
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.107987,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1568.8844328613282
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.069212,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1591.4700769042968
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.084151,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1614.0899409179688
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.028101,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1636.7073239746094
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.03964,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1659.270046875
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 3.823133,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1681.8210458984374
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.095131,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1706.3586030273439
+        },
+        {
+          "name": "execute_context_0(0)_generation_7(7)",
+          "phase": "generation_only",
+          "duration_ms": 2.020169,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 7,
+          "generation_tokens": 7,
+          "start_ms": 1726.8664780273436
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.45094,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1749.4781149902344
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.072781,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1771.9210668945314
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.085556,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1794.573391845703
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.215468,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1817.093083984375
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.6042530000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1839.954208984375
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.410595,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1862.4470510253907
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.234684,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1884.9259379882812
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.154164,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1907.5289338378907
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.2809540000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1930.0832819824218
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.394518,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1952.5514079589843
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.076953,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1975.0401579589843
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.264949,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 1997.5486628417968
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.187317,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2020.0690979003907
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.082794,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2042.5873569335938
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.1459,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2065.0483740234376
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.205683,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2087.6621188964846
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.0545790000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2110.0971359863283
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.288866,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2132.6667978515625
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.27812,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2155.1134060058594
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.095367,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2177.533444824219
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.0341489999999998,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2199.977949951172
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.140197,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2222.388408935547
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.068816,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2244.808889892578
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.0594050000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2267.286891845703
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.180349,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2289.7411818847654
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.0481469999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2312.054604003906
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.100227,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2334.4788530273436
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.529263,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2357.062860839844
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3370010000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2379.4162709960938
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.1501,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2401.691824951172
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 3.765598,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2424.065854003906
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 4.315637,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2446.480451904297
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.1042310000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2468.94783984375
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.262961,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2491.3439929199217
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.4556,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2514.0433740234375
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.189212,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2536.197758056641
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.231418,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2558.5622080078124
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.257184,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2580.9521760253906
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.138056,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2603.390078857422
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.1996480000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2625.8310979003904
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.035832,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2648.2874670410156
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.126893,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2670.6111799316404
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.272328,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2692.9877219238283
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.123665,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2715.492505859375
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.074603,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2737.8592958984377
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.788117,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2760.5837438964845
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.809561,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2783.143308837891
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.807419,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2805.6093740234373
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.8201370000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2828.0467170410157
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.706951,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2850.504791015625
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.410639,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2872.8160578613283
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.2783189999999998,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2895.266229003906
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.1186089999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2917.802262939453
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.0745340000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2940.3051369628906
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.4066129999999997,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2962.7923168945313
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.391803,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 2985.407992919922
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.452792,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3007.927544921875
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.394732,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3030.425742919922
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.132585,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3052.866770019531
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.526026,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3075.713571044922
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.3384940000000003,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3097.8214360351562
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.179081,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3120.2198198242186
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.089524,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3142.6976198730467
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 2.222114,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3165.109156982422
+        },
+        {
+          "name": "execute_context_0(0)_generation_6(6)",
+          "phase": "generation_only",
+          "duration_ms": 3.701646,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 6,
+          "generation_tokens": 6,
+          "start_ms": 3187.521612060547
+        },
+        {
+          "name": "execute_context_0(0)_generation_5(5)",
+          "phase": "generation_only",
+          "duration_ms": 4.411974,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 5,
+          "generation_tokens": 5,
+          "start_ms": 3209.9153269042968
+        },
+        {
+          "name": "execute_context_0(0)_generation_5(5)",
+          "phase": "generation_only",
+          "duration_ms": 2.294239,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 5,
+          "generation_tokens": 5,
+          "start_ms": 3232.4187229003905
+        },
+        {
+          "name": "execute_context_0(0)_generation_5(5)",
+          "phase": "generation_only",
+          "duration_ms": 2.069551,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 5,
+          "generation_tokens": 5,
+          "start_ms": 3254.6598989257814
+        },
+        {
+          "name": "execute_context_0(0)_generation_5(5)",
+          "phase": "generation_only",
+          "duration_ms": 2.0715100000000004,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 5,
+          "generation_tokens": 5,
+          "start_ms": 3276.9394780273437
+        },
+        {
+          "name": "execute_context_0(0)_generation_5(5)",
+          "phase": "generation_only",
+          "duration_ms": 2.192597,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 5,
+          "generation_tokens": 5,
+          "start_ms": 3299.201803955078
+        },
+        {
+          "name": "execute_context_0(0)_generation_4(4)",
+          "phase": "generation_only",
+          "duration_ms": 2.31027,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 4,
+          "generation_tokens": 4,
+          "start_ms": 3321.4812458496094
+        },
+        {
+          "name": "execute_context_0(0)_generation_0(0)",
+          "phase": "empty",
+          "duration_ms": 0.19197399999999998,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 0,
+          "generation_tokens": 0,
+          "start_ms": 3343.7609189453124
+        },
+        {
+          "name": "execute_context_0(0)_generation_0(0)",
+          "phase": "empty",
+          "duration_ms": 0.292731,
+          "context_requests": 0,
+          "context_tokens": 0,
+          "generation_requests": 0,
+          "generation_tokens": 0,
+          "start_ms": 3364.7559899902344
+        }
+      ]
+    }
+  ]
+}
