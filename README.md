@@ -308,6 +308,21 @@ Wait for `/stop_profile` to finish flushing and for the trace files to appear on
 
 Use a fresh label for each treatment and retry so old and new traces remain distinguishable. Profiling captures belong outside the measured cache-study sessions: profiling adds overhead, and the cache-study runner rejects startup commands containing profiling flags. Before returning to normal benchmarks, unset `INFERENCE_LAB_PROFILE_SESSION` and redeploy. No profiling measurements are included in the current results.
 
+`bench.profile_capture` captures one treatment against an already ready profiling deployment. It reuses the first eight `shared-c8` requests from a saved cache-study manifest; manifests with fewer than eight requests per scenario are rejected. After eight unrelated warmup requests and one prefix-primer request, it starts profiling, sends one concurrent eight-request batch, and stops profiling. Preparation is outside the trace.
+
+```bash
+python -m bench.profile_capture \
+  --manifest inference-runs/cache-study-live-01/workloads/round-1.json \
+  --expected-prefix-caching off \
+  --profile-session shared-c8-off-01 \
+  --server-log <profiling-server-startup-log> \
+  --output-dir inference-runs/profiling/shared-c8-off-01
+```
+
+The deployment's prefix-caching setting and profile session must match these arguments. Capture-off and capture-on should use fresh servers, distinct profile labels, and the same manifest. The driver validates the startup command, observed cache configuration, stable process identity, token counts, and completed-request counter deltas. Existing local output directories are not overwritten. It attempts `/stop_profile` after a start attempt even if the start response times out, a request fails, or the capture is interrupted; cleanup errors are recorded separately from the original failure.
+
+Each output contains `capture.json`, the original manifest as `workload.json`, `server.log`, and raw metric snapshots. `capture.json` records preparation and captured request results, timestamps, profiler start/stop outcomes, and the expected remote trace directory. Its `kind` is `profile_capture`, separate from benchmark results. A `completed` capture means requests and profiler shutdown validated; it does not verify that trace files persisted or contain GPU events. `trace_files_verified` remains false until trace inspection is performed separately. The driver neither deploys nor stops Modal apps nor downloads traces.
+
 Set the endpoint and proxy-authentication credentials in the client environment:
 
 ```bash
