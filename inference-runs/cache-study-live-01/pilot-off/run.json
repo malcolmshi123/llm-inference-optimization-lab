@@ -1,0 +1,855 @@
+{
+  "schema_version": 1,
+  "kind": "cache_study",
+  "status": "completed",
+  "started_at": "2026-10-21T16:47:25.571486+00:00",
+  "manifest_sha256": "e83c1e9df5fd7e68ae43e5d5402323610ebd6c774eae93f5be8447fd95bee6e0",
+  "client": {
+    "git_revision": "d350aee257ed52cd739ebf6a4be55d1fd59e1920",
+    "git_dirty": true,
+    "python": "3.11.9",
+    "packages": {
+      "httpx": "0.28.1",
+      "transformers": "5.20.1",
+      "jinja2": "3.1.6",
+      "prometheus-client": "0.21.1"
+    }
+  },
+  "server": {
+    "expected_prefix_caching": false,
+    "startup_command_from_log": [
+      "vllm",
+      "serve",
+      "Qwen/Qwen3-4B-Instruct-2507",
+      "--revision",
+      "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "--tokenizer-revision",
+      "cdbee75f17c01a7cc42f958dc650907174af0554",
+      "--host",
+      "0.0.0.0",
+      "--port",
+      "8000",
+      "--max-model-len",
+      "4096",
+      "--dtype",
+      "bfloat16",
+      "--gpu-memory-utilization",
+      "0.8",
+      "--max-num-batched-tokens",
+      "2048",
+      "--max-num-seqs",
+      "256",
+      "--enable-chunked-prefill",
+      "--no-enable-prefix-caching"
+    ],
+    "vllm_version_declared": "0.21.0",
+    "gpu_declared": "A10",
+    "process_start_time_seconds": 1792601118.04,
+    "previous_process_start_time_seconds": null,
+    "observed_cache_config": {
+      "_block_size_resolved": "True",
+      "block_size": "16",
+      "cache_dtype": "auto",
+      "calculate_kv_scales": "False",
+      "enable_prefix_caching": "False",
+      "engine": "0",
+      "gpu_memory_utilization": "0.8",
+      "hash_block_size": "None",
+      "is_attention_free": "False",
+      "kv_cache_dtype_skip_layers": "[]",
+      "kv_cache_memory_bytes": "None",
+      "kv_offloading_backend": "native",
+      "kv_offloading_size": "None",
+      "kv_sharing_fast_prefill": "False",
+      "mamba_block_size": "None",
+      "mamba_cache_dtype": "auto",
+      "mamba_cache_mode": "none",
+      "mamba_page_size_padded": "None",
+      "mamba_ssm_cache_dtype": "auto",
+      "num_cpu_blocks": "None",
+      "num_gpu_blocks": "4020",
+      "num_gpu_blocks_override": "None",
+      "prefix_caching_hash_algo": "sha256",
+      "sliding_window": "None",
+      "user_specified_block_size": "False",
+      "user_specified_mamba_block_size": "False"
+    }
+  },
+  "warmup": {
+    "messages": [
+      [
+        {
+          "role": "user",
+          "content": "Summarize the following text:\n\nroad forest tree light cloud field cloud forest moon road cloud sun sun sun water sun sun road wind field bird night field wind light forest garden night rain garden tree rain water stone wind bird wind river road garden garden bird stone bird stone garden cloud cloud river water forest sun rain night road rain night forest garden water tree forest garden forest forest moon moon forest bird tree tree bird sun tree moon rain moon wind field cloud garden night light river stone sun river sun tree sun wind water road light wind cloud light tree sun garden stone field garden sun river wind cloud field night light cloud river stone tree night sun rain sun rain river water wind bird sun tree moon night stone light garden tree bird road water field field light night night stone night sun sun field bird garden garden night night river field field sun night field forest rain night rain light forest tree night wind garden stone night road tree rain sun garden river garden bird tree river road cloud road bird rain field night cloud stone sun cloud field cloud water garden forest night field tree light bird sun rain field sun stone bird wind garden garden river bird moon tree tree field stone water light wind light field road garden road road road water stone tree cloud light forest moon stone moon sun river sun tree field cloud forest wind river cloud light light cloud wind garden rain road field tree road sun garden forest bird tree light wind river night stone wind cloud field stone water river rain road bird night forest forest water rain river stone river rain stone field light wind bird stone bird cloud road field rain wind moon road cloud road sun road bird moon light moon tree sun wind cloud river wind water forest field stone rain river sun water road garden light sun water water field wind water garden garden light sun rain light rain light forest bird forest rain night bird tree water water forest bird field water light road road river wind rain light bird garden cloud light cloud water cloud light field road sun forest tree water tree forest river field night rain moon light night moon field light wind field rain forest garden water tree forest stone rain sun cloud garden field water sun garden sun forest field field sun forest water cloud stone stone road road sun bird night tree road stone garden road water road rain sun forest night water light tree water light rain garden water light water rain rain river night light rain tree river sun stone tree forest forest river night night tree light forest night stone light light cloud sun light night garden garden bird river sun forest garden bird sun field light tree road wind light garden light night bird field forest sun light tree stone field stone garden stone stone wind cloud moon garden moon bird stone water field moon rain tree bird water tree stone river tree wind garden field bird cloud sun light night road forest night night water river cloud sun wind night garden tree stone river field night night road stone field garden bird cloud road rain road tree night tree light garden water river water forest stone light stone garden road wind bird tree wind night night cloud tree bird rain tree sun moon stone wind light road bird bird garden night cloud stone river garden water cloud sun cloud garden sun moon tree garden moon night tree stone bird forest light river rain night sun water river forest river river river moon night road night stone bird wind forest tree light water cloud bird field water river forest water road water rain stone moon cloud moon bird forest moon forest wind cloud wind moon bird road forest moon tree rain wind field stone garden road night sun night river road river cloud field stone stone river moon water sun water garden bird moon rain forest river forest field forest night rain river light light rain cloud forest water tree bird field bird stone tree wind tree bird field road cloud sun rain road forest field tree rain light stone night wind garden stone bird river rain river cloud road rain wind cloud water river moon water road road forest river garden sun night forest cloud light moon forest water sun tree road moon cloud garden cloud field river forest garden tree road moon river moon light wind wind garden bird water night river rain forest sun moon garden sun rain rain rain field forest road road cloud light rain rain rain bird water forest tree forest river forest river wind garden night cloud stone night river road light garden sun road wind moon tree cloud bird night field rain night night bird sun wind river light forest river forest garden bird field bird garden stone tree garden cloud forest river garden rain light forest tree light road rain river forest moon river wind road garden water cloud field river field night night river garden cloud road night rain garden stone bird river rain tree forest sun sun stone cloud road tree night road water light garden road road tree moon forest water night rain water forest light stone sun road road garden night road river night wind field cloud light bird forest road garden water light rain light moon tree night water cloud night tree river bird field cloud bird forest tree light stone tree moon road rain river cloud forest light cloud tree field river wind light wind field rain rain wind tree night moon stone water light rain bird road cloud forest rain garden field cloud night rain light road bird field cloud garden sun tree garden sun river moon cloud tree water sun night bird field cloud sun wind light road field garden sun tree tree wind garden light road tree rain sun garden moon forest sun rain garden garden forest water garden road river forest water light stone sun tree bird road road sun tree field road cloud river forest moon tree water cloud river tree bird moon forest river garden moon wind night light tree stone bird moon night cloud river road river cloud road road wind bird sun forest rain water river river tree bird night garden sun moon stone wind garden garden field garden field tree field garden garden tree water field light tree moon water rain stone night field moon moon river water light water night field tree water tree garden sun stone field cloud sun water forest light sun cloud night water light rain bird tree field night night road night road cloud light bird sun rain light light forest river road moon rain water tree road light river road light night rain light tree tree water light cloud river water garden rain light cloud tree river night stone rain moon wind rain tree moon rain moon river stone field garden bird road tree rain rain river stone wind light river cloud road forest stone road forest stone road tree stone moon sun field rain night stone light sun rain wind night sun wind field forest sun road light river forest wind night light river sun stone water bird rain wind road road rain sun cloud moon bird light road cloud water water bird water moon sun night road field water tree night water sun night bird garden stone stone tree road sun bird tree bird garden light tree rain sun moon night field light bird wind road garden wind rain water bird river road light field road bird wind sun wind sun garden water forest rain bird garden bird sun stone night field field water field sun light rain bird water night forest night garden rain moon rain forest water bird sun road rain night field garden light bird garden rain field garden garden moon road garden garden moon night moon tree river field moon road night light tree forest wind moon cloud tree garden garden road field river night moon river road tree night rain river stone garden bird tree water night bird sun river road cloud stone forest night cloud garden road moon field bird light stone night field stone field road stone stone sun moon forest light stone night bird sun stone light tree garden stone cloud cloud sun cloud field bird moon sun tree sun rain water cloud wind water river forest wind garden river water night water road field bird bird garden light light forest light rain forest forest tree rain rain road stone tree rain stone night water forest bird stone water wind wind stone forest rain light moon light cloud forest cloud stone field night stone night moon water night river field bird light tree field road garden garden night light forest wind forest night garden night field stone water water water garden garden moon field bird sun forest wind night bird road moon moon sun road rain tree wind light forest cloud tree cloud rain stone cloud forest moon road field garden rain wind moon stone bird water moon field forest moon field river night wind water wind night moon garden river moon stone cloud wind stone river bird wind field wind river tree light forest night wind rain moon water bird wind water river light river tree stone light cloud sun stone night cloud moon cloud stone garden stone water rain field rain river tree rain sun river sun forest night light field rain road wind road rain wind rain field bird forest forest river rain sun forest sun rain rain cloud cloud moon stone stone wind water night night field forest sun bird field light night night tree bird light forest field sun night bird forest sun bird stone garden field light road stone river moon field tree bird field garden forest field river light stone cloud rain bird night light field cloud forest stone sun bird garden tree cloud light field tree sun wind water stone wind rain rain road river field forest rain night field night night light water field night moon river river night sun tree cloud tree water night water light road water wind rain light road forest sun light field light river water water bird road stone water garden forest moon rain night field stone tree field road wind moon wind forest river bird rain river bird water forest garden tree night forest road night garden bird moon light light stone garden moon forest water stone tree sun moon garden stone wind field night road light river forest wind wind field garden field garden wind moon cloud rain rain forest tree water wind road sun light tree cloud road rain field forest tree rain wind water garden tree wind forest field forest garden moon light light light moon stone sun light night wind light light light light moon night water river forest forest night wind tree sun light rain moon road cloud field tree cloud water wind bird road wind field night field road field water forest road rain light wind tree bird light moon light field tree bird stone tree water road tree sun sun wind wind field field river road garden water rain river river garden night bird rain bird river tree tree sun sun garden wind moon road tree stone water garden rain river river moon moon bird sun sun tree sun night stone forest night field night night water wind night forest field cloud rain night forest garden night night rain rain garden rain river water moon stone moon river sun rain moon water moon cloud rain road bird cloud road sun night moon field forest field stone moon tree tree wind road forest river road water moon light river wind water wind garden river rain light sun light garden stone bird tree wind forest rain sun stone forest wind bird moon cloud moon moon sun night road stone cloud stone road night road field forest sun night road field bird field night sun rain water night bird bird rain tree bird night water tree water stone tree sun rain field cloud cloud field sun cloud bird rain"
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Summarize the following text:\n\nbird cloud cloud forest garden sun sun river moon road road moon sun night sun road road stone garden night bird cloud tree moon bird cloud stone cloud field water tree garden cloud garden light river light light water forest cloud road stone rain forest wind field wind water wind forest bird field night garden sun rain road tree garden wind tree wind tree moon water moon light night garden bird bird light garden forest tree road light night rain river cloud stone cloud cloud road field light water water garden water bird stone tree wind stone wind sun road night moon garden forest tree cloud field bird field road rain light garden sun field night cloud garden stone road road night cloud bird moon cloud forest wind field forest stone water sun field field light forest cloud stone moon field cloud tree stone night stone field light river light night garden rain tree river light forest river bird river rain stone water rain sun field field light garden rain stone rain field wind stone garden stone road river moon moon light road river sun sun rain light road forest wind river rain tree night bird sun garden stone tree tree sun forest road road tree cloud field road rain forest rain rain forest tree moon forest night night bird stone light sun road light water tree field river sun cloud tree stone bird water cloud tree rain night sun river rain field bird river rain cloud garden forest bird wind wind field light stone cloud rain night tree forest road rain wind water river moon cloud road field bird bird bird sun river garden light bird night water tree tree stone water night cloud forest field river stone water garden field sun night forest rain moon night moon night night cloud stone rain river tree light wind rain road moon water rain stone stone night light garden bird field stone sun garden stone water road field sun light water field bird water stone stone bird rain light wind night forest bird moon moon rain rain bird road field stone sun light moon cloud road night water field rain road river tree rain sun night road sun tree river field moon cloud water wind sun forest field garden light field garden river bird water bird road light bird cloud forest night bird rain moon field moon light stone moon road water moon field wind water tree garden moon field light light wind sun stone river forest wind stone moon cloud wind water river light light water wind water cloud garden moon rain rain stone stone sun stone light stone light road wind moon bird field field river wind bird cloud rain water sun sun wind sun bird field field water rain river sun cloud garden road tree garden sun bird tree garden wind stone cloud water tree moon road field river garden river cloud river moon sun cloud cloud cloud river garden stone sun cloud forest sun rain tree stone cloud cloud road stone moon wind moon stone stone tree cloud sun forest forest river moon water river tree stone tree bird stone cloud tree moon water stone water water stone night forest stone stone night cloud night water wind light bird river light tree forest river rain sun water stone wind garden rain wind field cloud wind moon night forest wind bird road tree moon tree forest light garden tree wind river rain water forest wind forest light forest night tree light wind forest stone night tree wind road night night moon garden bird rain light wind bird cloud road night river moon night road cloud road tree bird river rain moon moon moon water road rain sun bird light sun forest stone sun field rain tree tree night moon wind road field river wind wind water forest wind night field sun tree stone rain garden rain sun moon moon water night night light garden stone night garden tree river moon water light sun rain sun forest field road stone field rain moon tree night wind bird rain rain tree road moon tree moon field sun field water light river sun tree forest sun garden field stone water forest cloud bird tree road cloud water stone water night road wind cloud field moon stone wind night tree field wind water forest river river road wind bird garden night river cloud wind forest light tree stone sun forest wind bird forest water water bird rain bird light stone light cloud night wind sun stone stone cloud field field water rain moon wind night light bird cloud stone sun bird rain road road forest forest river cloud light stone moon tree rain field road tree cloud tree road night garden water field sun tree garden road night sun bird light forest bird cloud water cloud rain forest field moon forest sun stone garden light forest stone cloud moon rain night rain bird wind forest bird light tree garden water moon bird forest sun road sun water field sun forest cloud forest tree road cloud water rain sun field moon wind light light bird bird cloud river river forest water wind forest moon cloud field garden wind water tree moon moon cloud stone stone wind river road wind cloud night bird rain stone tree stone moon road forest field tree wind tree moon moon cloud night light field tree rain cloud bird water bird garden night moon road sun road rain light tree cloud night light wind wind cloud stone night road garden night light moon night night wind tree wind field light light light water night moon garden forest water stone bird cloud river field sun road forest river bird sun field night night rain wind tree garden forest water river sun stone water night field river moon water garden garden river moon tree rain rain water night tree field stone cloud river moon light light forest sun stone water water tree field tree moon road garden forest tree forest rain forest stone tree stone stone cloud forest road cloud night forest sun stone tree stone rain tree bird rain forest forest rain rain bird wind wind bird road garden wind tree road night cloud field water field road bird forest night field garden field bird night wind rain river cloud rain tree cloud rain garden moon moon road night garden cloud stone sun river moon moon stone bird wind light moon cloud water cloud rain stone tree field forest water night bird tree forest tree stone forest wind road stone forest light rain bird night light sun moon bird light river garden garden road bird sun moon river road bird garden road wind night moon road stone river rain river garden garden moon sun road stone garden bird bird wind forest forest tree field road forest road road water water moon wind garden sun moon wind stone sun light cloud moon wind garden light sun garden wind forest water tree road road sun cloud rain light river rain water road night cloud cloud stone sun night road road tree tree water light field bird river road bird wind river sun tree garden stone field cloud wind tree garden moon field cloud water sun water garden stone wind light forest road stone field night bird road bird bird tree moon river river bird forest forest road bird rain bird garden water tree water sun forest water night rain forest light stone bird bird garden light moon bird wind light rain sun road tree stone cloud tree wind night bird light wind night wind river tree garden tree garden rain forest field cloud wind forest wind cloud night cloud rain field light road wind tree night road stone stone water sun field river garden water moon wind water road bird field water cloud moon forest rain tree wind moon cloud rain stone cloud night cloud light road bird bird light night rain rain garden moon stone wind night garden light forest forest water water bird water night tree bird night night road night sun road night light night river water sun river road tree road tree moon garden moon bird cloud wind night stone rain cloud light cloud forest tree night wind cloud stone field water road stone sun moon garden moon rain moon night cloud river sun garden wind night wind wind garden cloud cloud river water garden night field river rain road stone garden cloud stone garden road tree forest moon rain garden sun field night river night sun wind road garden sun rain forest night tree road wind river water stone rain wind stone night rain forest water garden river wind moon garden forest forest sun cloud bird forest garden light light night stone moon tree river moon moon rain light wind water road garden stone light road field moon forest road stone light road tree forest night night water sun forest moon field moon cloud field rain sun water river garden moon field tree field road sun bird rain rain field night moon stone forest sun river night sun river bird road field moon water road water garden moon moon river tree light forest wind garden sun rain garden wind bird night cloud night light moon field sun river field tree road water sun field cloud moon light cloud rain sun bird sun garden water light river water river river tree river wind light night garden wind wind field road forest night river light sun forest sun rain sun tree tree light water water forest water garden cloud water light garden moon road field night tree stone garden moon wind stone cloud moon bird rain bird river wind wind night rain road moon light stone bird night night river light light night night wind sun forest moon river sun light cloud night garden river field rain tree sun river sun field wind garden light cloud moon forest night wind field bird sun stone river wind forest moon garden night forest night tree sun tree rain light tree stone water river night forest wind forest road cloud stone stone rain river road river river cloud river field water night river cloud light moon tree forest garden moon garden garden moon road garden garden river road garden cloud cloud sun light stone sun sun moon moon tree field garden rain bird stone tree stone river rain wind forest forest river night garden garden night wind moon water sun wind road road tree cloud cloud road moon light water sun moon river forest cloud sun forest water forest tree stone garden tree garden stone wind night stone forest garden garden forest water garden road water field river light garden light rain garden river stone light bird sun bird river night wind bird cloud forest sun water moon water wind wind water forest night cloud field rain garden road light tree bird rain moon bird sun rain light stone light garden road river cloud moon bird cloud light sun moon forest river water sun wind night cloud tree sun tree rain night garden forest light garden road wind garden stone river field garden field water cloud stone garden bird water garden bird water night moon tree moon forest tree light wind night river field forest water moon night water moon bird moon water field wind sun field light wind cloud field light cloud cloud sun forest road night wind light light stone light field bird rain garden stone road light water stone sun forest moon water road tree wind sun field garden stone road field tree light cloud stone rain water garden rain moon garden garden moon sun water night bird moon field night rain light garden bird water forest stone night rain river forest wind water cloud stone forest road moon field wind forest field bird garden stone stone field field river cloud field night light forest bird rain cloud water cloud sun wind light rain road night river wind bird rain tree cloud tree moon field stone water stone tree night road water moon rain wind cloud field tree stone light rain moon forest sun water bird river moon garden light bird moon road tree light light stone river water tree light tree"
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Summarize the following text:\n\nforest bird night rain cloud moon light night water garden road bird rain stone stone light light sun cloud cloud sun river sun river moon forest rain water moon wind stone sun garden moon moon river water bird road road field rain stone forest garden light forest rain water tree water stone forest light road sun water stone night moon tree garden rain forest road cloud field field night wind moon night river garden light garden field moon river road rain field sun bird river water rain light stone garden water wind tree wind night moon cloud tree night stone light river moon river field sun water bird moon water light cloud light river bird light river river rain cloud garden tree sun tree cloud wind sun river light stone light cloud forest sun forest wind water stone road tree bird field rain water sun forest tree water wind bird bird forest forest cloud bird garden bird garden moon forest river stone night light wind forest rain tree river light water river stone water cloud bird tree stone light bird road forest forest moon sun garden stone garden night bird wind river bird rain rain road stone cloud road light moon night wind sun sun garden forest field moon road rain stone night garden bird wind wind sun rain wind river garden river stone sun night river bird bird sun garden forest garden forest road field road rain tree sun forest tree bird light forest cloud sun light rain cloud water night field sun forest stone tree tree light rain night sun night sun water tree moon light wind cloud bird forest river bird garden field field bird garden bird water garden rain river water stone bird water rain night bird forest river tree water stone cloud forest moon road river tree road bird moon garden rain field garden light road road stone sun light night tree field bird road bird garden field water sun night garden forest tree moon river road river wind garden river cloud sun night cloud light garden garden wind road rain night rain road bird river garden river garden water road stone sun forest tree cloud forest cloud rain stone water garden garden river water rain forest road tree sun wind road stone road moon bird tree sun forest tree cloud rain cloud night water river cloud light garden light light cloud cloud field wind cloud bird stone forest rain garden garden light tree tree field river water rain light wind field light stone water tree water wind field stone moon field road sun tree road garden bird forest bird rain road stone bird cloud sun garden bird wind water forest wind field water road road field wind sun moon forest sun rain cloud river water field cloud rain sun cloud rain sun night garden light forest river cloud forest rain bird sun bird night night stone bird road light tree water cloud garden road road river river moon road sun wind cloud sun field bird sun night night rain wind moon wind bird road cloud sun forest stone cloud moon field water field road night water river moon river bird cloud moon field bird garden wind wind garden water wind water moon night forest road water bird water night field light sun wind light tree water river bird forest river river river stone light moon stone rain cloud road night rain cloud moon field garden cloud garden tree moon wind night cloud river stone stone bird light night field light water garden field garden wind water stone moon river garden river forest garden light tree sun forest sun cloud forest moon cloud field bird cloud rain river wind cloud tree cloud cloud forest night bird sun light tree road light cloud field moon stone field field sun field field water road cloud sun moon rain wind tree light tree tree moon rain wind forest bird bird light water tree night forest stone cloud forest bird night sun cloud stone stone light night forest rain night road light cloud garden stone bird wind forest forest cloud sun wind cloud stone wind wind forest cloud rain garden stone river forest river sun water cloud water road sun cloud road tree forest bird field stone moon water rain bird moon bird forest bird wind road field light cloud water road light night sun forest forest light sun bird forest night moon river rain field tree forest garden cloud road light cloud river river sun light river forest cloud rain road forest stone field cloud bird road river road forest tree night cloud stone stone stone water forest cloud tree garden night bird stone light field stone field sun garden night moon wind rain wind field river tree forest bird night stone water water sun stone sun moon tree tree night moon rain light river stone forest forest sun sun stone bird moon cloud garden light cloud tree water garden night stone moon cloud night light wind stone light road night cloud bird rain road moon river moon cloud wind road tree field rain field sun river sun garden water field field forest cloud moon road bird sun stone sun water cloud river forest road sun moon rain sun river field tree sun sun rain stone tree garden road night light garden road moon road garden night wind stone river moon night night river rain field sun cloud tree rain bird forest cloud garden sun moon bird forest water wind river cloud stone moon cloud sun cloud light water light rain road garden field bird wind river night forest bird bird night wind wind water river river cloud river water cloud light garden light bird field sun night cloud road field road road bird rain stone bird cloud river light water rain wind road bird rain garden road forest garden rain forest forest sun wind moon field tree night moon wind tree garden field moon road garden river river road rain rain rain rain stone light road tree tree bird field bird light tree sun garden tree light rain light cloud water tree field sun cloud moon light road rain garden water wind river bird wind wind bird field wind field sun sun river field water light cloud night water wind field moon field moon garden wind stone cloud rain river tree night water stone stone tree moon stone bird tree sun forest wind water wind bird forest light garden river rain river stone garden night stone field rain garden bird cloud river stone forest stone night stone bird road sun wind moon forest sun water water cloud river tree tree road moon river rain river bird river river rain garden river moon bird field forest field field river night night night stone night garden sun road cloud night field river wind cloud field light tree water sun bird cloud wind field forest night bird sun wind night night forest garden night moon rain bird wind stone stone cloud road water field rain garden river light forest road river garden forest bird river water forest rain moon garden night river bird tree rain wind road garden river water road wind river forest bird moon night water wind sun tree moon sun wind forest water night moon tree road cloud tree field moon garden wind water wind tree garden wind tree rain cloud garden road wind forest stone rain tree water rain sun wind night light road garden stone water field sun bird road road water water garden field bird night tree road light water stone water water wind sun wind rain water rain bird night water night wind bird tree sun forest river tree night stone moon moon garden night forest forest river sun tree forest bird field wind rain moon water rain garden night moon cloud night field cloud stone river field stone cloud wind night rain rain road rain tree tree sun sun light forest bird moon cloud garden rain bird field river rain light stone garden stone garden bird light tree cloud tree water road moon field wind forest night forest tree road night river moon bird river rain night river garden light moon stone cloud forest stone moon stone tree wind tree stone wind river sun stone stone garden garden tree night water road forest garden wind water field sun light stone road river wind moon light cloud forest river field stone sun field light tree river forest sun cloud road cloud river wind tree moon tree sun field field forest wind moon stone bird rain rain tree river forest night road sun cloud road moon wind river sun night stone water field road sun water cloud water garden river water road night rain tree field wind rain field night sun wind field field water rain light rain water night forest field wind stone garden sun river sun garden cloud tree road moon night bird road road moon rain river wind forest bird light night night night stone night bird tree road light garden road garden stone river forest road cloud tree garden bird water river river sun river moon stone bird cloud garden rain rain forest water stone river stone rain cloud night stone wind field forest road bird road cloud garden garden cloud wind rain cloud rain road forest bird rain sun road light sun night river cloud sun tree water water field night moon rain bird river rain rain light cloud water wind garden forest moon moon light garden wind moon stone road river road cloud road road rain light rain river light rain night river rain rain moon wind tree rain tree rain sun bird road light field field forest wind cloud rain garden sun river river cloud night field moon forest moon tree garden river cloud stone rain stone moon tree wind field river night garden light forest moon light tree forest night tree rain tree cloud rain garden sun sun river water cloud forest light bird bird sun light field sun light stone cloud stone field river cloud road light cloud tree garden bird bird river cloud stone field forest field moon bird night rain garden cloud night water garden tree road wind forest moon night light sun rain river cloud bird water light cloud rain garden stone cloud road moon night sun road river light road garden moon stone wind water stone water water field forest water sun bird field sun sun road sun garden wind river bird sun stone tree sun garden moon moon bird sun cloud moon sun river sun tree light night light garden road night road water bird light stone cloud stone cloud night garden tree night bird garden road tree field forest field moon cloud tree field wind bird moon cloud light garden stone garden bird road road road garden stone river sun sun garden stone light moon field tree forest moon night moon stone forest water rain tree water river field rain stone cloud tree cloud light sun wind forest bird forest forest sun wind forest wind moon forest wind forest river water water tree road moon tree stone forest road moon field rain sun cloud night forest tree rain garden wind road road night forest light road forest moon river tree field moon river road field stone water cloud garden bird night road bird night garden stone rain light cloud light sun wind stone road night water forest cloud wind water cloud moon river cloud sun wind field road water night river light river tree garden bird light bird light cloud rain night bird light sun cloud stone field cloud sun water field sun tree road light light river rain river forest sun sun river stone water tree field road river road garden water road water garden moon forest wind sun moon night moon night river river field moon sun stone wind rain sun cloud night rain stone garden forest sun moon garden light river stone stone light sun night bird field rain road road moon wind water river sun night cloud light tree garden sun moon field field river sun night night tree water rain forest water bird wind wind garden tree bird night forest wind water garden sun garden forest garden"
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Summarize the following text:\n\nfield sun stone moon field stone field moon wind garden garden garden rain sun forest bird road night sun light moon garden road stone night bird rain forest bird sun rain river night night light cloud field water wind cloud field light river cloud rain river sun forest tree stone river road sun stone moon bird road river field river wind field cloud tree road moon night night river forest moon night cloud forest field rain wind bird forest garden light light sun cloud cloud garden bird bird moon field bird road garden field sun bird sun tree garden wind sun garden tree moon sun tree moon road water field bird stone light bird garden river forest cloud road road moon field tree sun stone garden road wind water moon water bird tree tree forest night night garden light moon cloud wind field moon garden tree road river light night cloud bird sun river cloud forest moon garden stone forest garden river stone field tree night river wind field forest tree field wind stone field light water moon rain road bird bird stone light light rain field tree stone sun tree sun light garden tree tree tree wind moon cloud garden sun stone bird sun wind cloud river bird water night water stone moon moon field rain road forest light rain rain light forest stone field cloud rain night forest field road wind stone road moon tree tree field cloud moon moon field tree cloud wind garden moon road sun river wind forest bird moon wind river light river moon stone stone water cloud river night wind sun moon bird river rain stone bird river rain sun forest cloud road field river bird tree sun tree forest rain wind sun river field sun tree light road road field garden rain forest light rain bird rain river wind tree garden moon garden sun water light light night cloud forest tree road moon garden light road garden tree night river forest rain wind rain moon water forest garden rain light tree field night river garden road tree garden field water moon sun road moon tree night forest rain forest cloud water moon moon water river moon water water moon moon night bird sun water night road garden garden water moon tree sun river stone night bird field light rain cloud moon rain wind moon river moon night bird moon tree garden night cloud stone wind cloud road night cloud rain river rain bird bird field rain moon night water night river water rain rain stone stone night cloud forest forest tree moon field stone moon road rain sun road cloud forest night sun wind water river road light road forest night wind field sun water rain bird garden field stone stone forest road sun water rain night stone garden field light bird moon rain tree river cloud river garden cloud forest field light garden forest road wind field field wind cloud tree moon stone moon sun wind rain bird bird night bird road sun road water sun bird rain light sun sun water field field moon bird road wind rain light bird bird road stone bird bird cloud moon river light water cloud road wind bird cloud garden rain moon moon cloud field cloud road light water moon tree sun bird road night bird night sun bird river cloud wind cloud forest cloud wind field rain forest tree night road night field tree rain river tree sun garden night sun night bird night moon moon cloud water light field light wind water river road moon rain forest garden light garden river bird tree river light night road water forest moon forest rain night water cloud water river garden river cloud forest sun field light sun sun rain bird cloud cloud light cloud water rain river river sun wind stone rain road light bird night bird garden road garden tree garden bird water night cloud tree garden water night stone road road stone cloud road garden bird river garden garden tree wind water night bird water light river stone light forest forest field tree forest night light sun bird sun forest light rain stone moon tree field night sun rain road tree cloud tree garden garden stone field river cloud moon field garden light moon wind tree sun water water light cloud cloud tree light sun bird wind cloud sun stone water stone river forest garden rain cloud moon moon night tree road road sun field stone tree forest forest wind water light moon garden moon water rain moon sun night sun sun garden light garden sun garden forest rain cloud rain garden stone tree light night rain moon water garden sun garden tree wind tree wind road moon bird river river river road garden cloud rain garden night rain sun moon moon river river river sun wind forest cloud wind sun sun field garden sun night road stone cloud forest garden bird sun garden road sun road cloud night light water tree road bird field forest light cloud moon tree sun cloud river water cloud night garden wind rain forest garden garden night moon field river water field rain forest river night tree tree river tree rain river road garden field rain road forest river road light rain sun field river garden tree cloud stone water tree cloud stone rain tree wind tree river water wind wind tree water rain cloud road light rain wind night moon cloud water tree tree night sun road cloud road field moon rain moon cloud bird river river night tree wind stone stone bird road garden light night stone field river tree road moon forest cloud field rain road bird light garden field moon sun water moon cloud bird forest river sun water road wind sun garden garden field sun river river river garden river field bird cloud tree rain wind tree forest sun rain wind moon cloud sun cloud stone wind field sun forest light garden field tree light water rain river wind cloud rain sun road cloud night night garden rain road bird cloud sun rain road rain night stone moon moon cloud light forest road wind field light rain sun garden field rain forest bird water bird field water bird night garden bird cloud road river road tree night bird stone garden bird bird rain light road wind road water night road road cloud river stone light moon bird road wind night wind light forest rain stone light light night tree field night wind road night stone field cloud river tree sun rain stone garden cloud field garden tree sun stone stone garden forest wind river night moon garden wind moon moon light sun cloud rain rain water cloud light bird moon forest rain wind sun field tree field moon water forest river cloud garden sun road moon rain water sun forest river stone tree stone forest rain wind sun field forest cloud tree light cloud stone bird garden stone night field road stone river bird rain wind river tree sun cloud rain wind road light moon sun forest rain light water forest cloud moon forest garden bird bird tree stone forest bird field stone light river sun light cloud forest light garden light road stone cloud sun night sun light wind wind bird water rain field cloud garden sun sun moon road bird river water rain bird forest night rain tree stone sun river wind light light field field sun stone garden field night night stone wind forest night rain stone wind water stone cloud forest river river garden water river rain field river forest moon sun tree rain field moon wind water forest field river cloud night sun sun road light field rain tree night night road moon bird night tree sun moon wind night moon water stone garden sun garden water garden water garden sun wind light river road garden cloud field bird tree garden forest night night tree field river cloud river sun bird stone river night forest forest sun field bird wind tree road wind bird water rain bird night garden light garden light cloud field light rain cloud moon bird light garden night tree river road wind tree road light garden stone moon water stone water sun water cloud bird wind field river rain forest light wind forest river night road night forest stone moon rain moon cloud river road sun water field field moon rain wind sun light light garden stone forest field field sun moon forest moon tree forest cloud tree stone road moon wind bird river wind sun stone forest forest garden sun bird cloud stone moon stone water garden stone cloud garden sun light stone rain cloud river moon light sun sun light field moon tree rain rain road road forest stone road stone tree cloud moon light cloud rain forest light light wind light sun garden road wind field cloud wind river river road tree garden tree garden cloud rain tree water stone forest field light light sun cloud moon tree night wind forest field forest bird water river night rain wind moon moon water rain night forest bird road night light wind tree river water wind stone rain sun moon cloud cloud moon light river night garden stone forest forest moon night wind night tree light forest river tree rain tree light wind night garden road river garden stone river night tree tree river wind tree river forest rain bird light light moon wind moon forest river bird sun rain tree cloud river cloud garden sun forest water light light moon cloud light light wind wind sun bird tree road forest sun field forest tree moon bird moon bird forest cloud bird stone field sun sun water water stone river field forest garden field bird road light rain night field sun light wind cloud road field tree rain night bird garden garden rain stone wind moon water cloud garden forest wind tree moon sun light stone bird rain tree field rain stone rain sun moon garden light bird tree cloud light forest bird rain moon field moon rain water forest forest wind bird field rain field moon water garden field garden wind river bird river water tree night forest stone field forest moon moon sun sun forest field road bird moon forest light garden tree wind cloud river night light river tree moon cloud night stone sun forest night water stone forest night moon road sun wind tree rain tree tree sun cloud moon night night cloud tree tree bird cloud moon sun bird water night forest rain stone moon moon rain garden stone night field rain water forest tree bird sun rain garden moon tree stone bird light river rain night tree road night wind rain road road road cloud bird road moon field bird road forest wind tree cloud bird field stone rain river garden night garden garden rain cloud stone night wind garden wind garden cloud field bird light moon moon water river river wind river river wind road light field wind forest water road light water garden field moon stone sun rain water stone stone garden tree night river tree stone tree garden water rain moon wind cloud road rain river rain forest night garden light cloud garden garden road water water cloud night bird field night rain field bird forest sun road bird road road wind wind forest tree light cloud bird cloud cloud moon river bird sun forest wind moon tree wind wind light cloud bird river garden tree field bird sun stone forest tree wind river wind stone water light road stone rain forest water rain road night river tree bird night cloud garden sun night wind river light moon sun moon stone garden sun bird wind night road cloud cloud rain cloud garden tree night moon field tree field field wind tree light tree rain field light road stone forest garden bird tree stone river tree night river forest water moon night garden night forest garden forest sun moon road cloud rain moon tree cloud wind river forest night wind cloud rain forest forest river wind road wind moon road stone wind light stone river field light moon water rain wind cloud water forest moon water"
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Summarize the following text:\n\nwind tree garden night rain road stone water tree road forest tree garden moon moon cloud night water tree light wind forest wind cloud garden field forest cloud wind tree garden garden cloud forest light light tree stone wind stone road stone road road sun cloud tree stone road tree moon moon night light water light field tree garden river field bird sun wind river cloud field tree garden garden river bird rain stone water forest night cloud cloud cloud wind wind road night field road garden garden road tree bird river river bird river bird garden rain field cloud tree light garden stone light night moon moon moon road water night sun stone stone cloud bird garden bird light field rain moon road bird night rain road sun forest field stone garden field moon rain moon cloud cloud garden river cloud light sun stone rain river forest water road field sun forest garden cloud sun moon sun river stone field wind garden wind wind night bird rain tree forest forest forest moon rain road water rain wind field river wind stone sun night wind stone cloud river stone forest field sun field tree moon night water cloud forest water moon garden road tree garden sun sun stone stone garden road forest water moon tree field garden tree rain bird rain light light rain garden sun forest road forest moon bird bird light tree sun garden bird cloud moon wind cloud cloud wind light water light sun wind water moon tree river forest field wind river wind tree cloud forest moon road forest bird sun water tree water water moon garden cloud field stone night night bird field bird light bird cloud moon water rain forest stone tree sun bird garden water wind rain forest river water moon tree field road field water field water stone cloud night water field cloud moon forest night night stone rain stone forest water tree bird night light stone tree wind cloud night wind stone tree road field garden tree stone garden garden bird cloud rain garden water bird sun tree cloud forest field water forest light light stone field water river night garden cloud forest moon river water road sun night light garden road road river stone cloud rain sun water cloud forest sun moon river garden wind sun water tree bird moon field water light cloud garden field garden river tree bird rain light stone bird cloud light field light forest stone road road moon tree field tree sun moon forest moon tree field sun field night wind moon water water river light light moon night moon road light forest road forest garden road bird stone rain light forest tree wind cloud cloud field forest tree rain field garden moon field rain forest night light bird sun road light bird wind sun wind moon bird wind bird wind river sun moon forest bird road light cloud bird cloud night moon night moon night rain garden stone wind field sun water river forest tree field garden water light light moon garden moon light stone field stone road forest night forest forest night field sun cloud stone wind night river water night stone night road sun night night road moon tree light forest wind forest light garden tree night light road moon garden rain light road light road cloud stone rain light sun sun night field forest night field forest forest light tree garden sun tree moon sun field light tree wind field light rain field garden forest sun tree forest garden tree moon tree bird light wind bird tree wind wind garden river forest rain field sun bird tree forest forest night bird field river bird water sun garden river stone rain water road garden water bird garden light stone bird sun field light bird garden night forest wind water cloud field rain cloud bird garden light light forest light rain sun garden forest road bird stone moon sun bird sun water bird wind river stone moon river river river river night road wind forest field field cloud road sun night stone field sun garden sun night tree bird moon water cloud stone night river moon garden river tree tree sun rain water field road wind field river wind light rain stone wind garden wind stone garden river bird forest garden cloud field water forest garden moon field water bird field river garden stone night river garden garden water stone night tree sun wind rain water garden forest night sun road wind river light light cloud sun wind light stone tree road sun sun bird sun tree field bird field night road cloud garden road rain water night stone river river cloud cloud water rain light tree sun cloud cloud river wind night cloud garden night water forest road cloud sun night field field night forest sun tree road sun stone moon tree field sun road river water bird road water light night light moon cloud stone bird field rain water cloud cloud moon cloud rain forest water forest sun field sun rain river wind rain sun rain night moon rain light road moon rain rain night forest field sun stone cloud garden tree water cloud night stone water night water road water night moon stone road stone stone field garden moon cloud field cloud garden water night light field garden river tree wind moon moon light garden wind moon forest moon bird cloud rain field garden field moon moon cloud rain garden bird road rain light stone bird wind river river tree sun stone garden wind cloud sun moon water rain night rain tree sun cloud garden moon moon road stone field garden rain bird garden road night tree forest forest forest field light water light stone forest sun light night moon water road bird rain wind forest night garden rain forest tree rain night bird bird water tree rain wind river night forest bird bird forest water light bird tree water night garden forest river water light wind night rain river rain road forest forest road road light night river forest garden road wind moon field tree cloud night light moon field garden water stone stone field road forest sun forest cloud sun sun rain forest stone forest river road road water river river night wind stone night water moon forest stone bird stone forest bird light moon garden light river water moon road water road river tree light bird tree cloud garden cloud wind tree forest bird bird sun night garden road water bird tree wind sun road garden sun forest light tree sun stone night moon field garden tree bird moon moon forest forest rain river river rain cloud garden bird road moon sun road cloud water wind garden field moon stone sun light light cloud stone road sun garden cloud rain wind water sun light bird stone water light forest bird tree river cloud night river garden field field moon sun cloud moon bird road sun tree field field wind river moon sun garden sun light river stone rain moon forest sun field stone light river forest water wind light field stone garden water garden sun bird field forest light river river night river cloud cloud moon light rain wind garden cloud wind light garden forest cloud stone rain moon light stone road road cloud sun cloud sun water road garden garden sun bird tree bird water tree sun stone cloud stone road cloud stone tree bird forest forest river moon night rain rain bird night field forest night garden road sun road cloud sun light light field bird light light moon river sun wind water moon wind cloud road wind bird moon wind river light tree forest light wind wind moon night stone forest light water tree forest bird garden bird water field sun forest water night road rain field moon forest wind stone water cloud road tree tree bird wind bird bird water light sun road river cloud rain light forest bird forest sun moon river garden forest moon cloud river field river stone night forest rain tree stone road bird field cloud bird night bird forest stone bird night night bird night wind tree moon road light wind rain river night garden garden wind night garden light light bird rain light night forest rain water forest night light road bird sun stone tree night road field field wind forest field stone wind sun stone rain stone river light stone bird stone night cloud rain rain night cloud water garden rain garden sun cloud garden bird stone field field garden moon field garden water moon sun sun forest forest night wind light cloud rain forest moon bird road rain wind stone water road stone stone field water sun light cloud light tree night sun bird bird forest rain forest bird river forest sun stone tree wind field cloud river field road bird garden road night garden road field field rain light cloud road forest moon forest stone moon field river water sun night road light field sun night cloud water stone stone road garden wind night river rain rain bird bird water stone night moon garden field moon wind tree bird garden light moon night bird garden water water cloud road road water rain water water cloud road rain river forest bird forest sun road bird rain garden road forest tree wind garden forest wind cloud field forest cloud field road light sun road forest field cloud garden wind stone field field water rain stone moon bird tree stone field sun garden moon rain light wind road field moon water field moon cloud forest river water tree wind rain garden wind sun tree tree bird stone wind garden garden forest tree night moon garden wind wind forest water moon tree road river rain night moon garden road tree wind night bird moon sun water night river light forest moon moon rain tree moon light field road sun stone tree sun light road light field road water bird sun night field water bird moon road night moon water river water wind river garden field tree road moon sun wind bird garden moon bird night bird tree river rain forest sun stone forest water rain water cloud cloud water garden forest cloud stone sun field field bird rain cloud rain garden wind cloud rain river moon tree rain garden rain sun light tree field road moon rain water field field road road water field road stone stone water river sun stone stone tree light water night bird wind field light river road water moon water sun forest rain moon forest garden forest light field moon road water water sun stone light light field tree moon field stone forest stone light sun river cloud bird stone tree tree light garden rain sun forest rain road field garden sun forest river water road light bird forest water garden wind field cloud field light forest night tree light bird wind cloud forest bird garden sun road bird moon water bird bird road bird stone road garden field field sun water forest moon sun bird bird river tree field forest wind road stone night wind light stone bird water night forest water sun wind sun tree tree road water garden rain field tree light moon sun stone sun sun moon cloud rain garden field forest stone river garden cloud forest sun road forest road tree field stone garden cloud water water night bird moon river rain garden river garden sun night garden light field tree garden light stone rain rain rain wind bird sun bird moon light light cloud rain river river rain sun wind water water rain tree sun road wind cloud cloud forest sun rain river rain garden rain stone night rain field road forest cloud forest moon forest bird bird wind tree sun tree night bird stone stone wind stone sun wind garden wind road wind light field water water light river field rain tree rain water light rain forest stone water sun forest garden cloud stone rain bird water stone night field bird stone moon forest moon stone forest river sun tree stone bird rain stone tree night road night bird stone river sun wind water night water moon bird river"
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Summarize the following text:\n\ncloud bird river sun light sun moon forest night water wind sun field river garden stone light forest garden bird tree garden rain stone river light light wind field forest stone river cloud tree water moon tree forest garden garden field bird wind light rain sun forest stone rain water road stone stone field road night river river road river water field road garden sun night rain river field road cloud rain bird water sun night moon light road light light road river cloud river river sun sun river sun moon moon rain stone field light river road light night road sun road bird night night bird road river light rain moon rain river moon river sun river light road road wind rain bird cloud road light night cloud light wind light river night road stone tree light bird wind water water field river field moon river moon bird garden river field forest garden forest wind tree night garden road cloud forest water garden stone road river river garden sun stone water garden tree tree night bird water water cloud wind wind road moon bird stone cloud night cloud night light road field bird river wind river bird light cloud light forest light night water water river field garden cloud field field moon night wind sun moon wind tree sun stone light night light garden wind forest field field rain bird water road bird garden road light garden tree cloud river field wind wind tree forest road wind sun light river stone night garden stone river river garden river river field stone night night light cloud river bird moon light forest wind road field night forest sun road rain garden rain cloud field river wind tree stone road wind rain rain bird night tree cloud night moon night stone road forest moon water garden forest wind forest tree stone garden light road river stone moon river road sun garden moon bird road river cloud sun light forest stone rain wind forest field rain moon stone tree wind night field water river forest light night water cloud garden stone light stone water river moon tree road river forest moon river sun road cloud sun field field road garden river water rain garden light cloud bird river road moon bird sun rain road night moon cloud forest stone field bird tree river tree garden road rain wind moon cloud moon tree river water road light river wind water night rain rain bird water wind river rain water stone wind road water bird moon forest wind garden cloud water cloud rain tree forest river forest light night road stone garden stone water tree cloud field stone rain rain cloud field night night river rain river water night moon light wind sun river rain moon cloud moon light moon road night river night light garden garden night light bird garden stone wind field rain garden cloud light water field cloud light road rain cloud wind tree night wind water river wind light water garden garden tree river rain night moon moon light cloud garden stone stone rain road sun garden night stone light sun stone water bird cloud night bird night river moon night moon river river wind sun moon night field wind garden tree forest bird water road sun river light rain garden river night wind bird bird moon night water stone stone field bird tree rain forest moon bird light sun wind moon field water river garden field garden moon cloud garden road bird field rain stone rain field moon water light river wind rain tree forest cloud light road light garden moon water field water water water forest field water rain cloud field rain rain cloud sun forest light light moon road river road moon water night sun cloud road forest moon river tree sun garden tree garden garden light road garden cloud tree tree wind garden night light bird moon cloud forest road stone tree sun water stone night bird bird rain forest forest road water stone tree river garden cloud forest cloud tree wind moon tree water moon wind rain sun garden sun river wind stone forest rain light tree night water field field forest rain sun cloud rain river light wind bird bird bird forest sun wind garden wind bird forest bird river field stone field rain road night water rain field field bird garden cloud night cloud light night stone cloud cloud wind forest bird stone rain rain cloud bird river road light wind cloud field tree night moon rain river field field field bird moon river moon night road cloud cloud rain sun light rain field wind moon forest tree sun tree garden garden night rain garden sun water tree road moon moon water tree cloud stone field wind moon rain river field cloud road sun river tree light cloud night moon light sun water night bird garden light night rain rain forest night water wind cloud cloud wind river rain sun stone garden moon moon bird tree garden light river stone bird wind stone moon field wind garden bird wind tree bird wind tree tree moon forest moon wind bird garden stone tree night light sun tree forest cloud rain wind water river stone moon wind wind bird sun moon moon water rain rain stone light river road water night forest river moon sun field water sun cloud tree cloud field river night stone wind field light tree cloud wind night road wind garden moon light sun garden wind river sun night bird road wind road stone cloud light water river forest field tree cloud rain rain sun wind cloud stone river stone stone light sun forest water cloud bird tree moon sun stone rain field rain moon sun rain wind river river stone field tree wind moon stone road road river stone garden wind bird road moon cloud road tree water sun field water wind field wind garden road river water stone stone river stone sun garden sun light night river bird cloud light stone garden light stone tree bird sun sun cloud wind light water river bird bird tree bird forest light sun light cloud wind night stone tree light stone river water wind garden light forest sun sun cloud road cloud bird river sun garden sun wind light wind moon sun road water cloud wind light rain night moon night cloud night water road bird road water road light field tree cloud wind cloud field sun sun tree forest water sun rain wind sun light tree rain night rain moon sun stone rain cloud river sun field sun forest river stone moon river field cloud field light field cloud rain forest rain rain stone wind stone tree light cloud water light bird field tree stone stone bird field moon field tree bird moon moon wind stone field night field night stone road wind wind light road stone field moon wind water cloud field river garden tree field light forest forest moon tree forest sun forest stone garden moon light water water stone forest garden sun forest river water water river sun forest bird bird garden light garden moon night river road sun moon water sun stone river moon river cloud moon night garden night night sun cloud rain water tree water bird bird night river moon road rain garden garden moon road light field water road garden bird wind bird night sun sun river wind stone water river stone night field moon tree river field night moon field bird bird garden forest moon water garden river stone water bird forest light tree stone road garden forest road tree moon wind forest road moon cloud light forest bird night light stone rain field tree wind bird sun forest bird night forest moon road bird cloud river wind wind cloud night sun night moon wind field garden rain sun stone road wind water moon forest tree night rain road light garden tree light sun cloud road tree forest field water tree cloud wind field river field river sun night tree river moon rain forest river moon water moon water bird bird bird garden road water forest water water light night field stone light garden tree rain tree light forest forest cloud field rain night forest rain bird sun night wind night field night moon road road forest wind rain rain wind light stone garden field water garden water garden wind bird road rain light water cloud water cloud river cloud bird field tree road bird garden sun light forest rain road stone cloud tree tree bird forest light rain cloud light night night garden field stone road rain tree forest field stone wind forest cloud road river cloud stone road tree moon sun light water rain water field field bird cloud river tree moon wind rain cloud bird moon rain river tree forest cloud road cloud night stone water night sun garden bird rain forest field rain forest cloud light tree garden road wind sun rain tree light cloud forest night cloud water rain cloud road forest forest cloud light sun stone forest road wind moon night stone moon field night stone tree bird light garden cloud sun cloud sun stone forest bird moon river light light night cloud river stone rain moon water garden cloud stone forest rain moon field moon bird bird bird moon night stone water tree bird forest river stone garden field water stone moon cloud moon sun water garden sun water river rain cloud river stone water wind light rain bird light sun road tree night cloud garden bird garden garden water moon cloud tree cloud water forest sun forest road sun bird field water light river garden forest rain cloud river road field forest rain cloud field night water sun cloud forest road field bird tree bird bird tree water wind stone forest water rain night wind forest forest cloud cloud stone water tree wind light tree wind bird bird water road night cloud bird road tree rain cloud cloud tree field night night stone light road garden wind moon stone tree garden bird garden river wind garden bird light moon cloud field light night bird stone forest moon stone road garden night sun rain wind night light light night night night road sun sun sun light moon river night light light wind river stone sun cloud wind road river water forest sun field bird field rain cloud forest cloud moon field stone river wind field road garden river field stone cloud rain cloud sun cloud moon stone water field field road light tree stone stone moon night rain forest sun garden water sun sun wind road bird night light rain garden wind wind water water forest sun river wind cloud night wind cloud cloud garden road garden river wind light night light cloud cloud cloud cloud garden rain sun road rain river rain wind rain rain cloud stone wind night light sun garden road cloud sun night rain forest river garden river garden night sun sun light light bird garden wind field water field tree forest garden field field tree forest forest light rain sun garden road night rain water rain moon forest light sun cloud sun bird cloud water wind light night wind bird road water tree water stone rain tree moon water bird bird moon rain stone stone sun night road tree light bird field river bird road river field light cloud garden field forest river road water rain light river cloud field tree night cloud garden stone field moon sun tree night forest sun light rain road river garden river light road stone tree field garden river garden bird field wind road sun moon field water bird moon bird moon light light field bird river wind tree river moon cloud water garden cloud sun water sun cloud forest moon river wind light cloud moon light water forest cloud tree moon rain tree bird rain sun stone road light water stone bird light forest tree sun cloud rain rain cloud tree forest cloud stone moon river garden stone forest forest cloud forest tree bird wind water moon moon night sun water forest wind moon forest bird river wind cloud stone river rain stone rain water road water river"
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Summarize the following text:\n\nnight sun wind bird tree bird moon road river sun rain road road bird water forest tree stone moon wind field road sun tree bird sun field river stone forest road night garden bird stone tree water rain light stone stone forest bird night light bird road forest forest field road tree stone road night sun night forest sun water water bird road field tree water stone bird forest garden river night river rain water sun moon sun wind water bird garden cloud moon light moon garden light garden night moon road river stone moon cloud bird night field cloud night road cloud bird garden bird rain rain sun sun water rain wind night stone night tree light wind field night tree field rain river forest sun river tree river rain river river road moon tree bird light road sun cloud moon cloud tree stone bird bird river stone night tree moon light road road cloud moon forest cloud tree rain bird road road moon forest cloud stone stone night stone rain garden road river wind night water road night night wind bird stone cloud river night garden cloud forest light stone light river water forest forest moon wind night field forest sun cloud garden stone moon night river water garden water wind bird forest light moon water wind stone bird wind tree tree wind garden night bird garden rain forest sun garden moon wind light field field night river bird bird night sun moon moon tree sun wind wind night night tree road cloud rain tree river tree field bird field road forest stone river sun sun rain field bird stone cloud river moon stone night wind wind sun light cloud bird light forest road road bird bird sun wind road forest road light light garden wind bird stone wind cloud night water cloud road night night water rain cloud sun garden field moon moon sun tree water sun wind moon stone light rain road bird moon night wind light wind rain sun cloud garden wind water light night garden bird bird road night night night garden water stone sun rain moon rain sun cloud rain tree wind night stone wind road stone water bird road field night rain cloud light light bird river water rain moon forest river cloud water field garden sun rain sun water wind forest river light rain river field night moon moon bird tree night forest wind rain tree sun bird forest cloud light sun cloud rain stone field forest forest light wind cloud river bird light rain river rain cloud tree night wind rain rain river stone light field bird sun tree bird sun cloud river road sun moon field river moon wind moon field moon moon river moon field road wind night forest wind forest garden light wind light light tree water moon moon tree garden light bird cloud cloud cloud rain cloud stone night stone wind river forest bird garden rain sun cloud tree bird moon field road river rain garden tree tree tree water bird sun wind rain stone wind water moon rain water wind rain bird water wind road forest sun cloud bird moon water water rain sun sun field cloud bird rain sun night stone moon bird field stone sun bird wind bird wind wind moon tree water bird night field wind wind river light sun wind rain sun light wind bird cloud moon water water garden bird rain cloud sun tree moon moon bird forest bird sun moon forest road moon light bird cloud sun moon stone bird moon river wind sun field tree bird rain wind cloud cloud moon water sun light water forest water cloud night river road garden stone forest bird sun road rain tree bird bird river forest night bird sun tree garden sun bird tree river bird field wind light field water water night light river moon moon forest field light field rain river forest light field field wind sun tree night stone field water field tree stone night sun night stone tree garden garden wind bird moon water water forest road tree night light stone forest sun road moon wind river water light road field bird light sun cloud field forest river forest garden moon rain tree water light cloud road light bird sun forest river tree sun garden night bird water garden light night night light water field bird water forest field wind stone field rain field cloud light night light water sun cloud moon forest light tree sun forest water sun wind light road tree tree sun moon forest garden wind wind tree light garden garden bird water tree rain cloud road moon sun cloud bird field cloud moon water rain wind water field tree field bird night moon rain night water light night light wind bird tree rain water stone field night water stone garden stone stone sun field rain sun water stone bird stone sun road road sun bird forest river bird night water tree garden river rain road bird rain night tree river tree cloud river wind tree cloud night light road light tree night moon moon cloud river road stone wind sun bird water bird wind wind bird water bird sun stone light rain tree cloud moon road night tree water field light cloud cloud wind water river stone wind field stone road road light rain stone light light cloud road light moon moon wind wind garden light water bird forest field river forest cloud moon night moon field sun night night field stone cloud river cloud garden tree light water cloud bird sun field night field night cloud light river forest cloud bird garden cloud bird field forest moon field sun bird river river stone night garden stone road bird wind forest road water cloud garden cloud sun garden cloud bird stone cloud cloud water bird garden garden light field road moon bird rain road cloud cloud light field rain light road garden moon field river night moon field moon rain sun rain bird road night light night light light tree moon cloud forest forest garden stone cloud forest road bird stone garden moon bird bird river moon bird garden light rain forest water cloud garden night wind water garden road river night night cloud wind forest stone tree light water garden cloud road night cloud bird road stone rain water bird tree rain light moon river forest light stone road sun night forest moon stone night forest garden moon road stone stone forest forest bird water rain sun sun water moon sun night stone cloud stone field forest field wind night water night bird field forest rain water stone stone light light river night river water wind river field wind light garden rain road road night garden field wind night field road water night garden water night river garden garden river forest river road road moon wind tree light light stone moon stone bird garden stone tree tree road sun rain garden light forest cloud water stone road wind road stone forest forest water moon wind rain tree field night cloud bird road forest field forest field wind night forest cloud cloud rain wind garden bird field forest cloud water garden road field cloud night water sun forest road night bird cloud water moon stone road night bird moon water sun tree bird forest river bird field light cloud water sun night night river garden rain forest sun garden road wind night water light rain forest bird wind stone light moon river garden road tree garden sun water light stone tree light water garden cloud water light bird garden tree tree road night field river road water sun sun field stone sun cloud water bird cloud light rain night stone forest garden light sun wind cloud light bird road forest cloud forest river river moon night tree night rain moon tree night cloud sun rain field stone light water bird road light sun cloud sun cloud forest night garden moon light water road moon tree cloud forest light bird stone moon light sun field night stone wind road forest night garden moon field road night forest tree bird tree sun road light water forest tree moon moon forest bird river field road water river stone garden tree stone rain forest sun tree sun rain field forest forest moon rain bird night sun bird light garden wind light water field light stone sun stone forest forest water stone wind cloud bird rain road cloud rain road wind forest stone night road field water sun sun light moon sun sun tree bird field river stone tree field moon water river wind stone wind moon rain river stone garden stone field night light river light rain water cloud garden night rain moon river garden bird field bird tree night wind cloud forest wind water river rain cloud road sun moon wind bird wind night river road night tree wind river wind light rain moon garden river rain light tree river stone bird wind tree field night light bird cloud tree sun sun wind forest water bird field rain field rain tree rain river field stone field stone cloud light road bird wind road wind water road cloud river bird rain tree night bird field cloud river cloud bird tree night field water sun bird wind tree wind forest road water night forest stone cloud moon stone sun night light cloud sun forest tree cloud road tree water moon field river night river water stone sun stone wind river rain water cloud bird night light forest water river moon wind road water bird field light moon stone tree moon field water garden sun garden cloud cloud tree garden garden forest light forest wind tree forest moon field river water rain tree cloud garden night river night river road sun bird field river water stone night bird light forest bird rain stone night bird tree rain sun rain forest road forest moon night rain road bird field tree field forest road field night garden light water river night forest field river sun bird wind sun road bird light cloud field wind night water tree tree rain forest forest cloud sun bird light garden field sun rain river field light road water tree moon tree garden road garden garden wind wind wind field forest river moon water road light light rain field water light forest moon garden forest river light bird sun stone wind garden wind night sun tree night moon wind garden light moon water rain stone field bird night rain wind rain tree road rain light water rain road forest night water wind wind road river garden rain road wind rain field night wind forest tree tree rain field river wind moon moon garden bird sun wind stone cloud night moon wind wind water rain wind moon bird forest garden road wind field moon moon cloud bird tree water wind cloud cloud water moon field field field light light wind water stone river stone river wind forest road wind bird light night forest stone garden tree stone moon sun wind moon tree cloud water moon tree river night stone light bird sun water stone river river cloud light night forest light wind moon stone road moon forest cloud rain tree river wind field tree tree field field sun sun cloud light bird night moon stone water garden garden night garden tree stone field tree wind moon garden light water garden light night night forest rain tree forest moon road stone night moon road road sun field field sun wind tree field rain forest moon night cloud forest cloud tree field bird road wind river moon garden water rain stone cloud stone cloud river tree field light field light water cloud sun tree cloud garden bird bird stone water field sun road tree rain rain garden wind forest light river night cloud cloud wind field water forest forest moon garden garden wind river water bird forest road sun wind tree water forest wind cloud field river road river tree road river garden forest garden water field night rain moon cloud river forest garden moon tree garden night garden garden sun forest field rain river field wind moon stone rain moon rain"
+        }
+      ],
+      [
+        {
+          "role": "user",
+          "content": "Summarize the following text:\n\nwind rain night rain water water wind stone night cloud river wind wind wind light night sun garden night field cloud tree rain road moon tree forest rain river light tree tree moon cloud night cloud river stone wind moon bird moon bird rain field road bird night tree wind sun cloud road stone bird rain moon cloud field night forest night stone rain stone river night light tree tree sun wind water field forest stone cloud forest sun field light stone field forest rain garden bird river stone rain tree cloud cloud light stone night stone river forest sun rain garden garden light night stone water rain stone cloud bird moon stone forest moon bird sun river night garden water cloud cloud cloud wind sun sun forest wind wind moon light moon night field sun field wind forest tree stone forest wind road water tree water tree road night wind water bird garden garden cloud rain river field garden road bird water water road bird light water wind bird river wind sun wind field wind water cloud sun light field sun water night wind bird tree night bird forest forest cloud wind rain forest tree tree field water water road night rain moon river forest bird moon rain forest light light wind road cloud forest forest river stone rain night light rain sun stone field sun garden moon moon sun wind sun light water tree rain field field bird cloud sun garden wind moon river bird rain sun sun field garden field moon field cloud water wind moon forest river water stone rain wind road stone cloud river forest garden night bird road wind garden rain garden road tree sun water stone sun garden tree water field stone bird river river river stone tree field road light field sun river garden stone light cloud garden bird rain road wind cloud light light water light sun water forest stone tree tree moon garden garden river garden forest wind light forest light cloud river garden tree bird water tree sun stone night rain stone sun forest rain light field tree water rain forest tree cloud night wind road night stone night road garden moon field cloud tree field sun rain light night moon river bird wind sun river sun garden water bird garden wind garden wind water garden garden garden forest river wind light tree forest light river water field wind forest stone cloud moon tree road moon field garden road garden wind night sun rain garden garden garden cloud cloud forest garden sun cloud field rain cloud light wind rain river rain tree light cloud forest tree light night bird stone river stone bird sun road moon bird forest forest stone river bird sun night light wind wind field river moon water forest sun river road rain bird river road stone night field water bird road field road moon light bird water sun water field sun forest sun tree road cloud night rain night night cloud tree water field moon tree stone water moon moon sun tree forest field cloud moon wind wind bird bird stone water garden cloud moon night wind tree stone bird night night rain tree field light night forest sun stone bird cloud wind garden field moon forest light river rain water rain garden rain night sun rain night forest night wind garden cloud tree moon river night road road river tree water night night forest rain night rain wind sun garden river sun river wind cloud tree garden stone stone water water sun road wind bird field moon night field water rain night garden field night field field night forest moon road field wind wind garden night garden bird stone bird stone night sun road sun night river tree wind road garden tree garden rain sun bird moon bird light stone road rain field bird light cloud moon field moon night tree forest wind cloud moon forest bird light garden forest tree field wind cloud tree garden road road rain water stone forest stone wind cloud night moon sun cloud stone bird cloud cloud road light field bird water forest night night rain cloud rain road rain cloud river wind night wind cloud sun garden rain rain forest tree moon sun sun bird forest sun light cloud sun wind rain garden tree night garden tree forest moon moon bird river cloud light wind forest bird light rain field garden water rain tree moon rain stone moon wind cloud field garden wind night river light cloud stone field tree bird forest sun light field night tree moon garden field stone wind field forest night sun road night rain moon stone road light sun stone bird light road bird field rain stone forest cloud sun rain river bird water cloud cloud water bird wind night road river stone moon sun rain forest light sun forest road bird water night wind field sun forest light wind road sun field wind water wind cloud bird bird tree cloud sun road garden tree sun garden road stone sun stone bird moon bird rain cloud stone road tree forest forest wind tree road road wind moon stone field light forest tree wind moon garden sun bird light tree light forest sun night rain moon light light rain stone garden light forest water road garden water forest forest water forest bird sun field moon tree road moon bird garden cloud wind moon wind light bird sun bird stone tree water forest cloud field sun river forest wind tree night stone cloud garden bird light garden night rain forest field sun wind light bird tree moon water rain stone bird stone river bird water light field cloud field tree light cloud forest tree sun road water river field wind garden stone light cloud tree light garden tree moon forest field moon sun light river bird forest rain cloud stone moon river bird wind garden moon water road garden road field wind wind tree wind night forest moon rain stone water river river sun bird rain moon sun water bird tree sun cloud water light forest road tree bird tree forest water bird garden bird light wind road river wind road river water cloud water sun bird cloud water bird river wind night rain forest garden stone road tree cloud water river moon light river road light bird garden moon water forest night road stone forest stone water river forest field night moon night light rain tree field water tree stone field road cloud tree road forest water light field sun road tree light rain tree sun light road wind stone river night moon field stone night stone forest cloud forest water sun rain wind tree cloud road forest field bird field stone forest tree light field rain river bird stone moon river water wind water cloud light moon sun rain forest garden bird river bird wind wind light moon road wind forest moon night moon river garden forest sun moon water bird river tree stone light garden water night cloud garden cloud road night water stone bird bird night forest sun field moon moon water wind stone tree wind stone garden night light moon night stone sun water stone field field sun bird field forest field bird road bird tree rain field river road field forest light cloud field tree forest water river light rain rain road garden light water garden road river wind garden tree moon tree stone road river stone rain river moon stone rain water road garden moon tree night bird night road tree night road forest forest river field tree light forest wind garden field moon stone bird bird water bird forest sun tree night bird rain cloud stone stone tree stone sun bird light cloud garden bird sun field tree water forest forest water moon river garden river road rain rain night water garden forest night road cloud light night garden garden water stone bird garden bird light moon bird river light light tree road road field cloud bird forest water cloud tree moon bird field bird water water bird field light garden sun bird sun water wind bird light garden river field river wind sun rain moon cloud forest garden rain sun field forest garden river water forest wind river water bird moon sun rain wind sun rain light tree forest water light river rain moon night road tree road field forest cloud bird light water stone garden river forest stone moon garden light water road light garden field garden tree cloud moon garden rain river garden light tree rain tree road rain field moon rain cloud stone water field rain tree night tree sun moon rain light night road sun moon water river tree bird water tree bird night sun rain field stone rain stone road sun tree wind garden river garden bird forest light night road tree rain stone sun moon rain light field road moon wind bird sun bird cloud road night forest road moon forest forest rain river field water sun road night river night night river light road night field bird wind sun night wind light moon wind road light rain stone tree forest light sun garden tree tree bird cloud river garden garden wind night moon rain forest forest garden wind bird cloud field river bird river forest sun field river river wind stone water field light sun tree wind road wind tree moon river sun water road rain river sun road forest moon garden cloud garden sun light sun garden road garden cloud river tree moon tree rain bird tree cloud light sun light wind road wind moon forest stone wind sun night river field garden sun light wind river road road tree night rain wind river rain forest rain bird rain river wind night forest water light light road stone forest stone bird river river cloud river cloud light sun light water river rain sun cloud tree field cloud moon sun bird wind tree wind stone moon water water sun field field night wind water moon bird stone stone bird tree night forest garden wind field stone road night river rain bird forest wind water water moon bird night wind field stone garden water forest forest river forest forest rain garden rain bird bird wind sun rain light forest light light light wind tree rain stone stone tree garden bird garden river tree light bird river road stone moon tree field stone cloud field water night moon tree river water rain field bird rain wind stone stone river field stone forest night moon wind moon road field cloud road stone light sun stone stone night garden field stone field garden water moon tree sun night bird water rain moon moon wind night moon wind cloud bird water forest water field wind light water cloud tree field sun tree bird tree road bird water light forest field light moon garden garden light wind moon rain tree field water water cloud wind garden bird bird sun moon tree cloud stone moon rain tree bird forest stone light wind sun tree bird cloud sun tree river stone wind bird forest rain water night wind stone night light water road tree night water road garden stone rain river sun tree field rain sun sun sun moon road road rain field rain garden river night light moon water cloud garden tree light river cloud wind moon forest moon garden light forest night road forest night field field water road night water tree sun tree road light garden garden sun night cloud garden forest stone field road cloud water tree stone garden light water stone road moon bird stone wind field wind forest wind wind field night wind cloud rain light night field road tree tree road field water moon sun road garden water night cloud cloud river forest forest bird night wind moon forest river stone night sun wind rain wind garden field bird cloud field sun cloud stone night field stone tree wind rain sun moon river road moon tree stone wind night road light light water wind water moon moon wind rain rain light rain bird sun garden road river light forest rain stone stone cloud sun water night road light forest cloud road road"
+        }
+      ]
+    ],
+    "max_tokens": 128,
+    "started_at": "2026-10-21T16:47:25.947354+00:00",
+    "results": [
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like *road*, *tree*, *cloud*, *rain*, *sun*, *forest*, *water*, *bird*, *night*, *light*, *wind*, *garden*, and *moon*. It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**  \nThe text is a repetitive, unstructured collection of natural elements (e.g., trees, clouds, rain, sun, wind) and settings (",
+        "ttft_ms": 941.5077000157908,
+        "e2e_ms": 5731.5293999854475,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "finish_reason": "length",
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and largely nonsensical stream of words and phrases, with frequent repetition of terms like \"bird,\" \"cloud,\" \"tree,\" \"water,\" \"moon,\" \"sun,\" \"forest,\" \"road,\" \"garden,\" \"night,\" \"light,\" \"rain,\" \"wind,\" and \"stone.\" It lacks clear structure, logical progression, or coherent narrative.\n\n**Summary:**\n\nThe text appears to be a fragmented, poetic, or possibly generated stream of imagery related to natural elements (birds, clouds, trees, water, moon, sun, wind, rain, stone, forest, garden",
+        "ttft_ms": 2467.6357000134885,
+        "e2e_ms": 5907.367500010878,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "finish_reason": "length",
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and highly fragmented stream of words, primarily composed of natural elements such as *forest, bird, rain, moon, light, water, stone, tree, garden, river, wind, night, sun, cloud, road, field*. It lacks clear structure, grammar, or logical progression, and appears to be a random or generated sequence rather than a coherent narrative or description.\n\n**Summary:**\n\nThe text is not a meaningful or organized passage but rather a repetitive, chaotic collection of nature-related keywords. It emphasizes imagery of night, rain, moon, light, water, trees, forests, birds",
+        "ttft_ms": 1370.8743000170216,
+        "e2e_ms": 5764.397100021597,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "finish_reason": "length",
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and highly fragmented sequence of words and phrases, primarily centered around natural elements such as **sun, moon, rain, wind, water, trees, forests, gardens, birds, stones, roads, and fields**. It lacks clear structure, grammar, or logical progression, and appears to be a stream of poetic or symbolic imagery rather than a coherent narrative or argument.\n\n### Summary:\nThe text is a repetitive, poetic stream of imagery describing natural scenes—fields, gardens, forests, rivers, skies, and animals—often in alternating or overlapping combinations. It emphasizes themes of **nature, cycles of",
+        "ttft_ms": 1646.3508000015281,
+        "e2e_ms": 5811.008799995761,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "finish_reason": "length",
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a long, repetitive, and highly fragmented stream of words and phrases, primarily centered around natural elements like **tree, water, wind, moon, cloud, rain, forest, garden, road, stone, light, bird, sun, field, night**, etc. It lacks clear structure, grammar, or logical progression.\n\n### Summary:\nThe text appears to be a poetic or rhythmic stream of imagery describing scenes of nature—such as **nighttime gardens, forests, rivers, rain, wind, and moonlight**—with recurring motifs of **trees, water, light, and movement** (wind, birds,",
+        "ttft_ms": 2183.563500002492,
+        "e2e_ms": 5802.146899979562,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "finish_reason": "length",
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words related to nature (sun, moon, rain, wind, water, trees, forests, rivers, birds, gardens, stones, fields, roads, night, light) with no clear structure, grammar, or logical progression. It appears to be a poetic or rhythmic collage rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a fragmented, repetitive collection of natural imagery—such as sun, moon, rain, wind, water, trees, forests, rivers, birds, and gardens—without a clear theme, structure, or meaning. It lacks",
+        "ttft_ms": 2774.3951000156812,
+        "e2e_ms": 6205.024900031276,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "finish_reason": "length",
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words and phrases, primarily centered around natural elements like **sun, moon, wind, water, bird, tree, forest, river, stone, rain, garden, road, field**, and night. There is no clear narrative, structure, or logical progression.\n\n### Summary:\nThis text appears to be a poetic or rhythmic repetition of nature-related imagery, possibly generated algorithmically or as a form of linguistic art. It lacks coherent meaning, specific events, or a clear message. The recurring themes suggest a meditation on natural cycles—day and night, seasons, movement of elements",
+        "ttft_ms": 1918.7293999711983,
+        "e2e_ms": 5813.855600019451,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "finish_reason": "length",
+        "success": true
+      },
+      {
+        "status_code": 200,
+        "generated_text": "The provided text is a repetitive, stream-of-consciousness sequence of words related to nature—such as *wind, rain, night, sun, tree, river, cloud, stone, bird, garden, field, moon*—with no clear structure, grammar, or logical progression. It appears to be a poetic or rhythmic collage rather than a coherent narrative or argument.\n\n**Summary:**  \nThe text is a repetitive, unstructured stream of natural imagery (wind, rain, night, sun, trees, rivers, clouds, birds, stones, gardens, fields, moon) that lacks a clear meaning, sequence, or grammatical coherence",
+        "ttft_ms": 2743.907500000205,
+        "e2e_ms": 6120.001700008288,
+        "prompt_tokens": 2048,
+        "completion_tokens": 128,
+        "finish_reason": "length",
+        "success": true
+      }
+    ],
+    "batch_time_s": 6.2133329000207596,
+    "ended_at": "2026-10-21T16:47:32.160904+00:00"
+  },
+  "snapshots": {
+    "session-start": {
+      "path": "session-start.prom",
+      "captured_at": "2026-10-21T16:47:25.943357+00:00"
+    },
+    "warmup-after": {
+      "path": "warmup-after.prom",
+      "captured_at": "2026-10-21T16:47:32.509686+00:00"
+    },
+    "unique-c1-before": {
+      "path": "unique-c1-before.prom",
+      "captured_at": "2026-10-21T16:47:32.707689+00:00"
+    },
+    "unique-c1-after": {
+      "path": "unique-c1-after.prom",
+      "captured_at": "2026-10-21T16:47:53.139838+00:00"
+    },
+    "shared-c1-before": {
+      "path": "shared-c1-before.prom",
+      "captured_at": "2026-10-21T16:47:54.037670+00:00"
+    },
+    "shared-c1-after": {
+      "path": "shared-c1-after.prom",
+      "captured_at": "2026-10-21T16:48:19.318790+00:00"
+    },
+    "unique-c8-before": {
+      "path": "unique-c8-before.prom",
+      "captured_at": "2026-10-21T16:48:19.512846+00:00"
+    },
+    "unique-c8-after": {
+      "path": "unique-c8-after.prom",
+      "captured_at": "2026-10-21T16:48:25.506861+00:00"
+    },
+    "shared-c8-before": {
+      "path": "shared-c8-before.prom",
+      "captured_at": "2026-10-21T16:48:26.413593+00:00"
+    },
+    "shared-c8-after": {
+      "path": "shared-c8-after.prom",
+      "captured_at": "2026-10-21T16:48:32.423114+00:00"
+    }
+  },
+  "scenarios": [
+    {
+      "name": "unique-c1",
+      "case": "unique",
+      "concurrency": 1,
+      "status": "completed",
+      "priming": null,
+      "batches": [
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "The controls that must stay fixed are:\n\n- Hardware  \n- Model  \n- Generation settings  \n- Traffic schedule  \n\nThese are explicitly stated in the document:  \n> \"Engineers keep the hardware, model, generation settings, and traffic schedule fixed.\"",
+              "ttft_ms": 499.1800999850966,
+              "e2e_ms": 1456.748600001447,
+              "prompt_tokens": 2048,
+              "completion_tokens": 50,
+              "finish_reason": "stop",
+              "success": true
+            }
+          ],
+          "batch_time_s": 1.4586173999705352,
+          "request_ids": [
+            "unique-c1-4326aa32fd64d76a"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "Warmup requests are excluded from the latency report because they are intended to prepare the model for measurement, not to serve actual user requests. Their purpose is to warm up the model (e.g., load the model into memory or pre-populate reusable state) so that subsequent requests can be processed more efficiently. Since these requests do not represent real user interactions, they are not included in latency measurements to ensure that the reported performance reflects actual request processing times.",
+              "ttft_ms": 673.5325999907218,
+              "e2e_ms": 2399.4782000081614,
+              "prompt_tokens": 2048,
+              "completion_tokens": 91,
+              "finish_reason": "stop",
+              "success": true
+            }
+          ],
+          "batch_time_s": 2.401301899983082,
+          "request_ids": [
+            "unique-c1-0360791933badf88"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "The provided document does not explicitly describe **how failures should be reported**.\n\nHowever, it does mention that the report includes:\n\n- **Completed requests**  \n- **Failed requests**  \n- **Requests rejected before dispatch**\n\nThis indicates that failures (specifically, failed requests) are **included in the report**, and they are treated as part of the measurement data. The document emphasizes a thorough and transparent approach to measurement, including negative results (like failures), which are part of the \"supported evidence\" used to evaluate a release.\n\nWhile the exact *format* or *method* of reporting failures (e.g., error codes, frequency,",
+              "ttft_ms": 691.2075000000186,
+              "e2e_ms": 3122.7540000109,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.1241439000004902,
+          "request_ids": [
+            "unique-c1-2d7b478140030686"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "The team compares both deployment orders to **detect uncertainty in the observed performance difference** between two versions of the question answering service.\n\nSpecifically, by repeating the comparison in both orders (e.g., Version A followed by Version B, and Version B followed by Version A), the team ensures that any observed difference in latency or performance is not due to a bias introduced by the order of deployment. If the observed difference **changes sign** (e.g., becomes positive in one order and negative in the other), this indicates that the result is unstable or uncertain — suggesting that the performance difference may be due to external factors (like system state, caching",
+              "ttft_ms": 611.8024000315927,
+              "e2e_ms": 3112.7647000248544,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.1144827000098303,
+          "request_ids": [
+            "unique-c1-7700dd0671e29c34"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "The controls that must stay fixed are:\n\n- Hardware  \n- Model  \n- Generation settings  \n- Traffic schedule  \n\nThese are explicitly stated in the document:  \n> \"Engineers keep the hardware, model, generation settings, and traffic schedule fixed.\"",
+              "ttft_ms": 685.4500999907032,
+              "e2e_ms": 1629.817400011234,
+              "prompt_tokens": 2048,
+              "completion_tokens": 50,
+              "finish_reason": "stop",
+              "success": true
+            }
+          ],
+          "batch_time_s": 1.6314284999971278,
+          "request_ids": [
+            "unique-c1-63761f6df1568f85"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "Warmup requests are excluded from the latency report because they are intended to prepare the model for measurement and do not represent actual user requests. Including them in the latency report would skew the results, as their purpose is to stabilize the model's state (e.g., load it into memory or warm up caches) rather than to serve a real request. By excluding warmup requests, the team ensures that the latency measurements reflect only the performance of actual user interactions, providing a more accurate and reliable assessment of the system's real-world response time.",
+              "ttft_ms": 648.9803000004031,
+              "e2e_ms": 2813.49880003836,
+              "prompt_tokens": 2048,
+              "completion_tokens": 108,
+              "finish_reason": "stop",
+              "success": true
+            }
+          ],
+          "batch_time_s": 2.815372999990359,
+          "request_ids": [
+            "unique-c1-16f8c2832ce65d54"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "Failures should be reported as part of the full measurement data, specifically including:\n\n- **Completed requests**  \n- **Failed requests**  \n- **Requests rejected before dispatch**\n\nThis means that the report must explicitly document all types of request outcomes, not just successful ones. The inclusion of failed and rejected requests ensures a complete and transparent view of the system's performance and reliability during the evaluation of the two versions of the question answering service.",
+              "ttft_ms": 688.6721000191756,
+              "e2e_ms": 2344.1387000493705,
+              "prompt_tokens": 2048,
+              "completion_tokens": 88,
+              "finish_reason": "stop",
+              "success": true
+            }
+          ],
+          "batch_time_s": 2.3462266999995336,
+          "request_ids": [
+            "unique-c1-e9303528387ce106"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "The team compares both deployment orders to **detect uncertainty in the observed performance difference** between the two versions of the question answering service.\n\nSpecifically, by repeating the comparison in both orders (e.g., Version A followed by Version B, and Version B followed by Version A), they ensure that any observed difference in latency or performance is not due to a random or systematic bias introduced by the order of deployment. \n\nIf the observed difference **changes sign** (e.g., becomes positive in one order and negative in the other) across sessions, this indicates **uncertainty** in the result — suggesting that the performance difference may not be consistent or",
+              "ttft_ms": 705.6518999743275,
+              "e2e_ms": 3149.6527999988757,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.151627000013832,
+          "request_ids": [
+            "unique-c1-30deae14649186be"
+          ]
+        }
+      ],
+      "started_at": "2026-10-21T16:47:32.710689+00:00",
+      "before_snapshot": "unique-c1-before",
+      "elapsed_s": 20.075485899986234,
+      "ended_at": "2026-10-21T16:47:52.789533+00:00",
+      "after_snapshot": "unique-c1-after",
+      "metrics": {
+        "prefix_queries_tokens": 0.0,
+        "prefix_hits_tokens": 0.0,
+        "new_prefill_tokens": 16384.0,
+        "preemptions": 0.0,
+        "token_cache_hit_rate": null
+      }
+    },
+    {
+      "name": "shared-c1",
+      "case": "shared",
+      "concurrency": 1,
+      "status": "completed",
+      "priming": {
+        "results": [
+          {
+            "status_code": 200,
+            "generated_text": "The",
+            "ttft_ms": 572.4609000026248,
+            "e2e_ms": 572.5402000243776,
+            "prompt_tokens": 1843,
+            "completion_tokens": 1,
+            "finish_reason": "length",
+            "success": true
+          }
+        ],
+        "batch_time_s": 0.5743123000138439,
+        "started_at": "2026-10-21T16:47:53.149929+00:00",
+        "ended_at": "2026-10-21T16:47:53.724846+00:00"
+      },
+      "batches": [
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "Before restoring traffic, the following checks are needed:\n\n1. **Confirm that the queue has drained** – The operator must verify that the request queue is no longer growing and has returned to a stable, low level.  \n2. **Check recent failures** – The operator reviews logs for any recent errors, crashes, or service outages that may indicate underlying issues.  \n3. **Repeat the reference request** – A small reference request is sent to confirm that the service is functioning correctly and responding as expected under normal conditions.\n\nThese checks ensure that the service is stable and capable of handling the expected traffic load before traffic is fully restored.",
+              "ttft_ms": 582.5309000210837,
+              "e2e_ms": 3008.1582000129856,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "stop",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.0102692000218667,
+          "request_ids": [
+            "shared-c1-67023dfa329db953"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "The measurement that reveals a **growing queue** is:\n\n👉 **Queue depth**\n\n---\n\n### Explanation:\nFrom the provided document, the key sentence is:\n\n> \"If the queue grows continuously, the operator reduces incoming traffic and investigates capacity.\"\n\nThis directly links **a continuously growing queue depth** to the need for traffic reduction and capacity investigation.\n\nAdditionally, the operator compares:\n- Queue depth\n- Error rate\n- Latency\n\nwith the previous release to assess service health. While error rate and latency can indicate performance issues, **only a continuously growing queue depth** is explicitly described as a sign of capacity problems requiring intervention.\n\n> A short",
+              "ttft_ms": 706.9612999912351,
+              "e2e_ms": 3154.544299992267,
+              "prompt_tokens": 2047,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.1562437000102364,
+          "request_ids": [
+            "shared-c1-6450c28c7f6637f7"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "A health check is insufficient because **a successful health check only confirms that the service is responsive and can process a small, basic request** — it does not prove that the service can sustain the expected traffic volume or handle real-world workloads.\n\nSpecifically:\n\n- **It does not measure performance under load**: A health check typically involves a small reference request, which may not reflect the input size, complexity, or frequency of actual user queries. This means the service might respond quickly in a health check but fail under sustained or bursty traffic.\n  \n- **It does not indicate capacity or scalability**: Even if the service responds, the queue depth",
+              "ttft_ms": 679.7988999751396,
+              "e2e_ms": 3105.4750999901444,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.107706099981442,
+          "request_ids": [
+            "shared-c1-ab5dd78aa5a2bef9"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "An incident record should include:\n\n- **Timestamps** of key events (e.g., when the issue was detected, when traffic was reduced, when the queue drained, when traffic was restored).  \n- The **configuration in use** at the time of the incident (e.g., version of the service, environment settings, dependencies).  \n- **Direct measurements** such as queue depth, error rate, and latency (compared to previous releases or baselines).  \n- Observations of **traffic patterns**, including bursts or spikes that may temporarily affect performance.  \n- Actions taken by the operator (e.g., reducing traffic, investigating capacity",
+              "ttft_ms": 716.9700000085868,
+              "e2e_ms": 3127.9481999808922,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.130078699963633,
+          "request_ids": [
+            "shared-c1-9c729ac453a42387"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "Before restoring traffic, the following checks are needed:\n\n1. **Confirm that the queue has drained** – The operator must verify that the request queue is no longer growing, indicating that the system can handle the current traffic load without backlog.\n\n2. **Check recent failures** – The operator reviews logs for any recent errors, crashes, or service disruptions to ensure there are no underlying issues that could affect system stability.\n\n3. **Repeat the reference request** – A small reference request is sent to validate that the service is functioning correctly and responding as expected under normal conditions.\n\nThese checks ensure that the system is stable and capable of sustaining expected traffic before",
+              "ttft_ms": 598.006299987901,
+              "e2e_ms": 3102.316200034693,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.104092800000217,
+          "request_ids": [
+            "shared-c1-dc2296f5e28fa8dd"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "The measurement that reveals a growing queue is **queue depth**.\n\n### Explanation:\nFrom the provided context:\n> \"If the queue grows continuously, the operator reduces incoming traffic and investigates capacity.\"\n\nThis directly links **a growing queue** to **increasing queue depth**. While error rate and latency can indicate performance issues, only **queue depth** is explicitly described as a direct indicator of queue growth.\n\n- **Queue depth** measures the number of pending requests in the system. A continuous increase in queue depth indicates that incoming traffic exceeds processing capacity.\n- **Error rate** and **latency** may be affected by a growing queue, but",
+              "ttft_ms": 716.1652999930084,
+              "e2e_ms": 3143.1227999855764,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.1448023000266403,
+          "request_ids": [
+            "shared-c1-90987e1526a27fab"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "A health check is insufficient because **a successful response to a small reference request only confirms that the service is reachable and responsive—it does not prove that the service can sustain expected traffic levels**.\n\nAs stated in the document:\n\n> \"A successful health check confirms that the process responds; it does not demonstrate that the service can sustain the expected traffic.\"\n\nThis means:\n- The health check only verifies basic functionality (e.g., the service starts up and returns a response).\n- It does not measure performance under real-world load, such as **queue depth, error rate, or latency** under sustained or bursty traffic.\n- A **short burst",
+              "ttft_ms": 610.8428000006825,
+              "e2e_ms": 3123.115499969572,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.1250575999729335,
+          "request_ids": [
+            "shared-c1-e83dcbad85678880"
+          ]
+        },
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "An incident record should include **timestamps and the configuration in use**.\n\nThis is explicitly stated in the provided document:  \n> \"The incident record includes timestamps and the configuration in use.\"\n\nAdditionally, while not directly listed in the incident record, the context emphasizes that **direct measurements** (such as queue depth, error rate, latency, and recovery intervals) are critical for accurate conclusions. However, the specific elements *belonging in the incident record* are clearly defined as:\n\n- **Timestamps**  \n- **Configuration in use**\n\nThus, the correct answer to the question is:  \n**Timestamps and the configuration in use.",
+              "ttft_ms": 616.7745999991894,
+              "e2e_ms": 3124.8045000247657,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 3.1269457999733277,
+          "request_ids": [
+            "shared-c1-07bd7cb950159769"
+          ]
+        }
+      ],
+      "started_at": "2026-10-21T16:47:54.040670+00:00",
+      "before_snapshot": "shared-c1-before",
+      "elapsed_s": 24.94099400000414,
+      "ended_at": "2026-10-21T16:48:18.985121+00:00",
+      "after_snapshot": "shared-c1-after",
+      "metrics": {
+        "prefix_queries_tokens": 0.0,
+        "prefix_hits_tokens": 0.0,
+        "new_prefill_tokens": 16383.0,
+        "preemptions": 0.0,
+        "token_cache_hit_rate": null
+      }
+    },
+    {
+      "name": "unique-c8",
+      "case": "unique",
+      "concurrency": 8,
+      "status": "completed",
+      "priming": null,
+      "batches": [
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "Before restoring traffic, the following checks are needed:\n\n1. **Confirm that the queue has drained** – Ensure that the backlog of requests has been fully processed and is no longer growing.  \n2. **Check recent failures** – Review any recent errors or service issues that may have occurred during the period of reduced traffic.  \n3. **Repeat the reference request** – Perform a small reference request to verify that the service is functioning correctly and responding as expected.\n\nThese steps ensure that the service is stable and capable of handling the expected traffic before traffic is restored.",
+              "ttft_ms": 516.2772000185214,
+              "e2e_ms": 5067.685500020161,
+              "prompt_tokens": 2048,
+              "completion_tokens": 113,
+              "finish_reason": "stop",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "The measurement that reveals a growing queue is **queue depth**.\n\nSpecifically, if the **queue depth grows continuously** over time, it indicates that incoming traffic is exceeding the service's processing capacity. This is a key signal that the system is under strain and may require traffic reduction or capacity investigation.\n\nAdditional context from the document:\n- \"If the queue grows continuously, the operator reduces incoming traffic and investigates capacity.\"\n- The operator compares **queue depth, error rate, and latency** with the previous release before restoring traffic.\n- A growing queue is distinct from a short burst, which may temporarily increase queue depth even when average traffic is sustainable",
+              "ttft_ms": 1612.2292000218295,
+              "e2e_ms": 5483.498200017493,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "A health check is insufficient because **a successful health check only confirms that the service process responds (i.e., it is alive and can process a request), but it does not demonstrate that the service can sustain the expected traffic**.\n\nIn other words:\n- A health check may pass even if the system is overloaded, has high latency, or has a growing queue.\n- It does not measure real-world performance under actual load conditions.\n- It does not validate whether the service can handle the volume, throughput, or response time required by users.\n\nTherefore, while a health check is a basic indicator of service availability, it is not a reliable measure",
+              "ttft_ms": 1055.9195000096224,
+              "e2e_ms": 5452.905800018925,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "An incident record should include:\n\n- **Timestamps** of key events (e.g., when the health check was performed, when traffic was reduced or restored, when failures were observed).  \n- The **configuration in use** at the time of the incident (e.g., version numbers, environment settings, service parameters).  \n- **Direct measurements** such as queue depth, error rate, and latency (to distinguish them from possible explanations or assumptions).  \n- The **request identifier**, **input length**, **output length**, and **completion status** for each request (especially relevant for the document service).  \n- A clear distinction between **",
+              "ttft_ms": 1338.4633000241593,
+              "e2e_ms": 5466.269000025932,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "Before restoring traffic, the following checks are needed:\n\n1. **Confirm that the queue has drained** – Ensure that the backlog of requests has been fully processed and is no longer growing.  \n2. **Check recent failures** – Review any error logs or failure events that may have occurred during the period of reduced traffic.  \n3. **Repeat the reference request** – Perform a small reference request to verify that the service is functioning correctly and responding as expected.  \n\nThese steps ensure that the service is stable and capable of handling the expected traffic load before traffic is restored.",
+              "ttft_ms": 2165.395800024271,
+              "e2e_ms": 5220.3702999977395,
+              "prompt_tokens": 2048,
+              "completion_tokens": 115,
+              "finish_reason": "stop",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "The measurements that reveal a growing queue are:\n\n- **Queue depth**  \n- **Error rate**  \n- **Latency**\n\nSpecifically, the document states:  \n> \"The operator then compares queue depth, error rate, and latency with the previous release. If the queue grows continuously, the operator reduces incoming traffic and investigates capacity.\"\n\nThus, a **continuously increasing queue depth** is the primary indicator of a growing queue. While error rate and latency may correlate with queue growth (e.g., increased latency during high load), the **queue depth** is the direct and most reliable measurement of queue growth.  \n\n**Answer:** Queue",
+              "ttft_ms": 1880.2235000184737,
+              "e2e_ms": 5562.627599982079,
+              "prompt_tokens": 2047,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "A health check is insufficient because **a successful health check only confirms that the service process responds** — it does not demonstrate that the service can sustain the expected traffic or handle real-world load conditions.\n\nIn other words:\n- A health check verifies basic responsiveness (e.g., the service starts up and returns a response to a small test request).\n- However, it does **not** validate performance metrics such as **queue depth, error rate, or latency** under actual or expected traffic loads.\n- The service might respond quickly to a small reference request but still fail under sustained or peak traffic due to capacity limitations, bottlenecks, or resource",
+              "ttft_ms": 2450.035099987872,
+              "e2e_ms": 5565.0581999798305,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "An incident record should include:\n\n- **Timestamps** (when events occurred)  \n- **The configuration in use** (e.g., version numbers, settings, or environment details)  \n\nAdditionally, based on the context provided, it should contain **direct measurements** such as:\n\n- Queue depth  \n- Error rate  \n- Latency  \n- Request identifiers  \n- Input length  \n- Output length  \n- Completion status  \n\nAnd it must **distinguish direct measurements from possible explanations** to ensure accurate conclusions.  \n\nThus, the key elements that belong in an incident record are:  \n✅ Timestamps  \n✅ Configuration in use  \n✅ Direct measurements",
+              "ttft_ms": 2480.1642999518663,
+              "e2e_ms": 5625.014399993233,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 5.635794699948747,
+          "request_ids": [
+            "unique-c8-87e255836934ea76",
+            "unique-c8-6e319db29520c7b3",
+            "unique-c8-f4c13900a1c6bf71",
+            "unique-c8-b5bbae23cbd28fa2",
+            "unique-c8-105213f1cd81c01b",
+            "unique-c8-89ff316e27022410",
+            "unique-c8-33aca236a8d02f1a",
+            "unique-c8-5ac29653d29bbb97"
+          ]
+        }
+      ],
+      "started_at": "2026-10-21T16:48:19.515845+00:00",
+      "before_snapshot": "unique-c8-before",
+      "elapsed_s": 5.640934199967887,
+      "ended_at": "2026-10-21T16:48:25.160688+00:00",
+      "after_snapshot": "unique-c8-after",
+      "metrics": {
+        "prefix_queries_tokens": 0.0,
+        "prefix_hits_tokens": 0.0,
+        "new_prefill_tokens": 16383.0,
+        "preemptions": 0.0,
+        "token_cache_hit_rate": null
+      }
+    },
+    {
+      "name": "shared-c8",
+      "case": "shared",
+      "concurrency": 8,
+      "status": "completed",
+      "priming": {
+        "results": [
+          {
+            "status_code": 200,
+            "generated_text": "The",
+            "ttft_ms": 561.5799999795854,
+            "e2e_ms": 561.7980999522842,
+            "prompt_tokens": 1843,
+            "completion_tokens": 1,
+            "finish_reason": "length",
+            "success": true
+          }
+        ],
+        "batch_time_s": 0.563888099975884,
+        "started_at": "2026-10-21T16:48:25.519928+00:00",
+        "ended_at": "2026-10-21T16:48:26.083253+00:00"
+      },
+      "batches": [
+        {
+          "results": [
+            {
+              "status_code": 200,
+              "generated_text": "Before restoring traffic, the following checks are needed:\n\n1. **Confirm that the queue has drained** – The operator must verify that the request queue is no longer growing and has returned to a stable, low level.  \n2. **Check recent failures** – The operator reviews logs for any recent errors, crashes, or service outages that may indicate underlying issues.  \n3. **Repeat the reference request** – A small reference request is sent to confirm that the service is functioning correctly and responding as expected under normal conditions.\n\nThese checks ensure that the service is stable and capable of handling the expected traffic load before traffic is fully restored.  \n\n",
+              "ttft_ms": 600.2508000237867,
+              "e2e_ms": 5411.597400030587,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "The measurement that reveals a **growing queue** is:\n\n👉 **Queue depth**\n\n---\n\n**Explanation:**\n\nFrom the provided document, the key sentence is:\n\n> \"If the queue grows continuously, the operator reduces incoming traffic and investigates capacity.\"\n\nThis directly links **a growing queue** to an increase in **queue depth**. The operator monitors **queue depth**, **error rate**, and **latency** before and after a release to assess service health. A continuous increase in queue depth indicates that incoming requests are not being processed fast enough, signaling potential capacity issues.\n\n- **Error rate** and **latency** can indicate performance degradation",
+              "ttft_ms": 1615.734999999404,
+              "e2e_ms": 5579.877000011038,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "A health check is insufficient because **a successful health check only confirms that the service responds and is operational—it does not prove that the service can sustain the expected traffic volume or handle real-world load.**\n\nSpecifically:\n\n- A health check typically involves a small, lightweight reference request that may not reflect the complexity, size, or frequency of actual user requests.\n- It does not measure **performance under sustained load**, such as queue depth, error rates, or latency during peak usage.\n- A **short burst of traffic** can temporarily increase the queue depth, even when average traffic is sustainable. This temporary spike may be misinterpreted as a system",
+              "ttft_ms": 2456.9797000149265,
+              "e2e_ms": 5592.052399995737,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "An incident record should include the following:\n\n- **Timestamps** of key events (e.g., when the issue was detected, when traffic was reduced, when the queue drained, when traffic was restored).  \n- **The configuration in use** at the time of the incident (e.g., version numbers, service settings, environment details).  \n- **Direct measurements** such as queue depth, error rate, and latency (compared to previous releases or baselines).  \n- **Observations and conclusions** that clearly distinguish **direct measurements** from **possible explanations or hypotheses** (e.g., a spike in queue depth may be due",
+              "ttft_ms": 1060.17090001842,
+              "e2e_ms": 5493.586700002197,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "Before restoring traffic, the following checks are needed:\n\n1. **Confirm that the queue has drained** – The operator must verify that the request queue is no longer growing and has returned to a stable, low level.  \n2. **Check recent failures** – The operator reviews logs for any recent errors, crashes, or service outages that may indicate underlying issues.  \n3. **Repeat the reference request** – A small reference request is sent to confirm that the service is functioning correctly and responding as expected under normal conditions.\n\nThese checks ensure that the service is stable and capable of handling the expected traffic load before traffic is fully restored.  \n\n",
+              "ttft_ms": 1424.5180999860168,
+              "e2e_ms": 5486.405199975707,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "The measurement that reveals a **growing queue** is:\n\n👉 **Queue depth**\n\n### Explanation:\nFrom the provided document:\n> \"If the queue grows continuously, the operator reduces incoming traffic and investigates capacity.\"\n\nThis directly indicates that **queue depth** is the key metric used to detect whether the queue is growing over time.\n\n- **Queue depth** tracks the number of pending requests waiting to be processed.\n- A *continuous increase* in queue depth signals that incoming traffic exceeds processing capacity.\n- In contrast, a *short burst* may temporarily increase the queue, but if the queue grows continuously, it indicates a sustained overload.\n\nOther metrics",
+              "ttft_ms": 1887.3510000412352,
+              "e2e_ms": 5589.666799991392,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "A health check is insufficient because **a successful response to a small reference request only confirms that the service is reachable and basic functionality is working—it does not prove that the service can sustain expected traffic levels**.\n\nKey reasons why a health check is insufficient:\n\n1. **No Load Simulation**: A health check uses a small, minimal request, which does not reflect real-world traffic patterns, input sizes, or concurrency. It fails to stress-test the system under actual operational load.\n\n2. **Queue Growth Indicates Capacity Issues**: If the queue grows continuously, it signals that the system is overwhelmed and cannot process incoming requests at the expected rate. A health",
+              "ttft_ms": 2170.188100019004,
+              "e2e_ms": 5583.163000002969,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            },
+            {
+              "status_code": 200,
+              "generated_text": "An incident record should include the following:\n\n- **Timestamps** of key events (e.g., when the issue was detected, when traffic was reduced, when the queue drained, when traffic was restored).  \n- **Configuration in use** at the time of the incident (e.g., version of the service, environment settings, deployed code, or infrastructure changes).  \n- **Direct measurements** such as queue depth, error rate, and latency (compared to previous releases or baselines).  \n- **Observations and conclusions** that clearly distinguish **direct measurements** from **possible explanations or hypotheses** (e.g., a spike in",
+              "ttft_ms": 2484.696100000292,
+              "e2e_ms": 5645.0710000353865,
+              "prompt_tokens": 2048,
+              "completion_tokens": 128,
+              "finish_reason": "length",
+              "success": true
+            }
+          ],
+          "batch_time_s": 5.656587299949024,
+          "request_ids": [
+            "shared-c8-6bf7a7b832ede36f",
+            "shared-c8-2886606d0a6830cb",
+            "shared-c8-4a267c00f1c4eab0",
+            "shared-c8-9e31f10d112b25a4",
+            "shared-c8-212bb5f847022d40",
+            "shared-c8-6fa65a559061a4e9",
+            "shared-c8-0eae5ede2103db7d",
+            "shared-c8-6e7e42882cd18e8c"
+          ]
+        }
+      ],
+      "started_at": "2026-10-21T16:48:26.416590+00:00",
+      "before_snapshot": "shared-c8-before",
+      "elapsed_s": 5.661604599968996,
+      "ended_at": "2026-10-21T16:48:32.081825+00:00",
+      "after_snapshot": "shared-c8-after",
+      "metrics": {
+        "prefix_queries_tokens": 0.0,
+        "prefix_hits_tokens": 0.0,
+        "new_prefill_tokens": 16384.0,
+        "preemptions": 0.0,
+        "token_cache_hit_rate": null
+      }
+    }
+  ],
+  "ended_at": "2026-10-21T16:48:32.431135+00:00"
+}

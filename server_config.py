@@ -5,7 +5,7 @@ from dataclasses import dataclass
 MODEL_NAME = "Qwen/Qwen3-4B-Instruct-2507"
 MODEL_REVISION = "cdbee75f17c01a7cc42f958dc650907174af0554"
 VLLM_VERSION = "0.21.0"
-GPU_TYPE = "L4"
+GPU_TYPE = "A10"
 VLLM_PORT = 8000
 MAX_MODEL_LENGTH = 4096
 
