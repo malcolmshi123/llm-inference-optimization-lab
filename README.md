@@ -300,6 +300,14 @@ Modal prints the deployed web endpoint. Use `INFERENCE_LAB_PREFIX_CACHING=false`
 
 `server_config.py` pins the model and tokenizer revision and explicitly enables chunked prefill. Defaults use A10, BF16 precision, 4096-token context, 0.80 memory target, and 2048-token scheduling budget. Invalid treatment settings fail before deployment. The startup log prints the server command. Replaying the historical L4 study also requires explicitly selecting L4; its recorded measurements should not be compared directly with new A10 runs.
 
+For a separate diagnostic profiling deployment, set `INFERENCE_LAB_PROFILE_SESSION` to a unique session label such as `shared-c8-off-01`. Labels accept 1–64 ASCII letters, digits, underscores, or hyphens and must start with a letter or digit. An unset or blank value leaves profiling disabled.
+
+This adds vLLM's `--profiler-config` for PyTorch Profiler and mounts the persistent Modal Volume `inference-lab-profiles` at `/profiles`. Traces target `/profiles/<session-label>/`; the startup log prints that directory. Stack, shape, memory, and FLOP recording are disabled, and trace compression is enabled. Capture still requires explicit `/start_profile` and `/stop_profile` calls; configuring the profiler does not start a capture. See the [vLLM 0.21 profiling documentation](https://docs.vllm.ai/en/v0.21.0/contributing/profiling/).
+
+Wait for `/stop_profile` to finish flushing and for the trace files to appear on the Volume before stopping the deployment. Modal commits Volume changes in the background and at container shutdown. Download completed traces with `python -m modal volume get inference-lab-profiles <session-label> <local-directory> --env main`. See [Modal Volume persistence](https://modal.com/docs/guide/volumes#background-commits) and [Volume CLI commands](https://modal.com/docs/reference/cli/volume).
+
+Use a fresh label for each treatment and retry so old and new traces remain distinguishable. Profiling captures belong outside the measured cache-study sessions: profiling adds overhead, and the cache-study runner rejects startup commands containing profiling flags. Before returning to normal benchmarks, unset `INFERENCE_LAB_PROFILE_SESSION` and redeploy. No profiling measurements are included in the current results.
+
 Set the endpoint and proxy-authentication credentials in the client environment:
 
 ```bash

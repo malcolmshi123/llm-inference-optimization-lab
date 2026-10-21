@@ -1,6 +1,13 @@
 import modal
 
-from server_config import GPU_TYPE, VLLM_PORT, VLLM_VERSION, ServerConfig
+from server_config import (
+    GPU_TYPE,
+    PROFILE_ROOT,
+    PROFILE_VOLUME_NAME,
+    VLLM_PORT,
+    VLLM_VERSION,
+    ServerConfig,
+)
 
 SERVER_CONFIG = ServerConfig.from_env()
 
@@ -33,6 +40,11 @@ cache_mounts = {
     VLLM_CACHE_PATH: vllm_cache_vol,
 }
 
+if SERVER_CONFIG.profile_session is not None:
+    cache_mounts[PROFILE_ROOT] = modal.Volume.from_name(
+        PROFILE_VOLUME_NAME, create_if_missing=True
+    )
+
 
 @app.function(
     gpu=GPU_TYPE, image=vllm_image, volumes=cache_mounts, timeout=900, max_containers=1
@@ -41,8 +53,14 @@ cache_mounts = {
 @modal.web_server(port=VLLM_PORT, startup_timeout=600, requires_proxy_auth=True)
 def serve():
     import subprocess
+    from pathlib import Path
 
-    command = ServerConfig.from_env().command()
+    config = ServerConfig.from_env()
+    command = config.command()
+
+    if config.profile_directory is not None:
+        Path(config.profile_directory).mkdir(parents=True, exist_ok=True)
+        print("Profiler traces directory:", config.profile_directory, flush=True)
 
     print("Starting vLLM server with command:", " ".join(command), flush=True)
     subprocess.Popen(command)

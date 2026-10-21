@@ -1,4 +1,6 @@
+import json
 import os
+import re
 from collections.abc import Mapping
 from dataclasses import dataclass
 
@@ -11,12 +13,16 @@ MAX_MODEL_LENGTH = 4096
 
 PREFIX_CACHING_ENV = "INFERENCE_LAB_PREFIX_CACHING"
 TOKEN_BUDGET_ENV = "INFERENCE_LAB_MAX_NUM_BATCHED_TOKENS"
+PROFILE_SESSION_ENV = "INFERENCE_LAB_PROFILE_SESSION"
+PROFILE_ROOT = "/profiles"
+PROFILE_VOLUME_NAME = "inference-lab-profiles"
 
 
 @dataclass(frozen=True)
 class ServerConfig:
     prefix_caching: bool = True
     max_num_batched_tokens: int = 2048
+    profile_session: str | None = None
 
     def __post_init__(self):
         if type(self.prefix_caching) is not bool:
@@ -27,6 +33,16 @@ class ServerConfig:
             or self.max_num_batched_tokens <= 0
         ):
             raise ValueError(f"{TOKEN_BUDGET_ENV} must be a positive integer")
+
+        if self.profile_session is not None and (
+            not isinstance(self.profile_session, str)
+            or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]{0,63}", self.profile_session)
+            is None
+        ):
+            raise ValueError(
+                f"{PROFILE_SESSION_ENV} must be 1–64 ASCII letters, digits, "
+                "underscores, or hyphens, starting with a letter or digit"
+            )
 
     @classmethod
     def from_env(cls, environ: Mapping[str, str] | None = None) -> "ServerConfig":
@@ -41,16 +57,32 @@ class ServerConfig:
         except ValueError as exc:
             raise ValueError(f"{TOKEN_BUDGET_ENV} must be a positive integer") from exc
 
-        return cls(prefix_caching=prefix == "true", max_num_batched_tokens=budget)
+        return cls(
+            prefix_caching=prefix == "true",
+            max_num_batched_tokens=budget,
+            profile_session=environ.get(PROFILE_SESSION_ENV, "").strip() or None,
+        )
+
+    @property
+    def profile_directory(self) -> str | None:
+        if self.profile_session is None:
+            return None
+
+        return f"{PROFILE_ROOT}/{self.profile_session}"
 
     def environment(self) -> dict[str, str]:
-        return {
+        environment = {
             PREFIX_CACHING_ENV: str(self.prefix_caching).lower(),
             TOKEN_BUDGET_ENV: str(self.max_num_batched_tokens),
         }
 
+        if self.profile_session is not None:
+            environment[PROFILE_SESSION_ENV] = self.profile_session
+
+        return environment
+
     def command(self) -> list[str]:
-        return [
+        command = [
             "vllm",
             "serve",
             MODEL_NAME,
@@ -77,3 +109,23 @@ class ServerConfig:
             if self.prefix_caching
             else "--no-enable-prefix-caching",
         ]
+
+        if self.profile_directory is not None:
+            command.extend(
+                [
+                    "--profiler-config",
+                    json.dumps(
+                        {
+                            "profiler": "torch",
+                            "torch_profiler_dir": self.profile_directory,
+                            "torch_profiler_with_stack": False,
+                            "torch_profiler_record_shapes": False,
+                            "torch_profiler_with_memory": False,
+                            "torch_profiler_with_flops": False,
+                            "torch_profiler_use_gzip": True,
+                        }
+                    ),
+                ]
+            )
+
+        return command
