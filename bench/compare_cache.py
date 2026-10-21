@@ -642,6 +642,95 @@ def write_figures(comparison: dict, directory: Path):
         figure.savefig(directory / f"02_cache_prefill.{extension}", dpi=160)
 
     plt.close(figure)
+    figure, axes = plt.subplots(2, 4, figsize=(16, 7), sharey="col")
+    phases = (
+        ("queue", "Queue", "Mean per request (ms)"),
+        ("prefill", "Prefill", "Mean per request (ms)"),
+        ("decode", "Decode", "Mean per request (ms)"),
+        ("time_per_output_token", "TPOT", "Mean TPOT (ms/token)"),
+    )
+
+    for round_number in (1, 2):
+        for column, (phase, title, unit) in enumerate(phases):
+            axis = axes[round_number - 1, column]
+
+            for cache, offset in (("off", -0.18), ("on", 0.18)):
+                values = [
+                    rows[round_number, cache, name].get(f"server_{phase}_mean_ms")
+                    for name in names
+                ]
+                axis.bar(
+                    x + offset,
+                    [value if value is not None else np.nan for value in values],
+                    width=0.36,
+                    color=colors[cache],
+                    label=f"Cache {cache}",
+                )
+
+                for position, value in zip(x + offset, values):
+                    if value is None:
+                        axis.text(
+                            position,
+                            0.02,
+                            "N/A",
+                            transform=axis.get_xaxis_transform(),
+                            ha="center",
+                            va="bottom",
+                            rotation=90,
+                            fontsize=8,
+                        )
+
+            axis.set(
+                title=f"Round {round_number} | {title}",
+                ylabel=unit,
+                xticks=x,
+                xticklabels=labels,
+            )
+            axis.grid(axis="y", alpha=0.25)
+
+    for column, (phase, _, _) in enumerate(phases):
+        values = [row.get(f"server_{phase}_mean_ms") for row in comparison["rows"]]
+        maximum = max((value for value in values if value is not None), default=0)
+        axes[0, column].set_ylim(0, maximum * 1.05 if maximum else 1)
+
+    counts = sorted(
+        {
+            count
+            for row in comparison["rows"]
+            for phase, _, _ in phases
+            if (count := row.get(f"server_{phase}_observations")) is not None
+        }
+    )
+    observation_count = "unavailable"
+
+    if counts:
+        observation_count = (
+            str(counts[0]) if len(counts) == 1 else f"{counts[0]}–{counts[-1]}"
+        )
+
+    figure.suptitle("Server timings | histogram means by round", y=0.99)
+    figure.legend(
+        *axes[0, 0].get_legend_handles_labels(),
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.95),
+        ncol=2,
+    )
+    figure.text(
+        0.5,
+        0.015,
+        f"Observations per histogram: {observation_count}. "
+        "TPOT averages per-request observations. N/A means unavailable.\n"
+        "Not client percentiles or GPU kernel timings; "
+        "phases need not sum to client E2E. Two paired rounds; no confidence intervals.",
+        ha="center",
+        fontsize=9,
+    )
+    figure.tight_layout(rect=(0, 0.07, 1, 0.88))
+
+    for extension in ("png", "svg"):
+        figure.savefig(directory / f"03_server_timings.{extension}", dpi=160)
+
+    plt.close(figure)
 
 
 def export_comparison(comparison: dict, directory: Path):
@@ -666,7 +755,7 @@ def export_comparison(comparison: dict, directory: Path):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Compare two manually executed cache-study pairs and draw two figures."
+        description="Compare two manually executed cache-study pairs and draw three figures."
     )
 
     for name in (

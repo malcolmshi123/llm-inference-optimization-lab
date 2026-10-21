@@ -364,7 +364,7 @@ class CompareCacheTests(unittest.TestCase):
             with self.subTest(mutation=mutate), self.assertRaises(ValueError):
                 compare_runs(*self.directories)
 
-    def test_exports_include_both_rounds_and_two_readable_figures(self):
+    def test_exports_include_both_rounds_and_three_readable_figures(self):
         comparison = compare_runs(
             *self.directories,
             require_cache_metrics=True,
@@ -417,7 +417,7 @@ class CompareCacheTests(unittest.TestCase):
             comparison,
         )
 
-        for name in ("01_cache_latency", "02_cache_prefill"):
+        for name in ("01_cache_latency", "02_cache_prefill", "03_server_timings"):
             self.assertEqual(
                 (directory / (name + ".png")).read_bytes()[:8], b"\x89PNG\r\n\x1a\n"
             )
@@ -425,8 +425,48 @@ class CompareCacheTests(unittest.TestCase):
                 "<svg", (directory / (name + ".svg")).read_text(encoding="utf-8")
             )
 
+        self.assertEqual(
+            (directory / "03_server_timings.svg")
+            .read_text(encoding="utf-8")
+            .count("N/A"),
+            65,
+        )
+
         with self.assertRaises(FileExistsError):
             export_comparison(comparison, directory)
+
+    def test_timing_figure_distinguishes_zero_missing_and_positive_means(self):
+        comparison = compare_runs(*self.directories)
+        comparison["rows"][0].update(
+            server_queue_mean_ms=0,
+            server_queue_observations=4,
+            server_prefill_mean_ms=12.5,
+            server_prefill_observations=4,
+            server_time_per_output_token_mean_ms=3.5,
+            server_time_per_output_token_observations=4,
+        )
+        comparison["rows"][12].update(
+            server_prefill_mean_ms=100,
+            server_prefill_observations=4,
+        )
+
+        with patch("matplotlib.figure.Figure.savefig", autospec=True) as save:
+            export_comparison(comparison, self.root / "partial-timings")
+
+        figure = next(
+            call.args[0]
+            for call in save.call_args_list
+            if call.args[1].name == "03_server_timings.png"
+        )
+        queue, prefill, decode, tpot = figure.axes[:4]
+        self.assertEqual(queue.containers[0][0].get_height(), 0)
+        self.assertEqual(sum(text.get_text() == "N/A" for text in queue.texts), 7)
+        self.assertEqual(prefill.containers[0][0].get_height(), 12.5)
+        self.assertEqual(tpot.containers[0][0].get_height(), 3.5)
+        self.assertEqual(sum(text.get_text() == "N/A" for text in decode.texts), 8)
+        self.assertEqual(tpot.get_ylabel(), "Mean TPOT (ms/token)")
+        self.assertEqual(prefill.get_ylim(), figure.axes[5].get_ylim())
+        self.assertGreater(prefill.get_ylim()[1], 100)
 
     def test_server_timing_exports_preserve_existing_metrics_and_saved_runs(self):
         baseline = compare_runs(*self.directories)

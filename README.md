@@ -35,6 +35,23 @@ Shared-prefix cache-on windows recorded approximately **89.1% token cache-hit ra
 
 **Interpretation and limitations:** Shared-prefix latency improvements coincide with observed cache reuse and reduced prefill work. Their magnitude varies substantially between rounds. Unique-prefix latency also changes despite zero hits, showing that session variability contributes to the timing differences. These two paired rounds are exploratory; requests within a session are not independent replications. No pooled speedup or confidence interval is claimed. Measurements include client/network overhead, and throughput includes checkpoint overhead. GPU identity and server package versions remain declared deployment settings rather than independently captured runtime identities. Recorded client worktrees were dirty, so matching Git revisions alone cannot establish identical uncommitted code.
 
+### Server Timing Analysis
+
+The same saved measurement windows contain queue, prefill, decode, and time-per-output-token (TPOT) histograms. Every timing mean below uses 32 request observations, with warmup and priming excluded. Values show **cache-off → cache-on** within each round.
+
+| Round | Shared-prefix concurrency | Mean queue (ms) | Mean prefill (ms) | Mean decode (ms) | Mean TPOT (ms/token) |
+|---|---:|---:|---:|---:|---:|
+| 1 | 1 | <0.1 → <0.1 | 254.8 → 39.6 | 2236.4 → 2260.1 | 19.59 → 19.69 |
+| 2 | 1 | <0.1 → <0.1 | 254.8 → 43.8 | 2221.9 → 2219.4 | 19.59 → 19.56 |
+| 1 | 8 | 515.3 → <0.1 | 684.5 → 166.2 | 3409.7 → 2642.6 | 30.87 → 23.58 |
+| 2 | 8 | 512.4 → <0.1 | 679.6 → 170.1 | 3785.6 → 3022.8 | 29.90 → 23.80 |
+
+![Server timing means for both rounds and all prefix/concurrency scenarios](inference-runs/cache-study-live-01/comparison/03_server_timings.png)
+
+At concurrency 1, shared-prefix prefill means fell by approximately 83–84%, while decode means and TPOT stayed nearly unchanged. Decode remained over two seconds per request, consistent with a smaller E2E improvement than TTFT improvement. At concurrency 8, cache-on shared-prefix windows also showed queue means falling from approximately 512–515 ms to below 0.1 ms, plus lower decode means and TPOT. These observations are consistent with reduced prefill work changing contention among requests; they do not isolate GPU execution or prove a particular scheduling mechanism.
+
+Unique-prefix windows recorded no cache hits and no corresponding prefill reduction: server prefill means were approximately unchanged or higher with cache-on, even where client median TTFT improved. This reinforces the evidence of session variability. Server histogram means are distinct from client medians and do not provide an exact decomposition of those medians. TPOT averages per-request observations, and decode durations also depend on generated output length. The phases are not GPU kernel timings; no GPU timeline was captured.
+
 ## Historical Scheduling Findings (L4)
 
 - **Concurrency improved aggregate throughput but increased request latency.** For 256-token prompts, output throughput increased from 28.20 to 194.74 tokens/s as concurrency increased from 1 to 8.
@@ -424,7 +441,7 @@ Use `--require-cache-metrics` for published cache-study results. It requires que
 
 The comparison validates identical workloads within each pair, distinct seeds between rounds, matching client versions and declared server controls, four distinct server process identities, and the off→on/on→off execution order. It recomputes counter deltas from raw snapshots and rejects partial sessions, request mismatches, and inconsistent preparation or measurement phases. Dirty client worktrees are flagged because a shared Git revision cannot prove identical uncommitted code.
 
-The output contains `comparison.json`, `comparison.csv`, and two figures exported as PNG and SVG: `01_cache_latency` and `02_cache_prefill`. JSON preserves per-round cache-on percentage changes; CSV contains each treatment's latency p50/p95, completed-work throughput, actual token totals, failures, finish reasons, and metric changes. Throughput uses the full measured elapsed time. Latency percentiles and token totals use successful requests; failures remain in the attempted-request count. Existing output directories are not overwritten. The JSON `kind` remains `cache_comparison`, which identifies the data format independently of its filename.
+The output contains `comparison.json`, `comparison.csv`, and three figures exported as PNG and SVG: `01_cache_latency`, `02_cache_prefill`, and `03_server_timings`. JSON preserves per-round cache-on percentage changes; CSV contains each treatment's latency p50/p95, completed-work throughput, actual token totals, failures, finish reasons, and metric changes. Throughput uses the full measured elapsed time. Latency percentiles and token totals use successful requests; failures remain in the attempted-request count. Existing output directories are not overwritten. The JSON `kind` remains `cache_comparison`, which identifies the data format independently of its filename.
 
 Each JSON/CSV row also includes `server_{phase}_mean_ms` and `server_{phase}_observations` for `queue`, `prefill`, `decode`, and `time_per_output_token`. Means use histogram sum/count deltas from the saved measurement window, weighted by observation counts across engines. TPOT is the mean of per-request TPOT observations. These are server means, not client percentiles or GPU kernel timings; the phases need not sum to client E2E latency. Missing timing telemetry is `null` in JSON and blank in CSV. An available histogram with no observations has count zero and an unavailable mean. Existing saved runs need no changes.
 
