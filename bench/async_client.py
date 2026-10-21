@@ -7,7 +7,7 @@ import statistics
 import time
 from datetime import datetime
 from bench.workloads import generate_prompt
-from bench.results import save_results_json, save_results_csv
+from bench.batch_results import save_results_json, save_results_csv
 
 def positive_int(raw: str) -> int:
     try:

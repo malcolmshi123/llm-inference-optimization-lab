@@ -242,13 +242,17 @@ The activation command above is intended for Git Bash on Windows. Other shells u
 
 ### 2. Deploy the Inference Server
 
-Set the desired server-side `--max-num-batched-tokens` value in `modal_app.py`, then deploy:
+Set the scheduling budget and prefix-caching treatment when deploying:
 
 ```bash
+INFERENCE_LAB_PREFIX_CACHING=true \
+INFERENCE_LAB_MAX_NUM_BATCHED_TOKENS=2048 \
 python -m modal deploy modal_app.py
 ```
 
-Modal prints the deployed web endpoint.
+Modal prints the deployed web endpoint. Use `INFERENCE_LAB_PREFIX_CACHING=false` to disable caching or `INFERENCE_LAB_MAX_NUM_BATCHED_TOKENS=4096` for the historical scheduling comparison. These variables configure the deployment; changing the client environment afterward does not reconfigure a running server.
+
+`server_config.py` pins the model and tokenizer revision and explicitly enables chunked prefill. Defaults retain the L4, BF16 precision, 4096-token context, 0.80 memory target, and 2048-token scheduling budget. Invalid treatment settings fail before deployment. The startup log prints the server command.
 
 Set the endpoint and proxy-authentication credentials in the client environment:
 
@@ -281,7 +285,7 @@ python -m bench.async_client \
   --max-num-batched-tokens 2048
 ```
 
-For the 4096-token configuration, first update and redeploy the server with that budget, then run:
+For the 4096-token configuration, first redeploy with `INFERENCE_LAB_MAX_NUM_BATCHED_TOKENS=4096`, then run:
 
 ```bash
 python -m bench.async_client \
@@ -297,12 +301,12 @@ Results are written to timestamped JSON and CSV files in `results/`.
 ### 5. Compare Experiment Results
 
 ```bash
-python -m bench.compare \
+python -m bench.compare_batches \
   results/20261019_024946.json \
   results/20261019_030158.json
 ```
 
-The comparison utility validates the datasets, computes latency percentiles and mean throughput, reports percentage differences, and analyzes within-batch TTFT gaps.
+The comparison utility validates the datasets, computes latency percentiles and mean throughput, reports percentage differences, and analyzes within-batch TTFT gaps. The historical `python -m bench.compare` command remains available, and imports from `bench.results` still use the batch result writers.
 
 ### 6. Regenerate Figures
 
@@ -325,25 +329,30 @@ Stopping the application terminates its active GPU containers while preserving s
 From the repository root with local dependencies installed:
 
 ```bash
-python -m bench.test_results
-python -m unittest bench.test_async_client -v
+python -m unittest discover -s tests -v
 ```
 
-These tests cover JSON/CSV persistence and streaming-response validation. They run locally without a Modal deployment or GPU.
+These tests cover server configuration, JSON/CSV persistence, streaming-response validation, and compatibility with historical datasets and commands. They run locally without a Modal deployment or GPU.
 
 ## Repository Structure
 
 ```text
 .
 ├── modal_app.py
+├── server_config.py
 ├── bench/
 │   ├── client.py
 │   ├── async_client.py
-│   ├── test_async_client.py
 │   ├── workloads.py
+│   ├── batch_results.py
+│   ├── compare_batches.py
 │   ├── results.py
-│   ├── test_results.py
 │   └── compare.py
+├── tests/
+│   ├── test_async_client.py
+│   ├── test_batch_results.py
+│   ├── test_compatibility.py
+│   └── test_server_config.py
 ├── results/
 │   ├── 20261019_014825.json
 │   ├── 20261019_024946.json
