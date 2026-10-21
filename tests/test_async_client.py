@@ -44,6 +44,7 @@ class FakeClient:
         self.body = body
 
     def stream(self, *args, **kwargs):
+        self.payload = kwargs["json"]
         return FakeResponse(self.body)
 
 
@@ -58,6 +59,16 @@ class StreamingTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNone(result["ttft_ms"])
         self.assertIsNone(result["e2e_ms"])
         self.assertIsNone(result["completion_tokens"])
+
+    async def test_saved_messages_are_sent_without_rewriting_them(self):
+        client = FakeClient(sse(CONTENT, FINISH, USAGE, "[DONE]"))
+        messages = [{"role": "user", "content": "Saved document and question"}]
+        batch = await run_batch(client, [messages], max_tokens=128)
+
+        self.assertTrue(batch["results"][0]["success"])
+        self.assertEqual(client.payload["messages"], messages)
+        self.assertEqual(client.payload["max_tokens"], 128)
+        self.assertEqual(client.payload["temperature"], 0)
 
     async def test_complete_streams_succeed(self):
         for reason in ("stop", "length"):

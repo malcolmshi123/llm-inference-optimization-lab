@@ -40,10 +40,10 @@ class StreamingResponseError(RuntimeError):
     """The response did not contain a complete, usable benchmark result."""
 
 
-async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tokens: int = 128):
+async def send_streaming_request(client: httpx.AsyncClient, prompt: str | list[dict], max_tokens: int = 128):
     payload = {
         "model": MODEL_NAME,
-        "messages": [
+        "messages": prompt if isinstance(prompt, list) else [
             {
                 "role": "user",
                 "content": prompt,
@@ -141,7 +141,7 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
             "finish_reason": finish_reason,
         }
 
-async def run_batch(client: httpx.AsyncClient, prompts: list[str], max_tokens: int = 128):
+async def run_batch(client: httpx.AsyncClient, prompts: list[str | list[dict]], max_tokens: int = 128):
     batch_start = time.perf_counter()
     results = await asyncio.gather(
         *(
@@ -156,6 +156,9 @@ async def run_batch(client: httpx.AsyncClient, prompts: list[str], max_tokens: i
     normalized_results = []
 
     for result in results:
+        if isinstance(result, asyncio.CancelledError):
+            raise result
+
         if isinstance(result, Exception):
             normalized_results.append({
                 "success": False,

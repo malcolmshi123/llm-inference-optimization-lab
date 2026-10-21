@@ -332,7 +332,44 @@ From the repository root with local dependencies installed:
 python -m unittest discover -s tests -v
 ```
 
-These tests cover server configuration, JSON/CSV persistence, streaming-response validation, and comparison of the historical datasets. They run locally without a Modal deployment or GPU.
+These tests cover server configuration, JSON/CSV persistence, streaming-response validation, historical comparisons, document manifests, and cache-study execution against a fake server. They run locally without a Modal deployment or GPU. A tokenizer integration check uses the pinned tokenizer only when it is already cached locally.
+
+## Prefix-Cache Study
+
+The `cache-study` branch adds a focused document/Q&A experiment. Its runner and offline tests are implemented; live measurements and the comparison/figure command remain pending. The historical scheduling findings above are unchanged.
+
+Prepare two saved workloads, with 32 requests per scenario and different seeds between rounds:
+
+```bash
+python -m bench.cache_study prepare --seed 42 --count 32 --output workloads/cache-round-1.json
+python -m bench.cache_study prepare --seed 43 --count 32 --output workloads/cache-round-2.json
+```
+
+Each manifest contains unique-prefix and approximately 90% shared-prefix scenarios at concurrency 1 and 8. Inputs target 2048 tokens within 5% after chat templating. Outputs have a fixed limit of 128 tokens with normal EOS behavior. Readable local fixtures form a controlled document workload; the distribution is not measured production traffic. Use `--count 1` for a preliminary replay or `--count 8` for a small batch check before the full study. Count applies to each of the four scenarios.
+
+Start a fresh server with caching disabled and scheduling budget 2048. Save its actual `Starting vLLM server with command:` line from the Modal container logs in `logs/cache-off.txt`. The runner requires that line as evidence of the fixed command; do not substitute a locally generated command. Then run:
+
+```bash
+python -m bench.cache_study run \
+  --manifest workloads/cache-round-1.json \
+  --expected-prefix-caching off \
+  --server-log logs/cache-off.txt \
+  --output-dir results/cache-study/round-1-off
+```
+
+The runner verifies the cache flag and memory target through `/metrics`, warms the engine with eight unrelated requests, primes each shared prefix, and captures snapshots around measured batches. Cache-off receives the same primers as cache-on. The startup log provides command evidence; GPU identity and software versions on the server remain declared deployment settings rather than independent runtime measurements.
+
+Run four fresh treatment sessions in order: round 1 off→on, then round 2 on→off. Replay the same manifest within each round. For each session after the first, pass `--previous-run` with the preceding session's `run.json` to reject a reused server process. Stop and redeploy between sessions; changing the expected flag does not change the server.
+
+Each output directory contains `workload.json`, `run.json`, `requests.csv`, `server.log`, and raw `.prom` snapshots. Warmup and priming are stored separately from measured batches and CSV rows. Checkpoints retain completed batches and failures if the session stops. Do not resume a partially measured session as a full comparison; use a new directory and a fresh server.
+
+Metric analysis uses the pinned [vLLM metric definitions](https://docs.vllm.ai/en/v0.21.0/usage/metrics/) and saved snapshots. Reproduce the existing eight-request diagnostic offline:
+
+```bash
+python -m bench.cache_metrics metrics/metrics-before-long.txt metrics/metrics-after-long.txt
+```
+
+This reports 16,384 prefix queries, zero hits, 16,384 newly computed prefill tokens, and zero preemptions. Missing counters remain unavailable. Counter resets, changed process identities, and incompatible labels are rejected. New cache-study measurements must be collected before adding performance conclusions.
 
 ## Repository Structure
 
@@ -344,11 +381,19 @@ These tests cover server configuration, JSON/CSV persistence, streaming-response
 │   ├── client.py
 │   ├── async_client.py
 │   ├── workloads.py
+│   ├── fixtures/
+│   │   └── documents.json
+│   ├── cache_workloads.py
+│   ├── cache_metrics.py
+│   ├── cache_study.py
 │   ├── batch_results.py
 │   └── compare_batches.py
 ├── tests/
 │   ├── test_async_client.py
 │   ├── test_batch_results.py
+│   ├── test_cache_workloads.py
+│   ├── test_cache_metrics.py
+│   ├── test_cache_study.py
 │   ├── test_compare_batches.py
 │   └── test_server_config.py
 ├── results/
