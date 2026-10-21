@@ -381,8 +381,11 @@ python -m bench.compare_cache \
   --round-1-on results/cache-study/round-1-on \
   --round-2-off results/cache-study/round-2-off \
   --round-2-on results/cache-study/round-2-on \
-  --output-dir figures/cache-study
+  --output-dir figures/cache-study \
+  --require-cache-metrics
 ```
+
+Use --require-cache-metrics for published cache-study results. It requires query, hit, and newly computed prefill counters in every measured window; zero values remain valid. Omit it for diagnostic analysis that permits unavailable telemetry.
 
 The comparison validates identical workloads within each pair, distinct seeds between rounds, matching client versions and declared server controls, four distinct server process identities, and the off→on/on→off execution order. It recomputes counter deltas from raw snapshots and rejects partial sessions, request mismatches, and inconsistent preparation or measurement phases. Dirty client worktrees are flagged because a shared Git revision cannot prove identical uncommitted code.
 

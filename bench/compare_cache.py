@@ -223,7 +223,7 @@ def load_run(directory: Path, expected: bool) -> tuple:
 
     return run, manifest, summaries
 
-def compare_runs(round_1_off: Path, round_1_on: Path, round_2_off: Path, round_2_on: Path) -> dict:
+def compare_runs(round_1_off: Path, round_1_on: Path, round_2_off: Path, round_2_on: Path, *, require_cache_metrics: bool = False,) -> dict:
     directories = [round_1_off, round_1_on, round_2_on, round_2_off]
     loaded = [load_run(directory, expected) for directory, expected in zip(directories, (False, True, True, False))]
     identities = [run["server"]["process_start_time_seconds"] for run, _, _ in loaded]
@@ -270,6 +270,21 @@ def compare_runs(round_1_off: Path, round_1_on: Path, round_2_off: Path, round_2
             }
             changes.append({"round": round_number, "scenario": baseline["scenario"], "cache_on_change_pct": differences})
 
+    if require_cache_metrics:
+        required = (
+            "prefix_queries_tokens",
+            "prefix_hits_tokens",
+            "new_prefill_tokens",
+        )
+        for row in rows:
+            missing = [field for field in required if row[field] is None]
+            if missing:
+                raise ValueError(
+                    f"Round {row['round']} cache-{row['cache']} "
+                    f"{row['scenario']}: missing required cache metrics: "
+                    + ", ".join(missing)
+                )
+    
     notes = [
         "Two paired rounds are exploratory session replications; requests within a session are not independent replications.",
         "Percentiles describe successful requests only; token totals and output throughput also count successful requests only.",
@@ -277,6 +292,12 @@ def compare_runs(round_1_off: Path, round_1_on: Path, round_2_off: Path, round_2
         "Warmup and priming are excluded. Missing telemetry is unavailable. No bootstrap confidence intervals are computed.",
         "GPU identity and server software versions are declared settings supported by startup logs, not independently measured runtime identities."
     ]
+
+    if require_cache_metrics:
+        notes.append(
+            "Required cache query, hit, and new-prefill counters are "
+            "present in every measured interval."
+        )
 
     if any(run["client"].get("git_dirty") for run, _, _ in loaded):
         notes.append("At least one client worktree was dirty; matching Git revisions do not prove identical uncommitted code.")
@@ -371,10 +392,22 @@ def main():
     for name in ("round-1-off", "round-1-on", "round-2-off", "round-2-on", "output-dir"):
         parser.add_argument("--" + name, type=Path, required=True)
 
+    parser.add_argument(
+        "--require-cache-metrics",
+        action="store_true",
+        help="Require cache query, hit, and new-prefill counters in every measured interval.",
+    )
+    
     args = parser.parse_args()
 
     try:
-        comparison = compare_runs(args.round_1_off, args.round_1_on, args.round_2_off, args.round_2_on)
+        comparison = compare_runs(
+            args.round_1_off,
+            args.round_1_on,
+            args.round_2_off,
+            args.round_2_on,
+            require_cache_metrics=args.require_cache_metrics,
+        )
         export_comparison(comparison, args.output_dir)
     except (OSError, ValueError, KeyError, TypeError) as exc:
         parser.exit(1, f"Error: {exc}\n")

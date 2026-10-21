@@ -267,9 +267,17 @@ class CompareCacheTests(unittest.TestCase):
                 compare_runs(*self.directories)
 
     def test_exports_include_both_rounds_and_two_readable_figures(self):
-        comparison = compare_runs(*self.directories)
+        comparison = compare_runs(
+            *self.directories,
+            require_cache_metrics=True,
+        )
         directory = self.root / "analysis"
-        arguments = [sys.executable, "-m", "bench.compare_cache"]
+        arguments = [
+            sys.executable,
+            "-m",
+            "bench.compare_cache",
+            "--require-cache-metrics",
+        ]
 
         for flag, path in zip(("--round-1-off", "--round-1-on", "--round-2-off", "--round-2-on"), self.directories):
             arguments.extend((flag, str(path)))
@@ -339,6 +347,9 @@ class CompareCacheTests(unittest.TestCase):
         output = self.root / "missing-telemetry"
         export_comparison(comparison, output)
         self.assertGreaterEqual((output / "02_cache_prefill.svg").read_text(encoding="utf-8").count("N/A"), 4)
+
+        with self.assertRaisesRegex(ValueError, "prefix_hits_tokens"):
+            compare_runs(*self.directories, require_cache_metrics=True)
 
     def test_real_runner_outputs_are_accepted_without_schema_translation(self):
         async def execute():
