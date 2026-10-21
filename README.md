@@ -421,6 +421,8 @@ Stopping the application terminates its active GPU containers while preserving s
 
 ### Run tests
 
+For a complete offline check of the tooling and committed measurements, follow the [validation runbook](docs/validation.md). It regenerates comparisons in temporary directories without a GPU deployment.
+
 From the repository root with local dependencies installed:
 
 ```bash
