@@ -96,7 +96,10 @@ def counter_changes(before: dict, after: dict, name: str) -> dict | None:
     if any(dict(labels).get("model_name") != MODEL_NAME for labels in initial):
         raise ValueError(f"Counter does not match the study model: {name}")
 
-    created = name.removesuffix("_total").removesuffix("_sum") + "_created"
+    created = (
+        name.removesuffix("_total").removesuffix("_sum").removesuffix("_count")
+        + "_created"
+    )
 
     if series(before, created) != series(after, created):
         raise ValueError(f"Counter creation time changed: {name}")
