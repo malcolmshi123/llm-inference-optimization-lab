@@ -21,6 +21,7 @@ from bench.cache_metrics import (
 from bench.cache_study import write_json
 from bench.cache_workloads import load_manifest
 from bench.compare_cache import validate_request
+from bench.plot_style import BLUE, FIGURE_STYLE, ORANGE, label_figure
 from server_config import ServerConfig
 
 ANNOTATION = re.compile(r"execute_context_(\d+)\((\d+)\)_generation_(\d+)\((\d+)\)")
@@ -292,10 +293,17 @@ def write_timeline(summary: dict, directory: Path):
 
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
+
+    with plt.rc_context(FIGURE_STYLE):
+        _write_timeline(summary, directory)
+
+
+def _write_timeline(summary: dict, directory: Path):
+    import matplotlib.pyplot as plt
     from matplotlib.patches import Patch
 
     colors = {
-        "context_only": "#D55E00",
+        "context_only": ORANGE,
         "mixed": "#CC79A7",
         "generation_only": "#009E73",
         "empty": "#999999",
@@ -303,7 +311,7 @@ def write_timeline(summary: dict, directory: Path):
     figure, axes = plt.subplots(2, 1, figsize=(12, 5.5), sharex=True)
     for axis, capture in zip(axes, summary["captures"]):
         axis.broken_barh(
-            capture["timeline_kernel_intervals_ms"], (0.7, 0.5), facecolors="#0072B2"
+            capture["timeline_kernel_intervals_ms"], (0.7, 0.5), facecolors=BLUE
         )
         for phase, color in colors.items():
             ranges = [
@@ -314,43 +322,32 @@ def write_timeline(summary: dict, directory: Path):
             axis.broken_barh(ranges, (1.7, 0.5), facecolors=color)
         axis.set(
             title=(
-                f"Cache {capture['cache']} | {capture['kernel_count']:,} GPU kernels | "
+                f"Cache {capture['cache']} · {capture['kernel_count']:,} GPU kernels · "
                 f"{capture['completion_tokens']} output tokens"
             ),
             yticks=[0.95, 1.95],
             yticklabels=["GPU kernels", "Host scopes"],
             ylim=(0.4, 2.5),
         )
-        axis.grid(axis="x", alpha=0.2)
-    axes[-1].set_xlabel(
-        "Time from earliest GPU kernel / host execution scope in each trace (ms)"
-    )
+        axis.grid(axis="x")
+    axes[-1].set_xlabel("Time from first GPU kernel or host scope in each trace (ms)")
     axes[-1].set_xlim(left=0)
-    figure.suptitle(
-        "Shared-prefix profiling | one eight-request batch per treatment", y=0.99
-    )
     figure.legend(
         handles=[
             Patch(color=color, label=phase.replace("_", " "))
             for phase, color in colors.items()
         ],
-        loc="upper center",
-        bbox_to_anchor=(0.5, 0.94),
+        loc="upper left",
+        bbox_to_anchor=(0.075, 0.87),
         ncol=4,
     )
-    figure.text(
-        0.5,
-        0.02,
-        "Host scopes describe scheduled work; GPU execution may outlive them. "
-        "GPU lane merges recorded kernel intervals.\n"
-        "Not GPU utilization or a prefill/decode GPU-time decomposition. "
-        "Profiling overhead is included.\n"
-        "GPU gaps under 0.5 ms are merged for display only; exact duration "
-        "totals are preserved in summary.json.",
-        ha="center",
-        fontsize=9,
+    label_figure(
+        figure,
+        "Shared-prefix GPU timeline",
+        "Eight requests per treatment · Profiling overhead included",
+        "Host scopes are not GPU phases · GPU gaps under 0.5 ms merged for display",
     )
-    figure.tight_layout(rect=(0, 0.12, 1, 0.86))
+    figure.tight_layout(rect=(0.01, 0.08, 0.99, 0.84))
     for extension in ("png", "svg"):
         figure.savefig(directory / f"01_gpu_timeline.{extension}", dpi=160)
     plt.close(figure)

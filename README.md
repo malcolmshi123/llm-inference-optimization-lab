@@ -6,6 +6,95 @@ This project benchmarks Qwen3-4B-Instruct-2507 and investigates scheduling and p
 
 It contains two experiments: a prefix-cache study configured for NVIDIA A10, and an earlier scheduling-budget study on NVIDIA L4.
 
+## Contents
+
+- [Tech Stack](#tech-stack)
+- [Repository Structure](#repository-structure)
+- [System Architecture](#system-architecture)
+- [Prefix-Cache Results (A10)](#prefix-cache-results-a10)
+- [Historical Scheduling Findings (L4)](#historical-scheduling-findings-l4)
+- [Historical Scheduling Methodology](#historical-scheduling-methodology)
+- [Historical Scheduling Results](#historical-scheduling-results)
+- [Saved Evidence](#saved-evidence)
+- [Validation](#validation)
+- [Reproducing the Experiments](#reproducing-the-experiments)
+- [Prefix-Cache Study](#prefix-cache-study)
+- [Limitations](#limitations)
+- [Future Work](#future-work)
+- [Conclusion](#conclusion)
+
+## Tech Stack
+
+| Component | Technology |
+|---|---|
+| Model | Qwen3-4B-Instruct-2507 |
+| Inference engine | vLLM 0.21.0 |
+| GPU | NVIDIA A10 (cache study); NVIDIA L4 (historical scheduling) |
+| Infrastructure | Modal |
+| API | OpenAI-compatible HTTP API |
+| Benchmarking | Python, asyncio, httpx |
+| Streaming | Server-Sent Events (SSE) |
+| Analysis | NumPy, Python statistics |
+| Results | JSON, CSV, Prometheus metrics |
+
+The project focuses on **inference serving and benchmarking**. It does not train, fine-tune, quantize, or modify the model weights.
+
+## Repository Structure
+
+```text
+.
+├── .github/           # CPU CI
+├── bench/             # Benchmark and analysis tools
+├── docs/              # Validation and profiling runbooks
+├── figures/           # Scheduling figures and SVG generator
+├── inference-runs/    # Cache and profiling evidence
+├── metrics/           # Scheduling metric snapshots
+├── results/           # Scheduling JSON/CSV results
+├── tests/             # CPU tests
+├── .gitattributes
+├── .gitignore
+├── modal_app.py        # Modal deployment
+├── README.md
+├── requirements.txt
+└── server_config.py    # Server controls
+```
+
+## System Architecture
+
+```mermaid
+flowchart TD
+    A["Python Benchmark Client<br/>asyncio + httpx"] -->|"Concurrent HTTPS requests"| B["Modal Authenticated Endpoint"]
+    B --> C["vLLM 0.21.0<br/>Configured NVIDIA GPU"]
+    C --> D["Qwen3-4B-Instruct"]
+    D -->|"Streaming SSE responses"| A
+    A --> E["JSON / CSV Results"]
+    C --> F["Prometheus Metrics"]
+    E --> G["Analysis and Visualizations"]
+    F --> G
+```
+
+The inference server runs vLLM inside a Modal GPU container and exposes the OpenAI-compatible `/v1/chat/completions` endpoint.
+
+The benchmark client sends asynchronous requests, processes streamed responses, and records request-level and batch-level performance measurements. Modal proxy authentication protects the endpoint.
+
+### Historical Scheduling Configuration (L4)
+
+| Parameter | Value |
+|---|---|
+| GPU | L4 |
+| Precision | BF16 |
+| Maximum model length | 4096 tokens |
+| GPU memory utilization target | 0.80 |
+| Scheduling token budget | 2048 (control), 4096 (experiment) |
+| Chunked prefill | Enabled |
+| Prefix caching | Enabled |
+| vLLM maximum sequences | 256 (resolved default) |
+| Modal concurrent inputs | 8 |
+
+Modal's concurrent-input limit and vLLM's maximum-sequence limit operate at different layers of the serving stack.
+
+The cache study also uses the 2048-token scheduling budget; its treatment changes prefix caching on the configured A10 rather than the scheduling budget.
+
 ## Prefix-Cache Results (A10)
 
 **Question:** Does prefix caching reduce latency when requests reuse a document, and how does that behavior compare with unique-prefix requests?
@@ -84,58 +173,6 @@ Host annotations describe CPU execution scopes; asynchronous GPU work can outliv
 - **Server-side metrics provided additional diagnostic evidence.** A targeted eight-request experiment measured an average of 778 ms in queue time and 891 ms in prefill-phase time per request, with no observed prefix-cache hits or KV-cache preemptions.
 
 The earlier scheduling study produced a **negative optimization result**: increasing the scheduling token budget did not improve the measured workloads. Its findings describe the L4 scheduling experiment separately from the A10 cache study above.
-
-## Tech Stack
-
-| Component | Technology |
-|---|---|
-| Model | Qwen3-4B-Instruct-2507 |
-| Inference engine | vLLM 0.21.0 |
-| GPU | NVIDIA A10 (cache study); NVIDIA L4 (historical scheduling) |
-| Infrastructure | Modal |
-| API | OpenAI-compatible HTTP API |
-| Benchmarking | Python, asyncio, httpx |
-| Streaming | Server-Sent Events (SSE) |
-| Analysis | NumPy, Python statistics |
-| Results | JSON, CSV, Prometheus metrics |
-
-The project focuses on **inference serving and benchmarking**. It does not train, fine-tune, quantize, or modify the model weights.
-
-## System Architecture
-
-```mermaid
-flowchart TD
-    A["Python Benchmark Client<br/>asyncio + httpx"] -->|"Concurrent HTTPS requests"| B["Modal Authenticated Endpoint"]
-    B --> C["vLLM 0.21.0<br/>Configured NVIDIA GPU"]
-    C --> D["Qwen3-4B-Instruct"]
-    D -->|"Streaming SSE responses"| A
-    A --> E["JSON / CSV Results"]
-    C --> F["Prometheus Metrics"]
-    E --> G["Analysis and Visualizations"]
-    F --> G
-```
-
-The inference server runs vLLM inside a Modal GPU container and exposes the OpenAI-compatible `/v1/chat/completions` endpoint.
-
-The benchmark client sends asynchronous requests, processes streamed responses, and records request-level and batch-level performance measurements. Modal proxy authentication protects the endpoint.
-
-### Historical Scheduling Configuration (L4)
-
-| Parameter | Value |
-|---|---|
-| GPU | L4 |
-| Precision | BF16 |
-| Maximum model length | 4096 tokens |
-| GPU memory utilization target | 0.80 |
-| Scheduling token budget | 2048 (control), 4096 (experiment) |
-| Chunked prefill | Enabled |
-| Prefix caching | Enabled |
-| vLLM maximum sequences | 256 (resolved default) |
-| Modal concurrent inputs | 8 |
-
-Modal's concurrent-input limit and vLLM's maximum-sequence limit operate at different layers of the serving stack.
-
-The cache study also uses the 2048-token scheduling budget; its treatment changes prefix caching on the configured A10 rather than the scheduling budget.
 
 ## Historical Scheduling Methodology
 
@@ -285,6 +322,49 @@ However, the aggregate measurements do **not** reconstruct individual scheduler 
 
 The eight-request diagnostic is derived from [metrics-before-long.txt](metrics/metrics-before-long.txt) and [metrics-after-long.txt](metrics/metrics-after-long.txt). Subtract the before counter from the after counter, then divide each latency-sum delta by the completed-request count delta (8) and multiply by 1000 to obtain milliseconds. This gives 2142.88 ms TTFT, 777.62 ms queue time, and 891.12 ms prefill time. The prompt-token delta is 16384; cache-hit and preemption deltas are zero. The pair has matching metric creation timestamps.
 
+## Saved Evidence
+
+The [cache-study artifacts](inference-runs/cache-study-live-01/) and [profiling artifacts](inference-runs/profiling/) retain workloads, request outcomes, startup evidence, raw snapshots, and generated analyses. The profiling directory also includes compressed traces and verification receipts.
+
+The historical scheduling datasets, in run-filename order, are:
+
+| File | Description |
+|---|---|
+| [results/20261019_014825.json](results/20261019_014825.json) | 5 batches per workload at concurrency 1, 4, and 8; 30 batches and 130 successful requests. Scheduling budget is not recorded in this older file. Sources figures 01 and 02. |
+| [results/20261019_024946.json](results/20261019_024946.json) | 20 batches per workload at concurrency 8, recorded budget 2048; 40 batches and 320 successful requests. Sources figures 03 and 04. |
+| [results/20261019_030158.json](results/20261019_030158.json) | 20 batches per workload at concurrency 8, recorded budget 4096; 40 batches and 320 successful requests. Sources figures 03 and 04. |
+
+Each timestamped JSON has a corresponding `.csv` request-table export. All CSV rows match the JSON values for their exported fields. The baseline CSV omits the scheduling-budget column; the two A/B CSVs include it. JSON remains the analysis source because it preserves nested batches and full request records.
+
+The retained diagnostic snapshots have the following roles:
+
+| Files | Role and interpretation |
+|---|---|
+| [metrics/metrics-before-long.txt](metrics/metrics-before-long.txt), [metrics/metrics-after-long.txt](metrics/metrics-after-long.txt) | Paired cumulative counters supporting the eight-request diagnostic above. Keep both snapshots to preserve the subtraction baseline. |
+| [metrics/metrics-repeated.txt](metrics/metrics-repeated.txt) | Two completed requests, 38 prompt tokens, and 16 cached prompt tokens. Supports the separate cache-functionality observation. The exact request payloads and replay command are not committed. |
+
+The saved metrics reproduce the reported counter calculations, but the repository does not contain a script to replay those diagnostic requests and capture the snapshots. Keep these measurements distinct from the timestamped client benchmark datasets.
+
+## Validation
+
+For a complete offline check of the tooling and committed measurements, follow the [validation runbook](docs/validation.md). It regenerates comparisons in temporary directories without a GPU deployment.
+
+From the repository root with local dependencies installed:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+These tests cover server configuration, JSON/CSV persistence, streaming-response validation, historical comparisons, document manifests, and cache-study execution against a fake server. They run locally without a Modal deployment or GPU. A tokenizer integration check uses the pinned tokenizer only when it is already cached locally.
+
+The [CPU tests workflow](.github/workflows/tests.yml) runs on pushes and pull requests using Python 3.11. It first runs the suite offline with an isolated Hugging Face cache. It then downloads the pinned tokenizer files and runs the tokenizer integration check separately, also offline. That step sets `INFERENCE_LAB_REQUIRE_TOKENIZER=true`, so an unavailable tokenizer fails instead of skipping. Model weights, GPUs, and Modal credentials are not needed; dependency installation and the tokenizer download require network access. CI checks the tooling without rerunning the live performance experiments.
+
+The pilot checker also validates saved request results and raw snapshots, rather than relying only on a completed status:
+
+```bash
+python -m bench.check_cache_pilots inference-runs/cache-study-live-01
+```
+
 ## Reproducing the Experiments
 
 ### Prerequisites
@@ -345,7 +425,7 @@ python -m bench.profile_capture \
 
 The deployment's prefix-caching setting and profile session must match these arguments. Capture-off and capture-on should use fresh servers, distinct profile labels, and the same manifest. The driver validates the startup command, observed cache configuration, stable process identity, token counts, and completed-request counter deltas. Existing local output directories are not overwritten. It attempts `/stop_profile` after a start attempt even if the start response times out, a request fails, or the capture is interrupted; cleanup errors are recorded separately from the original failure.
 
-Each output contains `capture.json`, the original manifest as `workload.json`, `server.log`, and raw metric snapshots. `capture.json` records preparation and captured request results, timestamps, profiler start/stop outcomes, and the expected remote trace directory. Its `kind` is `profile_capture`, separate from benchmark results. A `completed` capture means requests and profiler shutdown validated; it does not verify that trace files persisted or contain GPU events. `trace_files_verified` remains false until trace inspection is performed separately. The driver neither deploys nor stops Modal apps nor downloads traces.
+Each output contains `capture.json`, the original manifest as `workload.json`, `server.log`, and raw metric snapshots. `capture.json` records preparation and captured request results, timestamps, profiler start/stop outcomes, and the expected remote trace directory. Its `kind` is `profile_capture`, separate from benchmark results. A `completed` capture means requests and profiler shutdown validated; it does not verify that trace files persisted or contain GPU events. `trace_files_verified` remains false in the capture record; a separate trace receipt records the download and GPU-event checks. The driver neither deploys nor stops Modal apps nor downloads traces.
 
 Follow the [profiling runbook](docs/profiling.md) for the two manual deployments, readiness checks, bounded trace downloads, GPU-event checks, and automatic app shutdown. The runbook uses Git Bash and the existing saved workload; no new benchmark study is required.
 
@@ -409,7 +489,7 @@ The comparison utility validates the datasets, computes latency percentiles and 
 python figures/generate_figures.py
 ```
 
-The generator uses only Python's standard library and the three primary benchmark JSON files listed below. It writes the four SVGs referenced in this README and does not require an active Modal deployment. The committed PNG files are convenience exports; this command does not regenerate them.
+The generator uses only Python's standard library and the three primary benchmark JSON files listed in [Saved Evidence](#saved-evidence). It writes the four SVGs referenced in this README and does not require an active Modal deployment. The committed PNG files are convenience exports; this command does not regenerate them.
 
 ### 7. Stop the Deployment
 
@@ -418,26 +498,6 @@ python -m modal app stop llm-inference-optimization-lab
 ```
 
 Stopping the application terminates its active GPU containers while preserving separately managed persistent volumes.
-
-### Run tests
-
-For a complete offline check of the tooling and committed measurements, follow the [validation runbook](docs/validation.md). It regenerates comparisons in temporary directories without a GPU deployment.
-
-From the repository root with local dependencies installed:
-
-```bash
-python -m unittest discover -s tests -v
-```
-
-These tests cover server configuration, JSON/CSV persistence, streaming-response validation, historical comparisons, document manifests, and cache-study execution against a fake server. They run locally without a Modal deployment or GPU. A tokenizer integration check uses the pinned tokenizer only when it is already cached locally.
-
-The [CPU tests workflow](.github/workflows/tests.yml) runs on pushes and pull requests using Python 3.11. It first runs the suite offline with an isolated Hugging Face cache. It then downloads the pinned tokenizer files and runs the tokenizer integration check separately, also offline. That step sets `INFERENCE_LAB_REQUIRE_TOKENIZER=true`, so an unavailable tokenizer fails instead of skipping. Model weights, GPUs, and Modal credentials are not needed; dependency installation and the tokenizer download require network access. CI checks the tooling without rerunning the live performance experiments.
-
-The pilot checker also validates saved request results and raw snapshots, rather than relying only on a completed status:
-
-```bash
-python -m bench.check_cache_pilots inference-runs/cache-study-live-01
-```
 
 ## Prefix-Cache Study
 
@@ -498,81 +558,7 @@ The output contains `comparison.json`, `comparison.csv`, and three figures expor
 
 Each JSON/CSV row also includes `server_{phase}_mean_ms` and `server_{phase}_observations` for `queue`, `prefill`, `decode`, and `time_per_output_token`. Means use histogram sum/count deltas from the saved measurement window, weighted by observation counts across engines. TPOT is the mean of per-request TPOT observations. These are server means, not client percentiles or GPU kernel timings; the phases need not sum to client E2E latency. Missing timing telemetry is `null` in JSON and blank in CSV. An available histogram with no observations has count zero and an unavailable mean. Existing saved runs need no changes.
 
-Both rounds remain separate. Two paired rounds support an exploratory comparison; requests within one session are not independent replications. No confidence intervals or pooled speedup are reported. Missing telemetry remains unavailable and is marked `N/A` in diagnostic cache figures. Workloads with fewer than the planned 32 requests per scenario are identified as pilots. The results at the top use saved live measurements; offline figure tests use synthetic data.
-
-## Repository Structure
-
-```text
-.
-├── modal_app.py
-├── server_config.py
-├── bench/
-│   ├── client.py
-│   ├── async_client.py
-│   ├── workloads.py
-│   ├── fixtures/
-│   │   └── documents.json
-│   ├── cache_workloads.py
-│   ├── cache_metrics.py
-│   ├── cache_study.py
-│   ├── compare_cache.py
-│   ├── check_cache_pilots.py
-│   ├── batch_results.py
-│   └── compare_batches.py
-├── tests/
-│   ├── test_async_client.py
-│   ├── test_client.py
-│   ├── test_batch_results.py
-│   ├── test_cache_workloads.py
-│   ├── test_cache_metrics.py
-│   ├── test_cache_study.py
-│   ├── test_compare_batches.py
-│   ├── test_compare_cache.py
-│   ├── test_check_cache_pilots.py
-│   └── test_server_config.py
-├── inference-runs/
-│   └── cache-study-live-01/
-│       ├── workloads/
-│       ├── logs/
-│       ├── pilot-off/
-│       ├── pilot-on/
-│       ├── round-1-off/
-│       ├── round-1-on/
-│       ├── round-2-on/
-│       ├── round-2-off/
-│       ├── comparison/
-│       └── scripts/
-├── results/
-│   ├── 20261019_014825.json
-│   ├── 20261019_024946.json
-│   └── 20261019_030158.json
-├── metrics/
-│   └── ...
-├── figures/
-│   ├── generate_figures.py
-│   └── ...
-└── examples/
-    └── ...
-```
-
-The benchmark datasets, in run-filename order, are:
-
-| File | Description |
-|---|---|
-| [results/20261019_014825.json](results/20261019_014825.json) | 5 batches per workload at concurrency 1, 4, and 8; 30 batches and 130 successful requests. Scheduling budget is not recorded in this older file. Sources figures 01 and 02. |
-| [results/20261019_024946.json](results/20261019_024946.json) | 20 batches per workload at concurrency 8, recorded budget 2048; 40 batches and 320 successful requests. Sources figures 03 and 04. |
-| [results/20261019_030158.json](results/20261019_030158.json) | 20 batches per workload at concurrency 8, recorded budget 4096; 40 batches and 320 successful requests. Sources figures 03 and 04. |
-
-Each timestamped JSON has a corresponding `.csv` request-table export. All CSV rows match the JSON values for their exported fields. The baseline CSV omits the scheduling-budget column; the two A/B CSVs include it. JSON remains the analysis source because it preserves nested batches and full request records.
-
-The retained diagnostic snapshots have the following roles:
-
-| Files | Role and interpretation |
-|---|---|
-| [metrics/metrics-before-long.txt](metrics/metrics-before-long.txt), [metrics/metrics-after-long.txt](metrics/metrics-after-long.txt) | Paired cumulative counters supporting the eight-request diagnostic above. Keep both snapshots to preserve the subtraction baseline. |
-| [metrics/metrics-repeated.txt](metrics/metrics-repeated.txt) | Two completed requests, 38 prompt tokens, and 16 cached prompt tokens. Supports the separate cache-functionality observation. The exact request payloads and replay command are not committed. |
-
-The saved metrics reproduce the reported counter calculations, but the repository does not contain a script to replay those diagnostic requests and capture the snapshots. Keep these measurements distinct from the timestamped client benchmark datasets.
+Both rounds remain separate. Two paired rounds support an exploratory comparison; requests within one session are not independent replications. No confidence intervals or pooled speedup are reported. Missing telemetry remains unavailable and is marked `N/A` in diagnostic cache figures. Workloads with fewer than the planned 32 requests per scenario are identified as pilots. The reported results use saved live measurements; offline figure tests use synthetic data.
 
 ## Limitations
 

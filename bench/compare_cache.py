@@ -18,6 +18,7 @@ from bench.cache_metrics import (
 )
 from bench.cache_study import startup_command, write_json
 from bench.cache_workloads import SCENARIOS, load_manifest
+from bench.plot_style import BLUE, FIGURE_STYLE, ORANGE, label_figure
 from bench.server_timings import timing_summary
 
 LATENCIES = ("ttft_p50_ms", "ttft_p95_ms", "e2e_p50_ms", "e2e_p95_ms")
@@ -504,12 +505,19 @@ def write_figures(comparison: dict, directory: Path):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
 
+    with plt.rc_context(FIGURE_STYLE):
+        _write_figures(comparison, directory)
+
+
+def _write_figures(comparison: dict, directory: Path):
+    import matplotlib.pyplot as plt
+
     names = [f"{case}-c{concurrency}" for case, concurrency in SCENARIOS]
     labels = [f"{case.title()}\nc={concurrency}" for case, concurrency in SCENARIOS]
     x = np.arange(len(names))
     colors = {
-        "off": "#0072B2",
-        "on": "#D55E00",
+        "off": BLUE,
+        "on": ORANGE,
     }
     rows = {
         (row["round"], row["cache"], row["scenario"]): row for row in comparison["rows"]
@@ -521,7 +529,7 @@ def write_figures(comparison: dict, directory: Path):
             axis = axes[round_number - 1, column]
 
             for cache in ("off", "on"):
-                for percentile, style, marker in ((50, "-", "o"), (95, "--", "^")):
+                for percentile in (50, 95):
                     values = [
                         rows[round_number, cache, name][f"{metric}_p{percentile}_ms"]
                         for name in names
@@ -530,15 +538,17 @@ def write_figures(comparison: dict, directory: Path):
                         x,
                         [value if value is not None else np.nan for value in values],
                         color=colors[cache],
-                        linestyle=style,
-                        marker=marker,
+                        linestyle="-" if percentile == 50 else "--",
+                        marker="o" if percentile == 50 else "D",
+                        markerfacecolor=colors[cache],
+                        markeredgecolor=colors[cache],
                         label=f"Cache {cache} p{percentile}",
                     )
 
             axis.set(
                 title=(
-                    f"Round {round_number}: "
-                    f"{'off → on' if round_number == 1 else 'on → off'} | "
+                    f"Round {round_number} · "
+                    f"{'off → on' if round_number == 1 else 'on → off'} · "
                     f"{'TTFT' if metric == 'ttft' else 'End-to-end'}"
                 ),
                 ylabel="Latency (ms)",
@@ -546,28 +556,24 @@ def write_figures(comparison: dict, directory: Path):
                 xticklabels=labels,
             )
             axis.set_ylim(bottom=0)
-            axis.grid(axis="y", alpha=0.25)
+            axis.grid(axis="y")
 
-    figure.suptitle(
-        "Prefix-cache study | approximately 2048 input tokens, output limit 128", y=0.99
-    )
     figure.legend(
         *axes[0, 0].get_legend_handles_labels(),
-        loc="upper center",
-        bbox_to_anchor=(0.5, 0.95),
+        loc="upper left",
+        bbox_to_anchor=(0.075, 0.87),
         ncol=4,
     )
     sizes = sorted({row["successful"] for row in comparison["rows"]})
     sample_size = str(sizes[0]) if len(sizes) == 1 else f"{sizes[0]}–{sizes[-1]}"
-    figure.text(
-        0.5,
-        0.015,
-        f"Successful requests per cell: {sample_size}. "
-        "Two paired rounds; p95 is descriptive. No confidence intervals.",
-        ha="center",
-        fontsize=9,
+    label_figure(
+        figure,
+        "Prefix-cache latency by scenario",
+        "Approximately 2048 input tokens · Output limit 128 · Two paired rounds",
+        f"n = {sample_size} successful requests per cell · "
+        "p95 is descriptive · No confidence intervals",
     )
-    figure.tight_layout(rect=(0, 0.04, 1, 0.88))
+    figure.tight_layout(rect=(0.01, 0.06, 0.99, 0.84))
 
     for extension in ("png", "svg"):
         figure.savefig(directory / f"01_cache_latency.{extension}", dpi=160)
@@ -610,33 +616,28 @@ def write_figures(comparison: dict, directory: Path):
                         )
 
             axis.set(
-                title=f"Round {round_number} | {title}", xticks=x, xticklabels=labels
+                title=f"Round {round_number} · {title}", xticks=x, xticklabels=labels
             )
             axis.set_ylim(bottom=0)
 
             if field == "token_cache_hit_rate":
                 axis.set_ylim(0, 105)
 
-            axis.grid(axis="y", alpha=0.25)
+            axis.grid(axis="y")
 
-    figure.suptitle(
-        "Cache reuse and prefill work | raw measured-window counter changes", y=0.99
-    )
     figure.legend(
         *axes[0, 0].get_legend_handles_labels(),
-        loc="upper center",
-        bbox_to_anchor=(0.5, 0.95),
+        loc="upper left",
+        bbox_to_anchor=(0.075, 0.87),
         ncol=2,
     )
-    figure.text(
-        0.5,
-        0.015,
-        "Warmup and priming excluded. N/A means unavailable, "
-        "including zero prefix-query denominators.",
-        ha="center",
-        fontsize=9,
+    label_figure(
+        figure,
+        "Cache reuse and prefill work",
+        "Measured-window counter changes · Warmup and priming excluded",
+        "N/A = unavailable telemetry or no prefix queries",
     )
-    figure.tight_layout(rect=(0, 0.04, 1, 0.88))
+    figure.tight_layout(rect=(0.01, 0.06, 0.99, 0.84))
 
     for extension in ("png", "svg"):
         figure.savefig(directory / f"02_cache_prefill.{extension}", dpi=160)
@@ -681,12 +682,12 @@ def write_figures(comparison: dict, directory: Path):
                         )
 
             axis.set(
-                title=f"Round {round_number} | {title}",
+                title=f"Round {round_number} · {title}",
                 ylabel=unit,
                 xticks=x,
                 xticklabels=labels,
             )
-            axis.grid(axis="y", alpha=0.25)
+            axis.grid(axis="y")
 
     for column, (phase, _, _) in enumerate(phases):
         values = [row.get(f"server_{phase}_mean_ms") for row in comparison["rows"]]
@@ -708,24 +709,20 @@ def write_figures(comparison: dict, directory: Path):
             str(counts[0]) if len(counts) == 1 else f"{counts[0]}–{counts[-1]}"
         )
 
-    figure.suptitle("Server timings | histogram means by round", y=0.99)
     figure.legend(
         *axes[0, 0].get_legend_handles_labels(),
-        loc="upper center",
-        bbox_to_anchor=(0.5, 0.95),
+        loc="upper left",
+        bbox_to_anchor=(0.075, 0.87),
         ncol=2,
     )
-    figure.text(
-        0.5,
-        0.015,
-        f"Observations per histogram: {observation_count}. "
-        "TPOT averages per-request observations. N/A means unavailable.\n"
-        "Not client percentiles or GPU kernel timings; "
-        "phases need not sum to client E2E. Two paired rounds; no confidence intervals.",
-        ha="center",
-        fontsize=9,
+    label_figure(
+        figure,
+        "Server-side timing by round",
+        "Histogram means · TPOT averages per-request observations",
+        f"n = {observation_count} per histogram · "
+        "N/A = unavailable · Server means, not GPU timings",
     )
-    figure.tight_layout(rect=(0, 0.07, 1, 0.88))
+    figure.tight_layout(rect=(0.01, 0.06, 0.99, 0.84))
 
     for extension in ("png", "svg"):
         figure.savefig(directory / f"03_server_timings.{extension}", dpi=160)
