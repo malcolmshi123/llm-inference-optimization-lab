@@ -14,7 +14,6 @@ from server_config import ServerConfig
 from tests.test_cache_metrics import metric_text
 from tests.test_cache_workloads import WordTokenizer
 
-
 class StudyServer:
     def __init__(
         self,
@@ -131,7 +130,6 @@ class StudyServer:
         )
 
         return httpx.Response(200, text=body)
-
 
 class CacheStudyTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
@@ -375,7 +373,6 @@ class CacheStudyTests(unittest.IsolatedAsyncioTestCase):
             path.with_suffix(".csv.tmp").read_text(encoding="utf-8"), "new"
         )
         self.assertEqual(sleep.call_count, 4)
-
 
 if __name__ == "__main__":
     unittest.main()

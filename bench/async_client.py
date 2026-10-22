@@ -9,7 +9,6 @@ from datetime import datetime
 from bench.workloads import generate_prompt
 from bench.batch_results import save_results_json, save_results_csv
 
-
 def positive_int(raw: str) -> int:
     try:
         value = int(raw)
@@ -20,7 +19,6 @@ def positive_int(raw: str) -> int:
         raise argparse.ArgumentTypeError("must be a positive integer")
 
     return value
-
 
 MODEL_NAME = "Qwen/Qwen3-4B-Instruct-2507"
 
@@ -34,10 +32,8 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-
 class StreamingResponseError(RuntimeError):
-    """The response did not contain a complete, usable benchmark result."""
-
+    pass
 
 async def send_streaming_request(
     client: httpx.AsyncClient, prompt: str | list[dict], max_tokens: int = 128
@@ -150,7 +146,6 @@ async def send_streaming_request(
             "finish_reason": finish_reason,
         }
 
-
 async def run_batch(
     client: httpx.AsyncClient, prompts: list[str | list[dict]], max_tokens: int = 128
 ):
@@ -189,7 +184,6 @@ async def run_batch(
         "batch_time_s": batch_time_s,
     }
 
-
 def batch_statistics(results: list[dict], batch_time_s: float) -> dict:
     successful = [result for result in results if result["success"]]
     total_completion_tokens = sum(result["completion_tokens"] for result in successful)
@@ -199,7 +193,6 @@ def batch_statistics(results: list[dict], batch_time_s: float) -> dict:
         "output_tokens_per_sec": total_completion_tokens / batch_time_s,
         "requests_per_sec": len(successful) / batch_time_s,
     }
-
 
 async def main():
     parser = argparse.ArgumentParser(description="Benchmark vLLM inference.")
@@ -438,7 +431,6 @@ async def main():
                     print(
                         "Requests per second (mean/stdev): N/A (insufficient samples)"
                     )
-
 
 if __name__ == "__main__":
     asyncio.run(main())

@@ -7,7 +7,6 @@ from bench.check_cache_pilots import load_pilots
 from tests.test_cache_workloads import WordTokenizer
 from tests.test_compare_cache import create_run
 
-
 class CheckCachePilotsTests(unittest.TestCase):
     def setUp(self):
         self.temporary = TemporaryDirectory()
@@ -42,7 +41,6 @@ class CheckCachePilotsTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "same workload"):
             load_pilots(self.root / "other")
-
 
 if __name__ == "__main__":
     unittest.main()

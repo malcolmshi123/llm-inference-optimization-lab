@@ -16,7 +16,6 @@ from bench.cache_workloads import (
 )
 from server_config import MODEL_NAME, MODEL_REVISION
 
-
 class WordTokenizer:
     chat_template = "word-tokenizer-template"
 
@@ -27,7 +26,6 @@ class WordTokenizer:
         return {
             "input_ids": [1, *ids, 2],
         }
-
 
 class CacheWorkloadTests(unittest.TestCase):
     def test_seed_replays_identical_payloads_and_other_seeds_change_them(self):
@@ -164,7 +162,6 @@ class CacheWorkloadTests(unittest.TestCase):
                             ),
                             0.05,
                         )
-
 
 if __name__ == "__main__":
     unittest.main()

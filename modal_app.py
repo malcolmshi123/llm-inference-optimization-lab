@@ -45,7 +45,6 @@ if SERVER_CONFIG.profile_session is not None:
         PROFILE_VOLUME_NAME, create_if_missing=True
     )
 
-
 @app.function(
     gpu=GPU_TYPE, image=vllm_image, volumes=cache_mounts, timeout=900, max_containers=1
 )

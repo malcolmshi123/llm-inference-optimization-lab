@@ -7,7 +7,6 @@ from bench import compare_batches
 
 ROOT = Path(__file__).resolve().parents[1]
 
-
 class CompareBatchesTests(unittest.TestCase):
     def test_historical_datasets_remain_readable(self):
         for filename, expected in (
@@ -35,7 +34,6 @@ class CompareBatchesTests(unittest.TestCase):
 
         self.assertIn("+14.04%", completed.stdout)
         self.assertIn("+1.51%", completed.stdout)
-
 
 if __name__ == "__main__":
     unittest.main()

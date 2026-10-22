@@ -1,21 +1,3 @@
-"""Generate the four publication SVGs in the solid-line-and-whisker style.
-
-From the repository root:
-    python figures/generate_figures.py
-
-Uses only Python's standard library and the three committed JSON datasets in
-results/. No live deployment, GPU, or plotting packages are required. Put this
-directory at the repository's figures/ path to use the defaults. Alternative
-locations can be supplied with --results-dir and --output-dir.
-
-This script regenerates SVG only. Matching PNG convenience exports are included
-in the distribution; re-export them after changing the SVGs to keep both formats
-in sync. All canvases are opaque white.
-Markers retain the original summary statistics. Whiskers are descriptive spread,
-not confidence intervals: batch min/max for mean throughput, pooled-request IQR
-for baseline median TTFT, and across-batch IQR at each sorted arrival rank.
-"""
-
 from __future__ import annotations
 
 import argparse
@@ -38,13 +20,11 @@ WORKLOADS = (
     ("long", "diamond", ORANGE, 10, "Long · 2048 input tokens"),
 )
 
-
 def read_batches(path: Path) -> list[dict]:
     data = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(data, list) or not data:
         raise ValueError(f"Expected nonempty benchmark list: {path}")
     return data
-
 
 def groups(data: list[dict], workload: str, concurrency: int) -> list[dict]:
     batches = [
@@ -64,7 +44,6 @@ def groups(data: list[dict], workload: str, concurrency: int) -> list[dict]:
             )
     return batches
 
-
 def get_ttfts(batches: list[dict]) -> list[float]:
     values = [r["ttft_ms"] for b in batches for r in b["results"]]
     if not values or any(v is None or not math.isfinite(v) or v < 0 for v in values):
@@ -73,9 +52,7 @@ def get_ttfts(batches: list[dict]) -> list[float]:
         )
     return values
 
-
 def pct(values: list[float], percentile: int) -> float:
-    """Linear interpolation, matching numpy.percentile's default method."""
     ordered = sorted(values)
     if not ordered:
         raise ValueError("No samples")
@@ -86,14 +63,11 @@ def pct(values: list[float], percentile: int) -> float:
         ordered[min(low + 1, len(ordered) - 1)] - ordered[low]
     )
 
-
 def ranked_summary(data: list[dict]) -> tuple[list[float], list[float], list[float]]:
-    """Median, p25, and p75 at each within-batch sorted arrival rank."""
     trials = [sorted(get_ttfts([batch])) for batch in groups(data, "long", 8)]
     return tuple(
         [pct([trial[i] for trial in trials], p) for i in range(8)] for p in (50, 25, 75)
     )
-
 
 class SVG:
     W, H = 960, 610
@@ -227,7 +201,6 @@ class SVG:
         path.write_text("\n".join(self.parts + ["</svg>", ""]), encoding="utf-8")
         print("Saved", path)
 
-
 def baseline_throughput(data, out):
     g = SVG(
         "Aggregate output throughput scales with concurrency",
@@ -276,7 +249,6 @@ def baseline_throughput(data, out):
     )
     g.save(out / "01_baseline_throughput.svg")
 
-
 def baseline_ttft(data, out):
     g = SVG(
         "Median first-token latency rises with concurrency",
@@ -320,7 +292,6 @@ def baseline_ttft(data, out):
         }
     )
     g.save(out / "02_baseline_ttft.svg")
-
 
 def budget_effect(control, candidate, out):
     labels, changes = [], []
@@ -370,7 +341,6 @@ def budget_effect(control, candidate, out):
     )
     g.save(out / "03_budget_ttft_delta.svg")
 
-
 def ranked_ttft(control, candidate, out):
     g = SVG(
         "Long-prompt TTFT by arrival rank",
@@ -414,7 +384,6 @@ def ranked_ttft(control, candidate, out):
     )
     g.save(out / "04_long_ttft_ranked.svg")
 
-
 def main():
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
@@ -438,7 +407,6 @@ def main():
     baseline_ttft(data["baseline"], args.output_dir)
     budget_effect(data["control"], data["candidate"], args.output_dir)
     ranked_ttft(data["control"], data["candidate"], args.output_dir)
-
 
 if __name__ == "__main__":
     main()

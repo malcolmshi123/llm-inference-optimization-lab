@@ -10,7 +10,6 @@ from server_config import (
     ServerConfig,
 )
 
-
 class ServerConfigTests(unittest.TestCase):
     def test_defaults_pin_revisions_and_experimental_controls(self):
         config = ServerConfig.from_env({})
@@ -182,7 +181,6 @@ class ServerConfigTests(unittest.TestCase):
         self.assertEqual(
             ServerConfig(profile_session="A" * 64).profile_session, "A" * 64
         )
-
 
 if __name__ == "__main__":
     unittest.main()

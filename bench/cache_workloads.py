@@ -11,12 +11,10 @@ SCENARIOS = (("unique", 1), ("shared", 1), ("unique", 8), ("shared", 8))
 TARGET_TOKENS = 2048
 OUTPUT_LIMIT = 128
 
-
 def token_ids(tokenizer, messages: list[dict]) -> list[int]:
     return tokenizer.apply_chat_template(
         messages, tokenize=True, add_generation_prompt=True, return_dict=True
     )["input_ids"]
-
 
 def common_prefix(left: list[int], right: list[int]) -> int:
     for index, (a, b) in enumerate(zip(left, right)):
@@ -24,7 +22,6 @@ def common_prefix(left: list[int], right: list[int]) -> int:
             return index
 
     return min(len(left), len(right))
-
 
 def fit_words(words: list[str], measure, target: int) -> str:
     low, high = 0, len(words)
@@ -39,7 +36,6 @@ def fit_words(words: list[str], measure, target: int) -> str:
 
     return " ".join(words[:low])
 
-
 def manifest_digest(manifest: dict) -> str:
     payload = {key: value for key, value in manifest.items() if key != "sha256"}
 
@@ -48,7 +44,6 @@ def manifest_digest(manifest: dict) -> str:
             "utf-8"
         )
     ).hexdigest()
-
 
 def create_manifest(tokenizer, *, seed: int = 42, count: int = 32) -> dict:
     if type(seed) is not int or type(count) is not int or count <= 0:
@@ -211,7 +206,6 @@ def create_manifest(tokenizer, *, seed: int = 42, count: int = 32) -> dict:
     manifest["sha256"] = manifest_digest(manifest)
 
     return manifest
-
 
 def load_manifest(path: Path) -> dict:
     manifest = json.loads(path.read_text(encoding="utf-8"))

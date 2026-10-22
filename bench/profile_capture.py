@@ -1,5 +1,3 @@
-"""Capture one diagnostic batch; profiling timings are not benchmark results."""
-
 import argparse
 import asyncio
 import os
@@ -22,7 +20,6 @@ from bench.cache_study import client_metadata, utc_now, write_json, write_text
 from bench.cache_workloads import load_manifest
 from bench.workloads import generate_prompt
 from server_config import PROFILE_VOLUME_NAME, ServerConfig
-
 
 async def capture(
     client,
@@ -232,7 +229,6 @@ async def capture(
 
     return run
 
-
 def main():
     parser = argparse.ArgumentParser(
         description="Profile one eight-request shared-prefix batch."
@@ -283,7 +279,6 @@ def main():
     print(
         "Download and verify the trace files separately before stopping the deployment."
     )
-
 
 if __name__ == "__main__":
     main()

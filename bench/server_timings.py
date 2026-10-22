@@ -1,11 +1,3 @@
-"""Inspect server timing observations in saved vLLM metric windows.
-
-Means are computed from histogram sum/count deltas, weighted by observations
-across engines. TPOT is the mean of per-request TPOT observations, rather than
-a pooled per-token average. These values are neither client latency percentiles
-nor GPU kernel timings; the server phases need not sum to client E2E latency.
-"""
-
 import argparse
 import json
 import math
@@ -19,7 +11,6 @@ TIMING_METRICS = {
     "decode": "vllm:request_decode_time_seconds",
     "time_per_output_token": "vllm:request_time_per_output_token_seconds",
 }
-
 
 def _histogram_summary(before: dict, after: dict, metric: str) -> dict:
     sums = counter_changes(before, after, metric + "_sum")
@@ -62,9 +53,7 @@ def _histogram_summary(before: dict, after: dict, metric: str) -> dict:
         "mean_ms": mean_ms,
     }
 
-
 def timing_summary(before: dict, after: dict) -> dict:
-    """Summarize one continuous server window; unavailable metrics stay None."""
     if process_identity(before) != process_identity(after):
         raise ValueError("Server restarted during the metric interval")
 
@@ -77,7 +66,6 @@ def timing_summary(before: dict, after: dict) -> dict:
         field: _histogram_summary(before, after, metric)
         for field, metric in TIMING_METRICS.items()
     }
-
 
 def main():
     parser = argparse.ArgumentParser(
@@ -97,7 +85,6 @@ def main():
         parser.error(str(exc))
 
     print(json.dumps(summary, indent=2, allow_nan=False))
-
 
 if __name__ == "__main__":
     main()

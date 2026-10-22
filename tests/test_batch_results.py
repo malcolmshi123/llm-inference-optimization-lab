@@ -37,7 +37,6 @@ dummy_batches = [
     }
 ]
 
-
 class BatchResultsTests(unittest.TestCase):
     def test_json_preserves_successful_and_failed_requests(self):
         with TemporaryDirectory() as directory:
@@ -68,7 +67,6 @@ class BatchResultsTests(unittest.TestCase):
         self.assertEqual(rows[0]["prompt_tokens"], "256")
         self.assertEqual(rows[0]["completion_tokens"], "32")
         self.assertEqual(float(rows[0]["batch_time_s"]), 1.2)
-
 
 if __name__ == "__main__":
     unittest.main()

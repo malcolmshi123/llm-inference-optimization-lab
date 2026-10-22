@@ -17,7 +17,6 @@ HEADERS = {
     "Content-Type": "application/json",
 }
 
-
 def send_streaming_request():
     if not all((VLLM_BASE_URL, MODAL_PROXY_KEY, MODAL_PROXY_SECRET)):
         raise ValueError(
@@ -99,7 +98,6 @@ def send_streaming_request():
 
         e2e_time_ms = (end_time - start_time) * 1000
         print(f"End-to-end time: {e2e_time_ms:.2f} ms")
-
 
 if __name__ == "__main__":
     send_streaming_request()

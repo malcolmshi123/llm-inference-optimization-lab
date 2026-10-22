@@ -11,7 +11,6 @@ from server_config import MODEL_NAME
 
 QUEUE = TIMING_METRICS["queue"]
 
-
 def histogram_text(
     *, seconds=0, count=0, created=10, metric=QUEUE, engine="0", model=MODEL_NAME
 ):
@@ -22,13 +21,11 @@ def histogram_text(
         f"{metric}_created{{{labels}}} {created}\n"
     )
 
-
 def snapshot(text="", *, identity=100, expected=True):
     return parse_metrics(
         f"process_start_time_seconds {identity}\n"
         f'vllm:cache_config_info{{enable_prefix_caching="{expected}"}} 1\n' + text
     )
-
 
 class ServerTimingsTests(unittest.TestCase):
     def test_window_deltas_exclude_baseline_and_convert_seconds_to_ms(self):
@@ -183,7 +180,6 @@ class ServerTimingsTests(unittest.TestCase):
                 check=True,
             )
             self.assertEqual(json.loads(result.stdout)["queue"]["mean_ms"], 250)
-
 
 if __name__ == "__main__":
     unittest.main()

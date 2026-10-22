@@ -16,7 +16,6 @@ from server_config import ServerConfig
 from tests.test_cache_workloads import WordTokenizer
 from tests.test_compare_cache import create_run
 
-
 def kernel(name, start, duration, device=0):
     return {
         "cat": "kernel",
@@ -29,7 +28,6 @@ def kernel(name, start, duration, device=0):
         },
     }
 
-
 def annotation(name, start=900, duration=50):
     return {
         "cat": "user_annotation",
@@ -38,7 +36,6 @@ def annotation(name, start=900, duration=50):
         "ts": start,
         "dur": duration,
     }
-
 
 def write_traces(directory, trace):
     traces = directory / "traces"
@@ -73,7 +70,6 @@ def write_traces(directory, trace):
             "traces": records,
         },
     )
-
 
 def fixture(directory, manifest, *, expected, session):
     create_run(directory, manifest, expected=expected, session=session)
@@ -128,7 +124,6 @@ def fixture(directory, manifest, *, expected, session):
     }
     write_traces(directory, trace)
     return trace
-
 
 class TraceSummaryTests(unittest.TestCase):
     def test_kernel_totals_and_union_are_distinct_and_use_microseconds(self):
@@ -211,7 +206,6 @@ class TraceSummaryTests(unittest.TestCase):
                     "traceEvents": [kernel("a", 0, 1), kernel("b", 0, 1, device=1)],
                 }
             )
-
 
 class ProfileSummaryTests(unittest.TestCase):
     def setUp(self):
@@ -333,7 +327,6 @@ class ProfileSummaryTests(unittest.TestCase):
         )
         with self.assertRaisesRegex(ValueError, "same workload"):
             summarize_pair(self.off, other)
-
 
 if __name__ == "__main__":
     unittest.main()

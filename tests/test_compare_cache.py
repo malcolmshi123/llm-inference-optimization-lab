@@ -29,7 +29,6 @@ from tests.test_cache_study import StudyServer
 from tests.test_cache_workloads import WordTokenizer
 from tests.test_server_timings import histogram_text
 
-
 def result(prompt_tokens, index=0, scale=1):
     return {
         "success": True,
@@ -39,7 +38,6 @@ def result(prompt_tokens, index=0, scale=1):
         "ttft_ms": (index + 1) * 10 * scale,
         "e2e_ms": (index + 10) * 10 * scale,
     }
-
 
 def create_run(directory: Path, manifest: dict, *, expected: bool, session: int):
     directory.mkdir(parents=True)
@@ -185,7 +183,6 @@ def create_run(directory: Path, manifest: dict, *, expected: bool, session: int)
         "Starting vLLM server with command: " + " ".join(command), encoding="utf-8"
     )
 
-
 def create_pairs(root: Path) -> list[Path]:
     first = create_manifest(WordTokenizer(), seed=42, count=4)
     second = create_manifest(WordTokenizer(), seed=43, count=4)
@@ -203,7 +200,6 @@ def create_pairs(root: Path) -> list[Path]:
         create_run(directory, manifest, expected=expected, session=session)
 
     return directories
-
 
 class CompareCacheTests(unittest.TestCase):
     def setUp(self):
@@ -755,7 +751,6 @@ class CompareCacheTests(unittest.TestCase):
                 for row in comparison["rows"]
             )
         )
-
 
 if __name__ == "__main__":
     unittest.main()

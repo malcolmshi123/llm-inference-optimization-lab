@@ -3,7 +3,6 @@ import unittest
 
 from bench.async_client import batch_statistics, run_batch
 
-
 def sse(*events):
     return (
         "\n\n".join(
@@ -12,7 +11,6 @@ def sse(*events):
         )
         + "\n\n"
     )
-
 
 CONTENT = {
     "choices": [
@@ -39,7 +37,6 @@ USAGE = {
     },
 }
 
-
 class FakeResponse:
     status_code = 200
 
@@ -59,7 +56,6 @@ class FakeResponse:
         for line in self.body.splitlines():
             yield line
 
-
 class FakeClient:
     def __init__(self, body):
         self.body = body
@@ -67,7 +63,6 @@ class FakeClient:
     def stream(self, *args, **kwargs):
         self.payload = kwargs["json"]
         return FakeResponse(self.body)
-
 
 class BatchStatisticsTests(unittest.TestCase):
     def test_successful_work_is_counted_over_the_entire_batch(self):
@@ -107,7 +102,6 @@ class BatchStatisticsTests(unittest.TestCase):
         self.assertEqual(summary["failed_requests"], 1)
         self.assertEqual(summary["output_tokens_per_sec"], 0)
         self.assertEqual(summary["requests_per_sec"], 0)
-
 
 class StreamingTests(unittest.IsolatedAsyncioTestCase):
     async def result_for(self, body):
@@ -216,7 +210,6 @@ class StreamingTests(unittest.IsolatedAsyncioTestCase):
                 self.assert_failed(
                     await self.result_for(sse(CONTENT, FINISH, usage, "[DONE]"))
                 )
-
 
 if __name__ == "__main__":
     unittest.main()

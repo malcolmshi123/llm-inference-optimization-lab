@@ -13,7 +13,6 @@ from server_config import ServerConfig
 from tests.test_cache_study import StudyServer
 from tests.test_cache_workloads import WordTokenizer
 
-
 class ProfilingServer(StudyServer):
     def __init__(self, manifest, *, start_timeout=False, stop_status=200, **options):
         super().__init__(manifest, **options)
@@ -47,7 +46,6 @@ class ProfilingServer(StudyServer):
                 self.profiled_payloads.append(payload)
 
         return super().__call__(request)
-
 
 class ProfileCaptureTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
@@ -224,7 +222,6 @@ class ProfileCaptureTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaisesRegex(ValueError, "eight"):
             await self.execute(server, name="small")
         self.assertEqual(server.events, [])
-
 
 if __name__ == "__main__":
     unittest.main()

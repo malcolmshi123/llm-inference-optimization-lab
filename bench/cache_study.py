@@ -30,10 +30,8 @@ from server_config import GPU_TYPE, VLLM_VERSION, ServerConfig
 
 ROOT = Path(__file__).resolve().parents[1]
 
-
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat()
-
 
 def write_text(path: Path, text: str):
     temporary = path.with_suffix(path.suffix + ".tmp")
@@ -47,12 +45,10 @@ def write_text(path: Path, text: str):
                 raise
             time.sleep(0.05 * 2**attempt)
 
-
 def write_json(path: Path, value: dict):
     write_text(
         path, json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + "\n"
     )
-
 
 def save_run(directory: Path, run: dict):
     write_json(directory / "run.json", run)
@@ -91,7 +87,6 @@ def save_run(directory: Path, run: dict):
 
     write_text(directory / "requests.csv", output.getvalue())
 
-
 def startup_command(log: str, expected: bool) -> list[str]:
     marker = "Starting vLLM server with command: "
     lines = [
@@ -110,7 +105,6 @@ def startup_command(log: str, expected: bool) -> list[str]:
 
     return command
 
-
 def client_metadata() -> dict:
     def git(*arguments):
         return subprocess.check_output(
@@ -128,7 +122,6 @@ def client_metadata() -> dict:
             for name in ("httpx", "transformers", "jinja2", "prometheus-client")
         },
     }
-
 
 async def run_study(
     client,
@@ -377,7 +370,6 @@ async def run_study(
 
     return run
 
-
 def main():
     parser = argparse.ArgumentParser(
         description="Prepare and run a focused prefix-cache study with manual deployments."
@@ -459,7 +451,6 @@ def main():
         subprocess.CalledProcessError,
     ) as exc:
         parser.exit(1, f"Error: {exc}\n")
-
 
 if __name__ == "__main__":
     main()

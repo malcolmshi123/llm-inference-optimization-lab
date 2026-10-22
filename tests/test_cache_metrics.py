@@ -13,7 +13,6 @@ from server_config import MODEL_NAME
 
 ROOT = Path(__file__).resolve().parents[1]
 
-
 def metric_text(
     *,
     tokens=0,
@@ -52,7 +51,6 @@ def metric_text(
         )
         + "\n"
     )
-
 
 class CacheMetricsTests(unittest.TestCase):
     def test_completed_requests_exclude_baseline_and_match_finish_reasons(self):
@@ -283,7 +281,6 @@ class CacheMetricsTests(unittest.TestCase):
 
         with self.assertRaisesRegex(ValueError, "Duplicate"):
             parse_metrics(metric_text() + "process_start_time_seconds 100\n")
-
 
 if __name__ == "__main__":
     unittest.main()

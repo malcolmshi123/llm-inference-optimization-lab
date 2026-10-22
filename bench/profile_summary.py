@@ -1,5 +1,3 @@
-"""Summarize one saved single-GPU profiling pair without contacting a server."""
-
 import argparse
 import csv
 import gzip
@@ -27,11 +25,9 @@ from server_config import ServerConfig
 ANNOTATION = re.compile(r"execute_context_(\d+)\((\d+)\)_generation_(\d+)\((\d+)\)")
 TIMELINE_GAP_MS = 0.5
 
-
 def union_intervals(
     intervals: list[tuple[float, float]], *, gap: float = 0
 ) -> list[tuple[float, float]]:
-    """Merge intervals; a positive gap is reserved for display coalescing."""
     merged = []
     for start, end in sorted(intervals):
         if merged and start <= merged[-1][1] + gap:
@@ -40,7 +36,6 @@ def union_intervals(
             merged.append((start, end))
     return merged
 
-
 def event_number(event: dict, key: str) -> float:
     value = event.get(key)
     if type(value) not in (int, float) or not math.isfinite(value):
@@ -48,7 +43,6 @@ def event_number(event: dict, key: str) -> float:
     if key == "dur" and value < 0:
         raise ValueError("Negative trace duration")
     return value
-
 
 def summarize_trace(trace: dict) -> dict:
     events = trace.get("traceEvents")
@@ -138,7 +132,6 @@ def summarize_trace(trace: dict) -> dict:
         "kernels": rows,
         "annotations": annotations,
     }
-
 
 def load_capture(directory: Path, expected: bool) -> dict:
     run = json.loads((directory / "capture.json").read_text(encoding="utf-8"))
@@ -249,7 +242,6 @@ def load_capture(directory: Path, expected: bool) -> dict:
         **worker,
     }
 
-
 def summarize_pair(off: Path, on: Path) -> dict:
     captures = [load_capture(off, False), load_capture(on, True)]
     left, right = captures
@@ -287,7 +279,6 @@ def summarize_pair(off: Path, on: Path) -> dict:
         "captures": captures,
     }
 
-
 def write_timeline(summary: dict, directory: Path):
     import matplotlib
 
@@ -296,7 +287,6 @@ def write_timeline(summary: dict, directory: Path):
 
     with plt.rc_context(FIGURE_STYLE):
         _write_timeline(summary, directory)
-
 
 def _write_timeline(summary: dict, directory: Path):
     import matplotlib.pyplot as plt
@@ -352,7 +342,6 @@ def _write_timeline(summary: dict, directory: Path):
         figure.savefig(directory / f"01_gpu_timeline.{extension}", dpi=160)
     plt.close(figure)
 
-
 def export_summary(summary: dict, directory: Path):
     directory.mkdir(parents=True, exist_ok=False)
     write_json(directory / "summary.json", summary)
@@ -372,7 +361,6 @@ def export_summary(summary: dict, directory: Path):
             writer.writeheader()
             writer.writerows(rows)
     write_timeline(summary, directory)
-
 
 def main():
     parser = argparse.ArgumentParser(
@@ -394,7 +382,6 @@ def main():
             f"{capture['context_tokens']:,} context tokens"
         )
     print(f"Saved offline profiling summary to {args.output_dir}")
-
 
 if __name__ == "__main__":
     main()

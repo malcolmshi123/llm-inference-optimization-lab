@@ -1,5 +1,3 @@
-"""Compare benchmark metrics by workload at concurrency 8."""
-
 import argparse
 import json
 import math
@@ -9,16 +7,13 @@ from pathlib import Path
 
 import numpy as np
 
-
 def validate_number(value, field, context, allow_none=False):
     if value is None and allow_none:
         return
     if type(value) not in (int, float) or not math.isfinite(value) or value < 0:
         raise ValueError(f"{context}: invalid {field} value: {value!r}")
 
-
 def load_batches(path):
-    """Read the top-level list of batches with their nested request results."""
     with path.open(encoding="utf-8") as handle:
         batches = json.load(handle)
     if not isinstance(batches, list):
@@ -68,9 +63,7 @@ def load_batches(path):
             raise ValueError(f"{path}: Mixed scheduling budgets in benchmark file")
     return batches
 
-
 def group_by_workload(batches):
-    """Keep complete batches, including trials and concurrency settings."""
     grouped = defaultdict(list)
     for batch in batches:
         key = (batch["workload"], batch["concurrency"])
@@ -83,9 +76,7 @@ def group_by_workload(batches):
             )
     return dict(grouped)
 
-
 def summarize_group(batches):
-    """Summarize pooled successful requests; return None for unavailable metrics."""
     requests = [
         request
         for batch in batches
@@ -114,9 +105,7 @@ def summarize_group(batches):
         ),
     }
 
-
 def compare_summaries(baseline, candidate):
-    """Return signed percentage changes, or None for missing/zero baselines."""
     changes = {}
     for metric in dict.fromkeys([*baseline, *candidate]):
         baseline_value = baseline.get(metric)
@@ -129,9 +118,7 @@ def compare_summaries(baseline, candidate):
             )
     return changes
 
-
 def get_trial_ttfts(batches):
-    """Collect sorted, non-missing TTFTs from successful requests by trial."""
     trial_ttfts = defaultdict(list)
     for batch in batches:
         for request in batch["results"]:
@@ -140,16 +127,13 @@ def get_trial_ttfts(batches):
                 trial_ttfts[batch["trial"]].append(ttft)
     return {trial: sorted(values) for trial, values in sorted(trial_ttfts.items())}
 
-
 def get_trial_gaps(trial_ttfts):
-    """Return consecutive gaps at full precision; round only when displaying."""
     gaps = {}
 
     for trial, ttfts in trial_ttfts.items():
         gaps[trial] = [ttfts[i + 1] - ttfts[i] for i in range(len(ttfts) - 1)]
 
     return gaps
-
 
 def print_trial_gap_comparison(baseline_batches, candidate_batches):
     threshold_ms = 300
@@ -216,7 +200,6 @@ def print_trial_gap_comparison(baseline_batches, candidate_batches):
         f"{matching_positions} have the same large-gap positions."
     )
 
-
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("baseline", type=Path, help="Baseline benchmark JSON")
@@ -272,7 +255,6 @@ def main():
     print_trial_gap_comparison(
         baseline.get(("long", 8), []), candidate.get(("long", 8), [])
     )
-
 
 if __name__ == "__main__":
     main()

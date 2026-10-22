@@ -2,12 +2,10 @@ import csv
 import json
 from pathlib import Path
 
-
 def save_results_json(path: str, batches: list[dict]) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)
     serialized_batches = json.dumps(batches, indent=2)
     Path(path).write_text(serialized_batches, encoding="utf-8")
-
 
 def save_results_csv(path: str, batches: list[dict]) -> None:
     Path(path).parent.mkdir(parents=True, exist_ok=True)

@@ -3,7 +3,6 @@ from pathlib import Path
 
 from bench.compare_cache import load_run, timestamp
 
-
 def load_pilots(directory: Path) -> list:
     pilots = [
         load_run(directory / name, expected)
@@ -28,7 +27,6 @@ def load_pilots(directory: Path) -> list:
 
     return pilots
 
-
 def main():
     parser = argparse.ArgumentParser(
         description="Validate saved cache-off/on pilots and show their cache metrics."
@@ -52,7 +50,6 @@ def main():
                 f"hits={row['prefix_hits_tokens']}, "
                 f"hit_rate={row['token_cache_hit_rate']}"
             )
-
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,3 @@
-"""Match the historical figures' typography, palette, and solid lines."""
-
 BLUE = "#0072B2"
 ORANGE = "#C55A11"
 INK = "#17212b"
@@ -36,7 +34,6 @@ FIGURE_STYLE = {
     "savefig.facecolor": "white",
     "svg.fonttype": "none",
 }
-
 
 def label_figure(figure, title: str, subtitle: str, footnote: str):
     figure.suptitle(title, x=0.045, y=0.975, ha="left")

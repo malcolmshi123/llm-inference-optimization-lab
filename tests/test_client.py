@@ -9,7 +9,6 @@ from bench import client as smoke
 from bench.async_client import StreamingResponseError
 from tests.test_async_client import CONTENT, FINISH, USAGE, sse
 
-
 class SmokeClientTests(unittest.TestCase):
     def execute(self, body):
         client = httpx.Client(
@@ -57,7 +56,6 @@ class SmokeClientTests(unittest.TestCase):
             self.assertRaisesRegex(ValueError, "VLLM_BASE_URL"),
         ):
             smoke.send_streaming_request()
-
 
 if __name__ == "__main__":
     unittest.main()

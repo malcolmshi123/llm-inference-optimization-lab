@@ -17,7 +17,6 @@ PROFILE_SESSION_ENV = "INFERENCE_LAB_PROFILE_SESSION"
 PROFILE_ROOT = "/profiles"
 PROFILE_VOLUME_NAME = "inference-lab-profiles"
 
-
 @dataclass(frozen=True)
 class ServerConfig:
     prefix_caching: bool = True

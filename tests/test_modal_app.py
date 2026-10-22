@@ -7,7 +7,6 @@ from unittest.mock import MagicMock, patch
 from bench.cache_study import startup_command
 from server_config import PROFILE_ROOT, PROFILE_SESSION_ENV, PROFILE_VOLUME_NAME
 
-
 class ModalAppTests(unittest.TestCase):
     def load_app(self, environment):
         modal = MagicMock()
@@ -96,7 +95,6 @@ class ModalAppTests(unittest.TestCase):
             startup_command(
                 "Starting vLLM server with command: " + " ".join(command), True
             )
-
 
 if __name__ == "__main__":
     unittest.main()

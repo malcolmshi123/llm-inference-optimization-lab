@@ -24,7 +24,6 @@ from bench.server_timings import timing_summary
 LATENCIES = ("ttft_p50_ms", "ttft_p95_ms", "e2e_p50_ms", "e2e_p95_ms")
 PERFORMANCE = (*LATENCIES, "requests_per_s", "output_tokens_per_s")
 
-
 def number(value, field: str, *, positive=False):
     if (
         type(value) not in (int, float)
@@ -38,7 +37,6 @@ def number(value, field: str, *, positive=False):
 
     return value
 
-
 def timestamp(value: str) -> datetime:
     parsed = datetime.fromisoformat(value)
 
@@ -46,7 +44,6 @@ def timestamp(value: str) -> datetime:
         raise ValueError("Timestamps must include a timezone")
 
     return parsed
-
 
 def validate_request(request: dict, *, prompt_tokens=None, limit=128):
     if type(request.get("success")) is not bool:
@@ -75,7 +72,6 @@ def validate_request(request: dict, *, prompt_tokens=None, limit=128):
 
     if request.get("finish_reason") not in ("stop", "length"):
         raise ValueError("Successful request has no valid finish reason")
-
 
 def summarize_scenario(scenario: dict, metrics: dict) -> dict:
     requests = [
@@ -112,7 +108,6 @@ def summarize_scenario(scenario: dict, metrics: dict) -> dict:
     summary["output_tokens_per_s"] = summary["completion_tokens"] / elapsed
 
     return summary
-
 
 def load_run(directory: Path, expected: bool) -> tuple:
     manifest = load_manifest(directory / "workload.json")
@@ -333,7 +328,6 @@ def load_run(directory: Path, expected: bool) -> tuple:
 
     return run, manifest, summaries
 
-
 def compare_runs(
     round_1_off: Path,
     round_1_on: Path,
@@ -498,7 +492,6 @@ def compare_runs(
         "changes": changes,
     }
 
-
 def write_figures(comparison: dict, directory: Path):
     import matplotlib
 
@@ -507,7 +500,6 @@ def write_figures(comparison: dict, directory: Path):
 
     with plt.rc_context(FIGURE_STYLE):
         _write_figures(comparison, directory)
-
 
 def _write_figures(comparison: dict, directory: Path):
     import matplotlib.pyplot as plt
@@ -729,7 +721,6 @@ def _write_figures(comparison: dict, directory: Path):
 
     plt.close(figure)
 
-
 def export_comparison(comparison: dict, directory: Path):
     directory.mkdir(parents=True, exist_ok=False)
     write_json(directory / "comparison.json", comparison)
@@ -748,7 +739,6 @@ def export_comparison(comparison: dict, directory: Path):
         )
 
     write_figures(comparison, directory)
-
 
 def main():
     parser = argparse.ArgumentParser(
@@ -798,7 +788,6 @@ def main():
         print(note)
 
     print(f"Saved comparison data and figures to {args.output_dir}")
-
 
 if __name__ == "__main__":
     main()

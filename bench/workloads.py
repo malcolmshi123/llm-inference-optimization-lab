@@ -1,6 +1,5 @@
 import random
 
-
 def generate_prompt(target_tokens: int, seed: int) -> str:
     if target_tokens <= 0:
         return ""
@@ -26,7 +25,6 @@ def generate_prompt(target_tokens: int, seed: int) -> str:
     content = " ".join(random.Random(seed).choices(words, k=max(0, target_tokens - 15)))
     return "Summarize the following text:\n\n" + content
 
-
 def count_prompt_tokens(tokenizer, prompt: str) -> int:
     messages = [
         {
@@ -40,7 +38,6 @@ def count_prompt_tokens(tokenizer, prompt: str) -> int:
     )
 
     return len(encoded["input_ids"])
-
 
 if __name__ == "__main__":
     from transformers import AutoTokenizer

@@ -15,7 +15,6 @@ COUNTERS = {
     "preemptions": "vllm:num_preemptions_total",
 }
 
-
 def parse_metrics(text: str) -> dict:
     samples = {}
 
@@ -30,7 +29,6 @@ def parse_metrics(text: str) -> dict:
 
     return samples
 
-
 def series(samples: dict, name: str) -> dict:
     values = {
         labels: value for (metric, labels), value in samples.items() if metric == name
@@ -41,7 +39,6 @@ def series(samples: dict, name: str) -> dict:
 
     return values
 
-
 def process_identity(samples: dict) -> float:
     values = series(samples, "process_start_time_seconds")
 
@@ -49,7 +46,6 @@ def process_identity(samples: dict) -> float:
         raise ValueError("A single server process identity is required")
 
     return next(iter(values.values()))
-
 
 def cache_configuration(samples: dict, expected: bool) -> dict:
     configs = series(samples, "vllm:cache_config_info")
@@ -70,7 +66,6 @@ def cache_configuration(samples: dict, expected: bool) -> dict:
 
     return config
 
-
 def is_idle(samples: dict) -> bool:
     running = series(samples, "vllm:num_requests_running")
     waiting = series(samples, "vllm:num_requests_waiting")
@@ -82,7 +77,6 @@ def is_idle(samples: dict) -> bool:
         raise ValueError("Request gauges do not match the study model")
 
     return not any(running.values()) and not any(waiting.values())
-
 
 def counter_changes(before: dict, after: dict, name: str) -> dict | None:
     initial, final = series(before, name), series(after, name)
@@ -111,11 +105,9 @@ def counter_changes(before: dict, after: dict, name: str) -> dict | None:
 
     return changes
 
-
 def validate_completed_requests(
     before: dict, after: dict, requests: list[dict]
 ) -> dict:
-    """Reconcile a clean measured window with the client's finish reasons."""
     if process_identity(before) != process_identity(after):
         raise ValueError("Server restarted during the metric interval")
 
@@ -165,7 +157,6 @@ def validate_completed_requests(
 
     return dict(observed)
 
-
 def interval_summary(before: dict, after: dict) -> dict:
     if process_identity(before) != process_identity(after):
         raise ValueError("Server restarted during the metric interval")
@@ -199,7 +190,6 @@ def interval_summary(before: dict, after: dict) -> dict:
 
     return result
 
-
 def main():
     parser = argparse.ArgumentParser(
         description="Inspect prefix-cache counter changes between two saved snapshots."
@@ -217,7 +207,6 @@ def main():
         parser.error(str(exc))
 
     print(json.dumps(summary, indent=2, allow_nan=False))
-
 
 if __name__ == "__main__":
     main()
