@@ -218,3 +218,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Saved startup evidence for the published cache and profiling studies
+!/inference-runs/cache-study-live-01/*/server.log
+!/inference-runs/profiling/shared-c8-*/server.log
+
+# Personal learning
+/examples/
+docs/project-learnings.md

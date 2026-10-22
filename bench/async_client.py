@@ -7,20 +7,16 @@ import statistics
 import time
 from datetime import datetime
 from bench.workloads import generate_prompt
-from bench.results import save_results_json, save_results_csv
+from bench.batch_results import save_results_json, save_results_csv
 
 def positive_int(raw: str) -> int:
     try:
         value = int(raw)
     except ValueError as exc:
-        raise argparse.ArgumentTypeError(
-            "must be a positive integer"
-        ) from exc
+        raise argparse.ArgumentTypeError("must be a positive integer") from exc
 
     if value <= 0:
-        raise argparse.ArgumentTypeError(
-            "must be a positive integer"
-        )
+        raise argparse.ArgumentTypeError("must be a positive integer")
 
     return value
 
@@ -37,13 +33,16 @@ HEADERS = {
 }
 
 class StreamingResponseError(RuntimeError):
-    """The response did not contain a complete, usable benchmark result."""
+    pass
 
-
-async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tokens: int = 128):
+async def send_streaming_request(
+    client: httpx.AsyncClient, prompt: str | list[dict], max_tokens: int = 128
+):
     payload = {
         "model": MODEL_NAME,
-        "messages": [
+        "messages": prompt
+        if isinstance(prompt, list)
+        else [
             {
                 "role": "user",
                 "content": prompt,
@@ -53,8 +52,8 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
         "temperature": 0,
         "stream": True,
         "stream_options": {
-            "include_usage": True
-        }
+            "include_usage": True,
+        },
     }
 
     prompt_tokens = None
@@ -66,7 +65,9 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
     first_token_time = None
     start_time = time.perf_counter()
 
-    async with client.stream("POST", f"{VLLM_BASE_URL}/v1/chat/completions", json=payload, headers=HEADERS) as response:
+    async with client.stream(
+        "POST", f"{VLLM_BASE_URL}/v1/chat/completions", json=payload, headers=HEADERS
+    ) as response:
         response.raise_for_status()
 
         async for line in response.aiter_lines():
@@ -128,7 +129,11 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
         generated_text = "".join(content_chunks)
         # print("Generated text:", repr(generated_text))
 
-        ttft_ms = (first_token_time - start_time) * 1000 if first_token_time is not None else None
+        ttft_ms = (
+            (first_token_time - start_time) * 1000
+            if first_token_time is not None
+            else None
+        )
         e2e_ms = (end_time - start_time) * 1000
 
         return {
@@ -141,14 +146,13 @@ async def send_streaming_request(client: httpx.AsyncClient, prompt: str, max_tok
             "finish_reason": finish_reason,
         }
 
-async def run_batch(client: httpx.AsyncClient, prompts: list[str], max_tokens: int = 128):
+async def run_batch(
+    client: httpx.AsyncClient, prompts: list[str | list[dict]], max_tokens: int = 128
+):
     batch_start = time.perf_counter()
     results = await asyncio.gather(
-        *(
-            send_streaming_request(client, prompt, max_tokens)
-            for prompt in prompts
-        ),
-        return_exceptions=True
+        *(send_streaming_request(client, prompt, max_tokens) for prompt in prompts),
+        return_exceptions=True,
     )
     batch_end = time.perf_counter()
     batch_time_s = batch_end - batch_start
@@ -156,44 +160,55 @@ async def run_batch(client: httpx.AsyncClient, prompts: list[str], max_tokens: i
     normalized_results = []
 
     for result in results:
+        if isinstance(result, asyncio.CancelledError):
+            raise result
+
         if isinstance(result, Exception):
-            normalized_results.append({
-                "success": False,
-                "error_type": type(result).__name__,
-                "error_message": str(result),
-                "ttft_ms": None,
-                "e2e_ms": None,
-                "prompt_tokens": None,
-                "completion_tokens": None,
-            })
+            normalized_results.append(
+                {
+                    "success": False,
+                    "error_type": type(result).__name__,
+                    "error_message": str(result),
+                    "ttft_ms": None,
+                    "e2e_ms": None,
+                    "prompt_tokens": None,
+                    "completion_tokens": None,
+                }
+            )
         else:
             result["success"] = True
             normalized_results.append(result)
 
     return {
         "results": normalized_results,
-        "batch_time_s": batch_time_s
+        "batch_time_s": batch_time_s,
+    }
+
+def batch_statistics(results: list[dict], batch_time_s: float) -> dict:
+    successful = [result for result in results if result["success"]]
+    total_completion_tokens = sum(result["completion_tokens"] for result in successful)
+    return {
+        "successful_requests": len(successful),
+        "failed_requests": len(results) - len(successful),
+        "output_tokens_per_sec": total_completion_tokens / batch_time_s,
+        "requests_per_sec": len(successful) / batch_time_s,
     }
 
 async def main():
     parser = argparse.ArgumentParser(description="Benchmark vLLM inference.")
-    parser.add_argument("--concurrency", nargs="+", type=positive_int, default=[1, 4, 8])
+    parser.add_argument(
+        "--concurrency", nargs="+", type=positive_int, default=[1, 4, 8]
+    )
     parser.add_argument("--trials", type=positive_int, default=5)
     parser.add_argument("--max-num-batched-tokens", type=positive_int, default=None)
     args = parser.parse_args()
 
-    required = (
-        "VLLM_BASE_URL",
-        "MODAL_PROXY_KEY",
-        "MODAL_PROXY_SECRET"
-    )
+    required = ("VLLM_BASE_URL", "MODAL_PROXY_KEY", "MODAL_PROXY_SECRET")
 
     missing = [name for name in required if not os.environ.get(name)]
 
     if missing:
-        parser.error(
-            "Missing environment variables: " + ", ".join(missing)
-        )
+        parser.error("Missing environment variables: " + ", ".join(missing))
 
     run_id = datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -223,7 +238,7 @@ async def main():
 
         workloads = {
             "short": 256,
-            "long": 2048
+            "long": 2048,
         }
         concurrency_levels = args.concurrency
         num_trials = args.trials
@@ -252,7 +267,9 @@ async def main():
                 warmup_successes = sum(
                     result["success"] for result in warmup_batch["results"]
                 )
-                print(f"Warmup batch complete: {warmup_successes}/{concurrency} successful.")
+                print(
+                    f"Warmup batch complete: {warmup_successes}/{concurrency} successful."
+                )
 
                 if warmup_successes != concurrency:
                     raise RuntimeError("Workload warmup failed.")
@@ -272,7 +289,7 @@ async def main():
 
                         prompt = generate_prompt(target_tokens, seed)
                         prompts.append(prompt)
-                        
+
                     batch = await run_batch(client, prompts)
 
                     batch["workload"] = workload_name
@@ -284,16 +301,9 @@ async def main():
                     results = batch["results"]
                     batch_time_s = batch["batch_time_s"]
 
-                    successful_requests = sum(1 for result in results if result["success"])
-                    failed_requests = len(results) - successful_requests
-
-                    batch["successful_requests"] = successful_requests
-                    batch["failed_requests"] = failed_requests
-
-                    output_tokens_per_sec = None
+                    batch.update(batch_statistics(results, batch_time_s))
 
                     for i, result in enumerate(results):
-
                         if not result["success"]:
                             print(f"Request {i + 1}:")
                             print(f"Error type: {result['error_type']}")
@@ -315,17 +325,10 @@ async def main():
                         print(f"Prompt tokens: {result['prompt_tokens']}")
                         print(f"Completion tokens: {result['completion_tokens']}")
 
-                    if all(r["completion_tokens"] is not None for r in results):
-                        total_completion_tokens = sum(r["completion_tokens"] for r in results)
-                        output_tokens_per_sec = total_completion_tokens / batch_time_s
-                        print(f"\nOutput tokens per second: {output_tokens_per_sec:.2f} tok/s")
-                    else:
-                        print("\nOutput tokens per second: N/A (missing token counts)")
-                    batch["output_tokens_per_sec"] = output_tokens_per_sec
-
-                    requests_per_sec = successful_requests / batch_time_s
-                    print(f"Requests per second: {requests_per_sec:.2f} req/s")
-                    batch["requests_per_sec"] = requests_per_sec
+                    print(
+                        f"\nOutput tokens per second: {batch['output_tokens_per_sec']:.2f} tok/s"
+                    )
+                    print(f"Requests per second: {batch['requests_per_sec']:.2f} req/s")
 
                     print(f"Batch time: {(batch_time_s * 1000):.2f} ms")
 
@@ -338,33 +341,33 @@ async def main():
 
             print("\n=== Latency Summary ===")
             for concurrency in concurrency_levels:
-
                 failed_batches = [
-                    batch for batch in all_batches
+                    batch
+                    for batch in all_batches
                     if batch["workload"] == workload_name
                     and batch["concurrency"] == concurrency
                     and batch["failed_requests"] > 0
                 ]
 
                 selected_batches = [
-                    batch for batch in all_batches 
+                    batch
+                    for batch in all_batches
                     if batch["workload"] == workload_name
                     and batch["concurrency"] == concurrency
-                    and batch["failed_requests"] == 0
                 ]
 
                 ttft_values = [
                     request["ttft_ms"]
                     for batch in selected_batches
                     for request in batch["results"]
-                    if request["ttft_ms"] is not None
+                    if request["success"] and request["ttft_ms"] is not None
                 ]
 
                 e2e_values = [
                     request["e2e_ms"]
                     for batch in selected_batches
                     for request in batch["results"]
-                    if request["e2e_ms"] is not None
+                    if request["success"] and request["e2e_ms"] is not None
                 ]
 
                 token_tp_values = [
@@ -374,13 +377,14 @@ async def main():
                 ]
 
                 request_tp_values = [
-                    batch["requests_per_sec"]
-                    for batch in selected_batches
+                    batch["requests_per_sec"] for batch in selected_batches
                 ]
 
                 print(f"\n--- Concurrency: {concurrency} ---")
 
-                print(f"Successful batches: {len(selected_batches)}")
+                print(
+                    f"Successful batches: {len(selected_batches) - len(failed_batches)}"
+                )
                 print(f"Failed batches: {len(failed_batches)}")
 
                 print(f"TTFT samples: {len(ttft_values)}")
@@ -388,7 +392,9 @@ async def main():
 
                 if len(ttft_values) >= 2:
                     ttft_p50 = statistics.median(ttft_values)
-                    ttft_p95 = statistics.quantiles(ttft_values, n=100, method="inclusive")[94]
+                    ttft_p95 = statistics.quantiles(
+                        ttft_values, n=100, method="inclusive"
+                    )[94]
                     print(f"TTFT p50: {ttft_p50:.2f} ms")
                     print(f"TTFT p95: {ttft_p95:.2f} ms")
                 else:
@@ -396,7 +402,9 @@ async def main():
 
                 if len(e2e_values) >= 2:
                     e2e_p50 = statistics.median(e2e_values)
-                    e2e_p95 = statistics.quantiles(e2e_values, n=100, method="inclusive")[94]
+                    e2e_p95 = statistics.quantiles(
+                        e2e_values, n=100, method="inclusive"
+                    )[94]
                     print(f"E2E p50: {e2e_p50:.2f} ms")
                     print(f"E2E p95: {e2e_p95:.2f} ms")
                 else:
@@ -406,9 +414,13 @@ async def main():
                     token_tp_mean = statistics.mean(token_tp_values)
                     token_tp_stdev = statistics.stdev(token_tp_values)
                     print(f"Output tokens per second (mean): {token_tp_mean:.2f} tok/s")
-                    print(f"Output tokens per second (stdev): {token_tp_stdev:.2f} tok/s")
+                    print(
+                        f"Output tokens per second (stdev): {token_tp_stdev:.2f} tok/s"
+                    )
                 else:
-                    print("Output tokens per second (mean/stdev): N/A (insufficient samples)")
+                    print(
+                        "Output tokens per second (mean/stdev): N/A (insufficient samples)"
+                    )
 
                 if len(request_tp_values) >= 2:
                     request_tp_mean = statistics.mean(request_tp_values)
@@ -416,7 +428,9 @@ async def main():
                     print(f"Requests per second (mean): {request_tp_mean:.2f} req/s")
                     print(f"Requests per second (stdev): {request_tp_stdev:.2f} req/s")
                 else:
-                    print("Requests per second (mean/stdev): N/A (insufficient samples)")
+                    print(
+                        "Requests per second (mean/stdev): N/A (insufficient samples)"
+                    )
 
 if __name__ == "__main__":
     asyncio.run(main())

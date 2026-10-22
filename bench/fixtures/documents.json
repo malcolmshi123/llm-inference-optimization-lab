@@ -1,0 +1,32 @@
+[
+  {
+    "title": "Document service operations handbook",
+    "questions": [
+      "Which checks are needed before restoring traffic?",
+      "Which measurements reveal a growing queue?",
+      "Why is a health check insufficient?",
+      "What belongs in an incident record?"
+    ],
+    "paragraphs": [
+      "The document service answers questions about internal manuals. Each request includes a document and a question. Operators record the request identifier, input length, output length, and completion status. Requests from different teams may reuse the same manual, but each question must be evaluated independently.",
+      "Before a release, the operator checks the service health endpoint and sends a small reference request. The operator then compares queue depth, error rate, and latency with the previous release. A successful health check confirms that the process responds; it does not demonstrate that the service can sustain the expected traffic.",
+      "If the queue grows continuously, the operator reduces incoming traffic and investigates capacity. A short burst may temporarily increase the queue even when average traffic is sustainable. The recovery interval matters because requests arriving after the burst can still experience delays.",
+      "Before restoring traffic, the operator confirms that the queue has drained, checks recent failures, and repeats the reference request. The incident record includes timestamps and the configuration in use. Conclusions must distinguish direct measurements from possible explanations."
+    ]
+  },
+  {
+    "title": "Release investigation notes",
+    "questions": [
+      "Which controls must stay fixed?",
+      "Why are warmup requests excluded?",
+      "How should failures be reported?",
+      "Why compare both deployment orders?"
+    ],
+    "paragraphs": [
+      "The release investigation compares two versions of a question answering service. Both versions receive the same saved requests. Engineers keep the hardware, model, generation settings, and traffic schedule fixed. They record deployment identifiers so that measurements from different server sessions remain distinguishable.",
+      "Warmup requests prepare the model for measurement and are excluded from the latency report. A document may also be submitted before measurement to populate reusable state. These are separate operations: warming the model does not guarantee that a particular document is cached.",
+      "The report includes completed requests, failed requests, and requests rejected before dispatch. Engineers examine short and long inputs separately because an aggregate median can hide a regression affecting one class. Generated output lengths are recorded rather than assumed to equal the requested maximum.",
+      "The team repeats the comparison in both orders and preserves raw measurements. If the observed difference changes sign across sessions, the report describes that uncertainty. A release is evaluated using the supported evidence, including negative results and limitations of the workload."
+    ]
+  }
+]
