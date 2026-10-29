@@ -4,7 +4,7 @@
 
 This project benchmarks Qwen3-4B-Instruct-2507 and investigates scheduling and prefix caching using request-level streaming measurements and server-side Prometheus metrics.
 
-It contains two experiments: a prefix-cache study configured for NVIDIA A10, and an earlier scheduling-budget study on NVIDIA L4.
+It contains two experiments: the L4 scheduling study and a prefix-cache benchmark configured for NVIDIA A10. A separate A10 GPU profiling pair provides diagnostic evidence.
 
 ## Contents
 
@@ -12,7 +12,7 @@ It contains two experiments: a prefix-cache study configured for NVIDIA A10, and
     - [Tech Stack](#tech-stack)
     - [System Architecture](#system-architecture)
     - [Repository Structure](#repository-structure)
-- [Historical Scheduling (L4)](#historical-scheduling-l4)
+- [L4 Scheduling Study](#l4-scheduling-study)
     - [Findings](#findings)
     - [Configuration](#configuration)
     - [Methodology](#methodology)
@@ -27,7 +27,7 @@ It contains two experiments: a prefix-cache study configured for NVIDIA A10, and
     - [Validation](#validation)
     - [Reproducing the Experiments](#reproducing-the-experiments)
         - [Shared Setup](#shared-setup)
-        - [Historical Scheduling Procedure (L4)](#historical-scheduling-procedure-l4)
+        - [L4 Scheduling Study Procedure](#l4-scheduling-study-procedure)
         - [Prefix-Cache Procedure (A10)](#prefix-cache-procedure-a10)
         - [GPU Profiling Procedure (A10)](#gpu-profiling-procedure-a10)
         - [Stop Any Live Deployment](#stop-any-live-deployment)
@@ -43,7 +43,7 @@ It contains two experiments: a prefix-cache study configured for NVIDIA A10, and
 |---|---|
 | Model | Qwen3-4B-Instruct-2507 |
 | Inference engine | vLLM 0.21.0 |
-| GPU | NVIDIA A10 (cache study); NVIDIA L4 (historical scheduling) |
+| GPU | NVIDIA A10 (prefix-cache benchmark and profiling); NVIDIA L4 (scheduling study) |
 | Infrastructure | Modal |
 | API | OpenAI-compatible HTTP API |
 | Benchmarking | Python, asyncio, httpx |
@@ -91,7 +91,9 @@ The benchmark client sends asynchronous requests, processes streamed responses, 
 └── server_config.py    # Server controls
 ```
 
-## Historical Scheduling (L4)
+<a id="historical-scheduling-l4"></a>
+
+## L4 Scheduling Study
 
 ### Findings
 
@@ -100,7 +102,7 @@ The benchmark client sends asynchronous requests, processes streamed responses, 
 - **Doubling the vLLM scheduling token budget did not improve performance.** Increasing `max_num_batched_tokens` from 2048 to 4096 increased median TTFT by 14.04% for short prompts and 1.51% for long prompts in the final comparison.
 - **Server-side metrics provided additional diagnostic evidence.** A targeted eight-request experiment measured an average of 778 ms in queue time and 891 ms in prefill-phase time per request, with no observed prefix-cache hits or KV-cache preemptions.
 
-The earlier scheduling study produced a **negative optimization result**: increasing the scheduling token budget did not improve the measured workloads. Its findings describe the L4 scheduling experiment separately from the A10 cache study.
+The L4 scheduling study produced a **negative optimization result**: increasing the scheduling token budget did not improve the measured workloads. Its findings remain separate from the A10 prefix-cache benchmark and the A10 GPU profiling pair.
 
 ### Configuration
 
@@ -348,7 +350,7 @@ Host annotations describe CPU execution scopes; asynchronous GPU work can outliv
 
 The [cache-study artifacts](inference-runs/cache-study-live-01/) and [profiling artifacts](inference-runs/profiling/) retain workloads, request outcomes, startup evidence, raw snapshots, and generated analyses. The profiling directory also includes compressed traces and verification receipts.
 
-The historical scheduling datasets, in run-filename order, are:
+The L4 scheduling study datasets, in run-filename order, are:
 
 | File | Description |
 |---|---|
@@ -377,7 +379,7 @@ From the repository root with local dependencies installed:
 python -m unittest discover -s tests -v
 ```
 
-These tests cover server configuration, JSON/CSV persistence, streaming-response validation, historical comparisons, document manifests, and cache-study execution against a fake server. They run locally without a Modal deployment or GPU. A tokenizer integration check uses the pinned tokenizer only when it is already cached locally.
+These tests cover server configuration, JSON/CSV persistence, streaming-response validation, L4 scheduling study comparisons, document manifests, and cache-study execution against a fake server. They run locally without a Modal deployment or GPU. A tokenizer integration check uses the pinned tokenizer only when it is already cached locally.
 
 The [CPU tests workflow](.github/workflows/tests.yml) runs on pushes and pull requests using Python 3.11. It first runs the suite offline with an isolated Hugging Face cache. It then downloads the pinned tokenizer files and runs the tokenizer integration check separately, also offline. That step sets `INFERENCE_LAB_REQUIRE_TOKENIZER=true`, so an unavailable tokenizer fails instead of skipping. Model weights, GPUs, and Modal credentials are not needed; dependency installation and the tokenizer download require network access. CI checks the tooling without rerunning the live performance experiments.
 
@@ -389,7 +391,7 @@ python -m bench.check_cache_pilots inference-runs/cache-study-live-01
 
 ### Reproducing the Experiments
 
-Complete shared setup, then choose the historical scheduling, prefix-cache, or GPU profiling procedure. Each has its own runner and outputs; the numbered steps restart within each procedure.
+Complete shared setup, then choose the L4 scheduling study, A10 prefix-cache, or A10 GPU profiling procedure. Each has its own runner and outputs; the numbered steps restart within each procedure.
 
 #### Shared Setup
 
@@ -435,13 +437,15 @@ export MODAL_PROXY_SECRET="<your-proxy-secret>"
 
 Do not commit authentication credentials to version control.
 
-#### Historical Scheduling Procedure (L4)
+<a id="historical-scheduling-procedure-l4"></a>
 
-This procedure tests the 2048-versus-4096 scheduling budget with `bench.async_client`. It does not run the prefix-cache study. The final two steps analyze the committed historical datasets offline.
+#### L4 Scheduling Study Procedure
+
+This procedure tests the 2048-versus-4096 scheduling budget with `bench.async_client`. It does not run the prefix-cache study. The final two steps analyze the committed L4 scheduling study datasets offline.
 
 ##### 1. Select L4 and Deploy the Scheduling Configuration
 
-Set `GPU_TYPE` to `"L4"` in `server_config.py` before deploying to match the historical hardware. Leaving the A10 default produces a new A10 scheduling experiment. Keep profiling disabled for these benchmark runs.
+Set `GPU_TYPE` to `"L4"` in `server_config.py` before deploying to match the L4 scheduling study's hardware. Leaving the A10 default produces a new A10 scheduling experiment. Keep profiling disabled for these benchmark runs.
 
 Deploy the 2048-token control with prefix caching enabled:
 
@@ -503,9 +507,9 @@ Metric analysis uses the pinned [vLLM metric definitions](https://docs.vllm.ai/e
 python -m bench.cache_metrics metrics/metrics-before-long.txt metrics/metrics-after-long.txt
 ```
 
-This historical diagnostic reports 16,384 prefix queries, zero hits, 16,384 newly computed prefill tokens, and zero preemptions. Missing counters remain unavailable. Counter resets, changed process identities, and incompatible labels are rejected.
+This L4 scheduling study diagnostic reports 16,384 prefix queries, zero hits, 16,384 newly computed prefill tokens, and zero preemptions. Missing counters remain unavailable. Counter resets, changed process identities, and incompatible labels are rejected.
 
-##### 5. Regenerate Historical Scheduling Figures
+##### 5. Regenerate L4 Scheduling Study Figures
 
 ```bash
 python figures/generate_figures.py
@@ -515,7 +519,7 @@ The generator uses only Python's standard library and the three primary benchmar
 
 #### Prefix-Cache Procedure (A10)
 
-The document/Q&A cache study has completed two paired rounds on a deployment configured for NVIDIA A10. See [Cache Results](#cache-results) for measured findings and limitations. The commands below reproduce the experiment; the earlier L4 scheduling results remain separate.
+The document/Q&A cache study has completed two paired rounds on a deployment configured for NVIDIA A10. See [Cache Results](#cache-results) for measured findings and limitations. The commands below reproduce the experiment; the L4 scheduling study results remain separate.
 
 Use `GPU_TYPE = "A10"` in `server_config.py`; restore that setting if you selected L4 for scheduling. This procedure uses `bench.cache_study`, fresh treatment processes, and saved manifests. It does not use the scheduling benchmark's trial sequence.
 
@@ -637,4 +641,4 @@ Potential extensions:
 
 ## Conclusion
 
-The scheduling study rejected a larger token budget for its measured workloads. The cache study observed shared-prefix reuse, reduced prefill work, and lower shared-prefix latency, alongside substantial timing variation across sessions. Both experiments use saved request results and server telemetry to distinguish implemented features from measured behavior.
+The L4 scheduling study rejected a larger token budget for its measured workloads. The cache study observed shared-prefix reuse, reduced prefill work, and lower shared-prefix latency, alongside substantial timing variation across sessions. Both experiments use saved request results and server telemetry to distinguish implemented features from measured behavior.
