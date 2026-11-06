@@ -55,17 +55,7 @@ The work concerns model serving and measurement. It does not include training, f
 
 ### System Architecture
 
-```mermaid
-flowchart TD
-    A["Python Benchmark Client<br/>asyncio + httpx"] -->|"Concurrent HTTPS requests"| B["Modal Authenticated Endpoint"]
-    B --> C["vLLM 0.21.0<br/>Configured NVIDIA GPU"]
-    C --> D["Qwen3-4B-Instruct"]
-    D -->|"Streaming SSE responses"| A
-    A --> E["JSON / CSV Results"]
-    C --> F["Prometheus Metrics"]
-    E --> G["Analysis and Visualizations"]
-    F --> G
-```
+![The Python benchmark client sends authenticated HTTPS requests to vLLM on Modal and receives an SSE stream. Client results and Prometheus snapshots feed offline analysis.](figures/system-architecture.svg)
 
 Modal runs the vLLM server on a configured GPU and exposes an OpenAI-compatible `/v1/chat/completions` endpoint.
 
