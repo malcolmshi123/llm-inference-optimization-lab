@@ -1,10 +1,10 @@
 # LLM Inference Optimization Lab
 
-**Investigating LLM inference performance with vLLM, Modal, and controlled GPU experiments.**
+**Benchmarking vLLM scheduling and prefix caching on Modal GPUs.**
 
-This project benchmarks Qwen3-4B-Instruct-2507 and investigates scheduling and prefix caching using request-level streaming measurements and server-side Prometheus metrics.
+This repository runs Qwen3-4B-Instruct-2507 with vLLM and measures inference latency and throughput under different serving configurations. A Python client records streaming responses; Prometheus counters and GPU traces help explain what happened inside the server.
 
-It contains two experiments: the L4 scheduling study and a prefix-cache benchmark configured for NVIDIA A10. A separate A10 GPU profiling pair provides diagnostic evidence.
+There are two benchmark studies: a scheduling-budget comparison on NVIDIA L4 and a prefix-cache comparison configured for NVIDIA A10. A separate A10 profiling capture examines GPU execution during shared-prefix requests. The three sets of evidence are kept distinct.
 
 ## Contents
 
@@ -51,7 +51,7 @@ It contains two experiments: the L4 scheduling study and a prefix-cache benchmar
 | Analysis | NumPy, Python statistics |
 | Results | JSON, CSV, Prometheus metrics |
 
-The project focuses on **inference serving and benchmarking**. It does not train, fine-tune, quantize, or modify the model weights.
+The work concerns model serving and measurement. It does not include training, fine-tuning, quantization, or changes to model weights.
 
 ### System Architecture
 
@@ -67,9 +67,9 @@ flowchart TD
     F --> G
 ```
 
-The inference server runs vLLM inside a Modal GPU container and exposes the OpenAI-compatible `/v1/chat/completions` endpoint.
+Modal runs the vLLM server on a configured GPU and exposes an OpenAI-compatible `/v1/chat/completions` endpoint.
 
-The benchmark client sends asynchronous requests, processes streamed responses, and records request-level and batch-level performance measurements. Modal proxy authentication protects the endpoint.
+The Python client issues concurrent requests, reads streamed responses, and saves timing and throughput measurements for individual requests and batches. Access to the endpoint requires Modal proxy authentication.
 
 ### Repository Structure
 
@@ -97,12 +97,12 @@ The benchmark client sends asynchronous requests, processes streamed responses, 
 
 ### Findings
 
-- **Concurrency improved aggregate throughput but increased request latency.** For 256-token prompts, output throughput increased from 28.20 to 194.74 tokens/s as concurrency increased from 1 to 8.
-- **Long prompts exhibited staggered time-to-first-token (TTFT).** At concurrency 8, requests experienced substantially different first-token delays despite having approximately equal input lengths.
-- **Doubling the vLLM scheduling token budget did not improve performance.** Increasing `max_num_batched_tokens` from 2048 to 4096 increased median TTFT by 14.04% for short prompts and 1.51% for long prompts in the final comparison.
-- **Server-side metrics provided additional diagnostic evidence.** A targeted eight-request experiment measured an average of 778 ms in queue time and 891 ms in prefill-phase time per request, with no observed prefix-cache hits or KV-cache preemptions.
+- For 256-token prompts, output throughput rose from 28.20 to 194.74 tokens/s between concurrency 1 and 8. Individual requests became slower as concurrency increased.
+- Eight concurrent 2048-token prompts often received their first tokens at different times, even though their input lengths were similar.
+- Raising `max_num_batched_tokens` from 2048 to 4096 increased median TTFT by 14.04% for short prompts and 1.51% for long prompts in the 20-trial comparison.
+- In a separate eight-request diagnostic, the server recorded an average of 778 ms in queue time and 891 ms in prefill-phase time per request, with no prefix-cache hits or KV-cache preemptions.
 
-The L4 scheduling study produced a **negative optimization result**: increasing the scheduling token budget did not improve the measured workloads. Its findings remain separate from the A10 prefix-cache benchmark and the A10 GPU profiling pair.
+The larger scheduling budget did not help either measured L4 workload. The A10 cache benchmark and profiling capture test different behavior and should not be treated as additional runs of the scheduling experiment.
 
 ### Configuration
 
@@ -118,24 +118,24 @@ The L4 scheduling study produced a **negative optimization result**: increasing 
 | vLLM maximum sequences | 256 (resolved default) |
 | Modal concurrent inputs | 8 |
 
-Modal's concurrent-input limit and vLLM's maximum-sequence limit operate at different layers of the serving stack.
+Modal's limit on concurrent inputs governs requests to the deployed function. vLLM's maximum-sequence setting is a separate limit inside the inference engine.
 
-The cache study also uses the 2048-token scheduling budget; its treatment changes prefix caching on the configured A10 rather than the scheduling budget.
+The A10 cache experiment also uses a 2048-token scheduling budget. It changes prefix caching instead of the scheduling budget.
 
 ### Methodology
 
 #### Workloads
 
-Two deterministic synthetic summarization workloads were used:
+The L4 benchmark uses two deterministic synthetic workloads:
 
 | Workload | Approximate input tokens | Maximum output tokens |
 |---|---:|---:|
 | Short | 256 | 128 |
 | Long | 2048 | 128 |
 
-Prompts consist of seeded sequences of nature-related words. The generator provides repeatable input lengths and workload structure without depending on external datasets.
+The prompt generator uses seeded sequences of nature-related words to produce repeatable input lengths without an external dataset.
 
-These prompts are intended for **controlled performance measurement**, not for evaluating model quality or representing realistic production traffic.
+The text is deliberately artificial. It helps control prompt length, but says nothing about answer quality or performance on production traffic.
 
 #### Metrics
 
@@ -149,7 +149,7 @@ The benchmark collects:
 | **Request throughput** | Successful requests divided by batch wall-clock duration |
 | **Success rate** | Fraction of completed requests without recorded failures |
 
-TTFT and E2E measurements include client, network, HTTP, and server overhead. They should not be interpreted as GPU kernel execution times.
+TTFT and E2E are measured at the client, so both include HTTP and network overhead as well as server time. Neither is a GPU kernel timing.
 
 #### Experimental Controls
 
@@ -163,13 +163,13 @@ The benchmark framework uses:
 - JSON and CSV checkpointing.
 - Separate server deployments for each scheduling-budget configuration.
 
-Cold-start latency was excluded from the steady-state performance comparisons.
+Cold-start time is excluded from these steady-state measurements.
 
 ### Results
 
 #### 1. Baseline: Concurrency vs. Performance
 
-The initial baseline tested concurrency levels of 1, 4, and 8, with five measured batches for each workload/concurrency combination.
+The baseline used five measured batches for each combination of short or long prompts and concurrency 1, 4, or 8.
 
 ![Baseline throughput vs concurrency](figures/01_baseline_throughput.svg)
 
@@ -184,30 +184,30 @@ The initial baseline tested concurrency levels of 1, 4, and 8, with five measure
 
 ![Baseline median TTFT vs concurrency](figures/02_baseline_ttft.svg)
 
-Increasing concurrency substantially improved aggregate throughput, but each request experienced greater latency, particularly for longer prompts.
+Both workloads produced more output tokens per second at higher concurrency. TTFT rose too, particularly for 2048-token prompts.
 
-This established the primary **tradeoff between throughput and latency** investigated in subsequent experiments.
+The next experiment held concurrency at 8 and changed vLLM's scheduling token budget.
 
 #### 2. Scheduling Optimization Hypothesis
 
-vLLM's `max_num_batched_tokens` controls the shared token budget available within a scheduling iteration.
+`max_num_batched_tokens` limits the number of tokens scheduled in one vLLM iteration.
 
-With chunked prefill enabled, long prompt-prefill operations can be divided across scheduling iterations and interleaved with decoding work.
+With chunked prefill, a long prompt can be processed across several iterations while decode work runs alongside it.
 
-**Hypothesis:** Increasing the scheduling budget from 2048 to 4096 tokens could allow more prefill work to execute per iteration, potentially reducing TTFT for concurrent long prompts.
+I tested whether raising that budget from 2048 to 4096 would let the scheduler do more prefill work per iteration and lower TTFT for concurrent long prompts.
 
-The change could also affect decoding latency and batch efficiency, so improvement was not guaranteed.
+There was a possible downside: giving prefill more room could interfere with decoding and overall batch efficiency.
 
-Two configurations were evaluated:
+The comparison used two server configurations:
 
 - **Control:** `max_num_batched_tokens=2048`
 - **Experiment A:** `max_num_batched_tokens=4096`
 
 #### 3. A/B Experiment: 2048 vs. 4096
 
-Following an initial five-trial exploratory comparison, both configurations were evaluated using 20 measured batches per workload at concurrency 8.
+After a five-trial exploratory run, I repeated the comparison with 20 measured batches per workload at concurrency 8.
 
-Each configuration completed 320 measured requests. Across both configurations, **all 640 requests succeeded**.
+Both configurations completed 320 requests, for 640 successful measured requests in total.
 
 ##### Short prompts (256 tokens)
 
@@ -229,27 +229,27 @@ Each configuration completed 320 measured requests. Across both configurations, 
 
 ![Scheduling-budget TTFT comparison](figures/03_budget_ttft_delta.svg)
 
-**Result:** Raising the token budget to 4096 did not improve the targeted long-prompt workload. Median and tail TTFT were slightly worse, while output throughput decreased by approximately 1%.
+Raising the budget to 4096 did not reduce TTFT for long prompts. Median and p95 TTFT increased slightly, and mean output throughput fell by about 1%.
 
-The larger budget also produced notably worse short-prompt TTFT in the 20-trial comparison.
+Short prompts fared worse as well, with a 14.04% increase in median TTFT in the 20-trial run.
 
-These differences describe the observed experiment runs; they are not claims of statistical significance or universal superiority of one configuration.
+These are differences between the recorded runs. The study does not establish statistical significance or show that 2048 is always the better setting.
 
 #### 4. Investigating the TTFT Staircase
 
-An additional analysis examined first-token latency within each concurrent batch.
+The long-prompt measurements also showed an unusual pattern within batches.
 
-For each long-prompt trial, the eight TTFT measurements were sorted from fastest to slowest. Across repeated trials, requests frequently exhibited distinct groups of first-token arrival times.
+I sorted the eight TTFT values in each trial from fastest to slowest. Across the repeated trials, first-token arrivals often separated into distinct groups.
 
 ![Ranked long-prompt TTFT](figures/04_long_ttft_ranked.svg)
 
-The pattern was consistent with staggered scheduling and prefill execution, but client-observed TTFT alone could not establish which internal scheduler operations caused the gaps.
+That pattern suggests requests were waiting for different amounts of scheduling or prefill work. Client timing alone cannot show the exact sequence of scheduler decisions.
 
-A follow-up diagnostic used vLLM's Prometheus metrics to investigate queueing, prefill, prefix-cache reuse, and preemption behavior.
+I collected Prometheus counters around a separate eight-request batch to check queue time, prefill work, cache reuse, and preemptions.
 
 ##### Server-side diagnostic
 
-A single measured batch of eight concurrent 2048-token prompts produced:
+For eight concurrent 2048-token prompts, the server counters gave these per-request means:
 
 | Server-side measurement | Mean per request |
 |---|---:|
@@ -257,32 +257,32 @@ A single measured batch of eight concurrent 2048-token prompts produced:
 | Queue time | 777.62 ms |
 | Prefill-phase time | 891.12 ms |
 
-Additional observations:
+The same diagnostic recorded:
 
 - **16384 prompt tokens** were newly processed across eight requests.
 - **Zero prefix-cache hits** were recorded during the diagnostic batch.
 - **Zero KV-cache preemptions** were recorded.
 - A separate repeated-prompt diagnostic recorded 16 cached prompt tokens across two completed requests, providing evidence that prefix caching was functional.
 
-These findings support scheduling queueing and prefill contention as plausible contributors to staggered TTFT.
+Queue time and prefill time were both substantial, making them plausible contributors to the staggered arrivals.
 
-However, the aggregate measurements do **not** reconstruct individual scheduler iterations or prove the precise causal contribution of chunked prefill.
+The counters are aggregate measurements, however. They cannot reconstruct individual scheduling iterations or identify the exact effect of chunked prefill.
 
-The eight-request diagnostic is derived from [metrics-before-long.txt](metrics/metrics-before-long.txt) and [metrics-after-long.txt](metrics/metrics-after-long.txt). Subtract the before counter from the after counter, then divide each latency-sum delta by the completed-request count delta (8) and multiply by 1000 to obtain milliseconds. This gives 2142.88 ms TTFT, 777.62 ms queue time, and 891.12 ms prefill time. The prompt-token delta is 16384; cache-hit and preemption deltas are zero. The pair has matching metric creation timestamps.
+The calculation uses [metrics-before-long.txt](metrics/metrics-before-long.txt) and [metrics-after-long.txt](metrics/metrics-after-long.txt), which have matching metric creation timestamps. Subtract the before counters from the after counters. For latency, divide each sum delta by the increase of eight completed requests and multiply by 1000. The results are 2142.88 ms TTFT, 777.62 ms queue time, and 891.12 ms prefill time. The deltas also show 16384 newly processed prompt tokens and zero cache hits or preemptions.
 
 ## Prefix-Cache (A10)
 
 ### Experimental Design
 
-**Question:** Does prefix caching reduce latency when requests reuse a document, and how does that behavior compare with unique-prefix requests?
+What changes when requests reuse most of a document, and how does that compare with requests whose prefixes are unique?
 
-Four fresh treatment sessions covered two paired rounds: cache-off → cache-on with seed 42, then cache-on → cache-off with seed 43. Each treatment measured 32 requests in each of four scenarios, totaling **512 measured requests**. Warmup and priming requests were excluded.
+The experiment used four fresh server sessions in two paired rounds. Round 1 tested cache-off followed by cache-on with seed 42; round 2 reversed the order with seed 43. Each treatment measured 32 requests in four scenarios, giving 512 measured requests overall. Warmup and prefix priming were excluded.
 
-Inputs targeted 2048 tokens after chat templating, with a 128-token output limit and normal EOS behavior. The deployment used BF16, a 4096-token context limit, and a fixed scheduling token budget of 2048. Shared-document workloads targeted approximately 90% common input prefixes; these controlled fixtures do not represent measured production traffic.
+Each prompt targeted 2048 tokens after chat templating, with a 128-token output cap and normal EOS behavior. The A10 deployment used BF16, a 4096-token context limit, and a 2048-token scheduling budget. Shared-document scenarios aimed for roughly 90% common input tokens. These are controlled document fixtures, not sampled production requests.
 
 ### Cache Results
 
-Changes below compare cache-on with cache-off within each round. Negative latency changes mean lower latency.
+Each percentage is the cache-on change relative to cache-off in the same round. Negative latency changes indicate faster responses.
 
 | Round | Prefix | Concurrency | Median TTFT change | Median E2E change |
 |---|---|---:|---:|---:|
@@ -295,17 +295,17 @@ Changes below compare cache-on with cache-off within each round. Negative latenc
 | 2 | Unique | 8 | −5.2% | −1.6% |
 | 2 | Shared | 8 | −76.8% | −38.8% |
 
-Shared-prefix cache-on windows recorded approximately **89.1% token cache-hit rates**. Newly computed prefill tokens fell from approximately 65,535 to 7,167 per measured scenario. Unique-prefix cache-on windows recorded zero hits and unchanged prefill-token totals. No measured request failures or KV-cache preemptions were recorded.
+In shared-prefix scenarios with caching enabled, token cache-hit rates were approximately 89.1%. Newly computed prefill tokens fell from about 65,535 to 7,167 per measured scenario. The unique-prefix scenarios had zero cache hits and no reduction in prefill-token totals. No measured requests failed, and the server recorded no KV-cache preemptions.
 
 ![Cache-study latency by round, prefix scenario, and concurrency](inference-runs/cache-study-live-01/comparison/01_cache_latency.png)
 
 [Comparison JSON](inference-runs/cache-study-live-01/comparison/comparison.json) · [Comparison CSV](inference-runs/cache-study-live-01/comparison/comparison.csv) · [Raw experiment artifacts](inference-runs/cache-study-live-01/)
 
-**Interpretation and limitations:** Shared-prefix latency improvements coincide with observed cache reuse and reduced prefill work. Their magnitude varies substantially between rounds. Unique-prefix latency also changes despite zero hits, showing that session variability contributes to the timing differences. These two paired rounds are exploratory; requests within a session are not independent replications. No pooled speedup or confidence interval is claimed. Measurements include client/network overhead, and throughput includes checkpoint overhead. GPU identity and server package versions remain declared deployment settings rather than independently captured runtime identities. Recorded client worktrees were dirty, so matching Git revisions alone cannot establish identical uncommitted code.
+Shared-prefix latency fell in the same windows that recorded cache hits and less prefill computation, but the size of the improvement differed markedly between rounds. Unique-prefix latency changed too, despite having no cache hits. That makes session variability an important part of the result. The two paired rounds are exploratory, and requests within a session do not count as independent replications; I do not report a pooled speedup or confidence interval. Client latency includes network overhead, and the throughput calculation includes checkpoint overhead. GPU identity and package versions were deployment settings rather than independently recorded runtime identities. The client worktrees were dirty, so matching Git revisions alone cannot establish that uncommitted code was identical.
 
 ### Server Timing Analysis
 
-The same saved measurement windows contain queue, prefill, decode, and time-per-output-token (TPOT) histograms. Every timing mean below uses 32 request observations, with warmup and priming excluded. Values show **cache-off → cache-on** within each round.
+Prometheus snapshots from the same measurement windows include queue, prefill, decode, and time-per-output-token (TPOT) histograms. Each mean below is based on 32 requests, excluding warmup and priming. The values run from cache-off to cache-on within each round.
 
 | Round | Shared-prefix concurrency | Mean queue (ms) | Mean prefill (ms) | Mean decode (ms) | Mean TPOT (ms/token) |
 |---|---:|---:|---:|---:|---:|
@@ -316,13 +316,13 @@ The same saved measurement windows contain queue, prefill, decode, and time-per-
 
 ![Server timing means for both rounds and all prefix/concurrency scenarios](inference-runs/cache-study-live-01/comparison/03_server_timings.png)
 
-At concurrency 1, shared-prefix prefill means fell by approximately 83–84%, while decode means and TPOT stayed nearly unchanged. Decode remained over two seconds per request, consistent with a smaller E2E improvement than TTFT improvement. At concurrency 8, cache-on shared-prefix windows also showed queue means falling from approximately 512–515 ms to below 0.1 ms, plus lower decode means and TPOT. These observations are consistent with reduced prefill work changing contention among requests; they do not isolate GPU execution or prove a particular scheduling mechanism.
+At concurrency 1, caching cut mean shared-prefix prefill time by roughly 83% to 84%, while decode time and TPOT barely changed. Decode still took more than two seconds, which helps explain why the E2E gain was smaller than the TTFT gain. At concurrency 8, queue time also dropped from about 512 to 515 ms to below 0.1 ms; decode means and TPOT were lower. Less prefill work may have eased contention, although these measurements do not isolate GPU execution or prove a particular scheduling mechanism.
 
-Unique-prefix windows recorded no cache hits and no corresponding prefill reduction: server prefill means were approximately unchanged or higher with cache-on, even where client median TTFT improved. This reinforces the evidence of session variability. Server histogram means are distinct from client medians and do not provide an exact decomposition of those medians. TPOT averages per-request observations, and decode durations also depend on generated output length. These are server phase means; the separate diagnostic pair below adds GPU traces.
+Unique-prefix requests had no cache hits, and their mean prefill time was unchanged or higher with caching enabled, even in windows where client median TTFT improved. That is another sign of session variability. Server histogram means are not interchangeable with client medians and do not decompose client E2E latency exactly. TPOT is averaged over requests, and decode duration also depends on output length. The profiling capture below provides a separate view of GPU activity.
 
 ### GPU Profiling Case Study
 
-A separate cache-off/cache-on pair profiled the same eight shared-prefix requests at concurrency 8, using fresh server processes. Both worker traces report **NVIDIA A10** in their device metadata. The downloaded traces were verified against SHA-256 receipts and reconciled with raw request counters and cache metrics.
+For the GPU case study, I captured one cache-off and one cache-on batch of the same eight shared-prefix requests at concurrency 8, using fresh server processes. Both worker traces identify the device as NVIDIA A10. SHA-256 receipts verify the downloaded traces, and the saved counters agree with the request and cache measurements.
 
 | Diagnostic observation | Cache off | Cache on |
 |---|---:|---:|
@@ -336,11 +336,11 @@ A separate cache-off/cache-on pair profiled the same eight shared-prefix request
 
 ![GPU kernel activity and host execution scopes for the diagnostic profiling pair](inference-runs/profiling/comparison/01_gpu_timeline.png)
 
-Cache-on reused 89.1% of input tokens. Context work appeared in one context-only and three mixed context/generation host iterations, compared with one context-only and eight mixed iterations with cache-off. Their annotated context-token totals exactly match the measured new-prefill counters. These iteration counts include chunked prefill and are not request counts.
+With caching enabled, 89.1% of the input tokens were reused. The host trace showed one context-only iteration and three mixed context/generation iterations, versus one context-only and eight mixed iterations with caching disabled. The annotated context-token counts agree exactly with the new-prefill counters. These are host iterations, including chunked prefill, not request counts.
 
 The kernel table shows a change in execution mix. For example, the large-tile `cutlass_80_tensorop_bf16_s16816gemm_relu_bf16_256x128_32x3_tn_align8` kernel fell from 864 calls / 1,410.4 ms to 72 calls / 62.1 ms. Meanwhile, the `ampere_bf16_s16816gemm_bf16_64x64_sliced1x2_ldg8_f2f_stages_64x6_tn` kernel increased from 9,000 calls / 1,311.3 ms to 9,432 calls / 1,373.6 ms. Lower total kernel duration alongside a higher overall kernel count shows why counting launches alone does not characterize GPU work. The observations are consistent with reduced prefill computation changing the kernel mix.
 
-Host annotations describe CPU execution scopes; asynchronous GPU work can outlive them. The analysis keeps the two lanes separate and does not assign GPU phase durations by timestamp overlap. GPU gaps below 0.5 ms are merged for display only; exact duration totals remain in the summary. Neither the summed durations nor their interval union measures SM utilization. This is one instrumented batch per treatment, with slightly different output lengths and fixed off→on order; it is diagnostic evidence, not an additional benchmark speedup estimate. The original 512-request comparison is unchanged.
+CPU host scopes and asynchronous GPU work do not have identical boundaries. The analysis therefore keeps them separate rather than assigning GPU phase durations by timestamp overlap. Gaps shorter than 0.5 ms are merged only in the displayed timeline; the summary retains exact duration totals. Neither kernel-duration sums nor their interval union measures SM utilization. This single profiled batch per treatment had slightly different output lengths and a fixed off-then-on order. It is diagnostic evidence, not another benchmark speedup estimate; the 512-request comparison is unchanged.
 
 [Profiling summary](inference-runs/profiling/comparison/summary.json) · [Full kernel names and durations](inference-runs/profiling/comparison/kernels.csv) · [Execution annotations](inference-runs/profiling/comparison/annotations.csv) · [Reproduce the offline analysis](docs/profiling.md#offline-analysis)
 
@@ -348,7 +348,7 @@ Host annotations describe CPU execution scopes; asynchronous GPU work can outliv
 
 ### Saved Evidence
 
-The [cache-study artifacts](inference-runs/cache-study-live-01/) and [profiling artifacts](inference-runs/profiling/) retain workloads, request outcomes, startup evidence, raw snapshots, and generated analyses. The profiling directory also includes compressed traces and verification receipts.
+The saved [cache-study artifacts](inference-runs/cache-study-live-01/) and [profiling artifacts](inference-runs/profiling/) include workloads, request outcomes, startup logs, raw metrics, and analysis outputs. The profiling files also include compressed traces and download-verification receipts.
 
 The L4 scheduling study datasets, in run-filename order, are:
 
@@ -358,7 +358,7 @@ The L4 scheduling study datasets, in run-filename order, are:
 | [results/20261019_024946.json](results/20261019_024946.json) | 20 batches per workload at concurrency 8, recorded budget 2048; 40 batches and 320 successful requests. Sources figures 03 and 04. |
 | [results/20261019_030158.json](results/20261019_030158.json) | 20 batches per workload at concurrency 8, recorded budget 4096; 40 batches and 320 successful requests. Sources figures 03 and 04. |
 
-Each timestamped JSON has a corresponding `.csv` request-table export. All CSV rows match the JSON values for their exported fields. The baseline CSV omits the scheduling-budget column; the two A/B CSVs include it. JSON remains the analysis source because it preserves nested batches and full request records.
+Every timestamped JSON has a matching CSV request export, and the exported CSV fields agree with the JSON records. The older baseline CSV has no scheduling-budget column; the two A/B exports do. Analysis uses JSON because it retains batch structure and complete request data.
 
 The retained diagnostic snapshots have the following roles:
 
@@ -367,11 +367,11 @@ The retained diagnostic snapshots have the following roles:
 | [metrics/metrics-before-long.txt](metrics/metrics-before-long.txt), [metrics/metrics-after-long.txt](metrics/metrics-after-long.txt) | Paired cumulative counters supporting the eight-request diagnostic above. Keep both snapshots to preserve the subtraction baseline. |
 | [metrics/metrics-repeated.txt](metrics/metrics-repeated.txt) | Two completed requests, 38 prompt tokens, and 16 cached prompt tokens. Supports the separate cache-functionality observation. The exact request payloads and replay command are not committed. |
 
-The saved metrics reproduce the reported counter calculations, but the repository does not contain a script to replay those diagnostic requests and capture the snapshots. Keep these measurements distinct from the timestamped client benchmark datasets.
+These snapshots support the reported counter calculations, although the original diagnostic requests and snapshot-capture procedure cannot be replayed from a committed script. They are separate from the timestamped client benchmark runs.
 
 ### Validation
 
-For a complete offline check of the tooling and committed measurements, follow the [validation runbook](docs/validation.md). It regenerates comparisons in temporary directories without a GPU deployment.
+The [validation runbook](docs/validation.md) describes how to check the tooling and recalculate results offline. It writes regenerated comparisons to temporary directories and requires no GPU.
 
 From the repository root with local dependencies installed:
 
@@ -391,11 +391,11 @@ python -m bench.check_cache_pilots inference-runs/cache-study-live-01
 
 ### Reproducing the Experiments
 
-Complete shared setup, then choose the L4 scheduling study, A10 prefix-cache, or A10 GPU profiling procedure. Each has its own runner and outputs; the numbered steps restart within each procedure.
+Start with the shared setup, then follow the L4 scheduling, A10 cache, or A10 profiling procedure. The runners and output formats differ, so the numbered steps restart for each procedure.
 
 #### Shared Setup
 
-Use this setup for any live procedure below. Offline validation and analysis of saved results do not require a running GPU deployment.
+The following setup applies to all live procedures. Offline tests and analysis of saved data do not require an active GPU deployment.
 
 ##### Prerequisites
 
@@ -417,11 +417,11 @@ python -m pip install -r requirements.txt
 python -m modal setup
 ```
 
-The activation command above is intended for Git Bash on Windows. Other shells use their corresponding virtual-environment activation command.
+The activation command is for Git Bash on Windows. Use your shell's usual virtual-environment activation command elsewhere.
 
 ##### Server Defaults
 
-`server_config.py` pins the model and tokenizer revision and explicitly enables chunked prefill. Defaults use A10, BF16 precision, 4096-token context, 0.80 memory target, and 2048-token scheduling budget. Invalid treatment settings fail before deployment. The startup log prints the server command.
+`server_config.py` pins the model and tokenizer revision and explicitly enables chunked prefill. Its defaults are A10, BF16, a 4096-token context, a 0.80 GPU memory target, and a 2048-token scheduling budget. Invalid settings fail before deployment, and the startup log prints the server command.
 
 ##### Endpoint and Authentication
 
@@ -441,7 +441,7 @@ Do not commit authentication credentials to version control.
 
 #### L4 Scheduling Study Procedure
 
-This procedure tests the 2048-versus-4096 scheduling budget with `bench.async_client`. It does not run the prefix-cache study. The final two steps analyze the committed L4 scheduling study datasets offline.
+Use `bench.async_client` to compare scheduling budgets of 2048 and 4096. This procedure is separate from the cache experiment. The last two steps analyze committed L4 data offline.
 
 ##### 1. Select L4 and Deploy the Scheduling Configuration
 
@@ -485,7 +485,7 @@ python -m bench.async_client \
   --max-num-batched-tokens 4096
 ```
 
-**Important:** The benchmark client's `--max-num-batched-tokens` argument records experiment metadata. It does not change the running vLLM server's configuration.
+The client flag `--max-num-batched-tokens` labels the results. To change the server's scheduling budget, redeploy with the corresponding server environment variable.
 
 Results are written to timestamped JSON and CSV files in `results/`.
 
@@ -499,7 +499,7 @@ python -m bench.compare_batches \
   results/20261019_030158.json
 ```
 
-The comparison utility validates the datasets, computes latency percentiles and mean throughput, reports percentage differences, and analyzes within-batch TTFT gaps. Use `bench.compare_batches` for comparisons and `bench.batch_results` for JSON/CSV persistence.
+`bench.compare_batches` validates the saved data, calculates latency percentiles and mean throughput, reports percentage differences, and examines within-batch TTFT gaps. `bench.batch_results` handles JSON/CSV persistence.
 
 Metric analysis uses the pinned [vLLM metric definitions](https://docs.vllm.ai/en/v0.21.0/usage/metrics/) and saved snapshots. Reproduce the existing eight-request diagnostic offline:
 
@@ -515,13 +515,13 @@ This L4 scheduling study diagnostic reports 16,384 prefix queries, zero hits, 16
 python figures/generate_figures.py
 ```
 
-The generator uses only Python's standard library and the three primary benchmark JSON files listed in [Saved Evidence](#saved-evidence). It writes the four SVGs referenced in this README and does not require an active Modal deployment. The committed PNG files are convenience exports; this command does not regenerate them.
+This standard-library generator reads the three primary benchmark JSON files in [Saved Evidence](#saved-evidence) and writes the four SVG figures in this README. It runs offline. The PNGs are convenience exports and are not regenerated by this command.
 
 #### Prefix-Cache Procedure (A10)
 
-The document/Q&A cache study has completed two paired rounds on a deployment configured for NVIDIA A10. See [Cache Results](#cache-results) for measured findings and limitations. The commands below reproduce the experiment; the L4 scheduling study results remain separate.
+The document/Q&A cache experiment used two paired rounds on a deployment configured for NVIDIA A10. Its measurements and limitations are described under [Cache Results](#cache-results). The L4 scheduling results are separate.
 
-Use `GPU_TYPE = "A10"` in `server_config.py`; restore that setting if you selected L4 for scheduling. This procedure uses `bench.cache_study`, fresh treatment processes, and saved manifests. It does not use the scheduling benchmark's trial sequence.
+Use `GPU_TYPE = "A10"` in `server_config.py` (the default) if you changed it to L4 for scheduling. This procedure uses saved manifests and fresh treatment servers through `bench.cache_study`, not the scheduling benchmark runner.
 
 ##### 1. Prepare the Cache Workloads
 
@@ -532,11 +532,11 @@ python -m bench.cache_study prepare --seed 42 --count 32 --output workloads/cach
 python -m bench.cache_study prepare --seed 43 --count 32 --output workloads/cache-round-2.json
 ```
 
-Each manifest contains unique-prefix and approximately 90% shared-prefix scenarios at concurrency 1 and 8. Inputs target 2048 tokens within 5% after chat templating. Outputs have a fixed limit of 128 tokens with normal EOS behavior. Readable local fixtures form a controlled document workload; the distribution is not measured production traffic. Use `--count 1` for a preliminary replay or `--count 8` for a small batch check before the full study. Count applies to each of the four scenarios.
+Each manifest contains unique-prefix and roughly 90% shared-prefix scenarios at concurrency 1 and 8. Inputs target 2048 tokens within 5% after chat templating, and outputs are capped at 128 tokens with normal EOS behavior. These readable document fixtures are controlled workloads, not production traffic. Use `--count 1` for a preliminary replay or `--count 8` for a small batch check. The count applies separately to each scenario.
 
 ##### 2. Run Four Fresh Cache Treatments
 
-Start a fresh server with caching disabled and scheduling budget 2048. Save its actual `Starting vLLM server with command:` line from the Modal container logs in `logs/cache-off.txt`. The runner requires that line as evidence of the fixed command; do not substitute a locally generated command. Then run:
+Start a fresh server with caching disabled and the scheduling budget set to 2048. Copy the actual `Starting vLLM server with command:` line from the Modal logs into `logs/cache-off.txt`. The runner checks this startup evidence; a locally constructed command is not equivalent.
 
 ```bash
 python -m bench.cache_study run \
@@ -546,13 +546,13 @@ python -m bench.cache_study run \
   --output-dir results/cache-study/round-1-off
 ```
 
-The runner verifies the cache flag and memory target through `/metrics`, warms the engine with eight unrelated requests, primes each shared prefix, and captures snapshots around measured batches. Cache-off receives the same primers as cache-on. The startup log provides command evidence; GPU identity and software versions on the server remain declared deployment settings rather than independent runtime measurements.
+The runner checks the cache flag and memory target through `/metrics`, issues eight unrelated warmup requests, primes shared prefixes, then captures counters around the measured batches. Both cache settings receive the same primers. The log confirms the launched command, but GPU identity and installed server versions remain declared settings rather than independently measured runtime details.
 
-Each measured window must also reconcile the `vllm:request_success_total` deltas, grouped by `finished_reason`, with the recorded successful requests. The runner and offline comparison reject missing counters, mismatched counts or finish reasons, and unexpected server-side completions such as aborts or errors. This checks the saved snapshots without changing historical result files; matching aggregate counts cannot prove request identity.
+For each window, the `vllm:request_success_total` counter deltas, grouped by `finished_reason`, must agree with successful requests recorded by the client. Missing counters, incorrect counts or finish reasons, and unexpected completions such as aborts cause validation to fail. Matching aggregate totals still cannot identify individual requests.
 
-Run four fresh treatment sessions in order: round 1 off→on, then round 2 on→off. Replay the same manifest within each round. For each session after the first, pass `--previous-run` with the preceding session's `run.json` to reject a reused server process. Stop and redeploy between sessions; changing the expected flag does not change the server.
+The session order is round 1 off then on, followed by round 2 on then off. Use the same manifest within a round. For sessions after the first, `--previous-run` points to the prior `run.json` so the runner can reject a reused server process. Stop and redeploy between sessions; an expected-cache argument does not reconfigure the server.
 
-Each output directory contains `workload.json`, `run.json`, `requests.csv`, `server.log`, and raw `.prom` snapshots. Warmup and priming are stored separately from measured batches and CSV rows. Checkpoints retain completed batches and failures if the session stops. Do not resume a partially measured session as a full comparison; use a new directory and a fresh server.
+Each treatment directory stores `workload.json`, `run.json`, `requests.csv`, `server.log`, and raw `.prom` snapshots. Warmup and priming are separate from measured requests. If a run stops early, its checkpoints retain completed batches and errors, but the partial run must not be treated as a full comparison. Restart it with a fresh server and output directory.
 
 ##### 3. Compare the Cache Treatments
 
@@ -568,7 +568,7 @@ python -m bench.compare_cache \
   --require-cache-metrics
 ```
 
-Use `--require-cache-metrics` for published cache-study results. It requires query, hit, and newly computed prefill counters in every measured window; zero values remain valid. Omit it for diagnostic analysis that permits unavailable telemetry.
+For published cache results, use `--require-cache-metrics` to require query, hit, and newly computed prefill counters for every window. Zero is a valid reading. Diagnostic runs can omit the flag when some telemetry is unavailable.
 
 The comparison validates identical workloads within each pair, distinct seeds between rounds, matching client versions and declared server controls, four distinct server process identities, and the off→on/on→off execution order. It recomputes counter deltas from raw snapshots and rejects partial sessions, request mismatches, and inconsistent preparation or measurement phases. Dirty client worktrees are flagged because a shared Git revision cannot prove identical uncommitted code.
 
@@ -576,11 +576,11 @@ The output contains `comparison.json`, `comparison.csv`, and three figures expor
 
 Each JSON/CSV row also includes `server_{phase}_mean_ms` and `server_{phase}_observations` for `queue`, `prefill`, `decode`, and `time_per_output_token`. Means use histogram sum/count deltas from the saved measurement window, weighted by observation counts across engines. TPOT is the mean of per-request TPOT observations. These are server means, not client percentiles or GPU kernel timings; the phases need not sum to client E2E latency. Missing timing telemetry is `null` in JSON and blank in CSV. An available histogram with no observations has count zero and an unavailable mean. Existing saved runs need no changes.
 
-Both rounds remain separate. Two paired rounds support an exploratory comparison; requests within one session are not independent replications. No confidence intervals or pooled speedup are reported. Missing telemetry remains unavailable and is marked `N/A` in diagnostic cache figures. Workloads with fewer than the planned 32 requests per scenario are identified as pilots. The reported results use saved live measurements; offline figure tests use synthetic data.
+Keep the two rounds separate. They allow exploratory comparisons, but requests within one treatment are not independent replications, so there is no pooled speedup or confidence interval. Missing telemetry appears as `N/A` in diagnostic figures. Runs with fewer than 32 requests per scenario are pilots. Published results come from saved live measurements; offline figure tests use synthetic data.
 
 #### GPU Profiling Procedure (A10)
 
-Use the A10 setting and the shared endpoint/authentication setup. This is a separate diagnostic capture with `bench.profile_capture`, not a scheduling or cache-performance benchmark. Follow the linked profiling runbook for the complete off/on procedure.
+Use A10 and the shared endpoint/authentication setup. `bench.profile_capture` collects a diagnostic trace separately from the timing benchmarks. The full process is in the [profiling runbook](docs/profiling.md).
 
 For a separate diagnostic profiling deployment, set `INFERENCE_LAB_PROFILE_SESSION` to a unique session label such as `shared-c8-off-01`. Labels accept 1–64 ASCII letters, digits, underscores, or hyphens and must start with a letter or digit. An unset or blank value leaves profiling disabled.
 
@@ -588,7 +588,7 @@ This adds vLLM's `--profiler-config` for PyTorch Profiler and mounts the persist
 
 Wait for `/stop_profile` to finish flushing and for the trace files to appear on the Volume before stopping the deployment. Modal commits Volume changes in the background and at container shutdown. Download completed traces with `python -m modal volume get inference-lab-profiles <session-label> <local-directory> --env main`. See [Modal Volume persistence](https://modal.com/docs/guide/volumes#background-commits) and [Volume CLI commands](https://modal.com/docs/reference/cli/volume).
 
-Use a fresh label for each treatment and retry so old and new traces remain distinguishable. Profiling captures belong outside the measured cache-study sessions: profiling adds overhead, and the cache-study runner rejects startup commands containing profiling flags. Before returning to normal benchmarks, unset `INFERENCE_LAB_PROFILE_SESSION` and redeploy. The profiling pair is separate from the 512-request benchmark comparison.
+Use a new profile label for each treatment and retry. Keep profiling separate from cache-study benchmark sessions because the profiler adds overhead and the benchmark runner rejects profiling flags. Unset `INFERENCE_LAB_PROFILE_SESSION` and redeploy before resuming normal benchmarks. The trace pair is not part of the 512-request performance comparison.
 
 `bench.profile_capture` captures one treatment against an already ready profiling deployment. It reuses the first eight `shared-c8` requests from a saved cache-study manifest; manifests with fewer than eight requests per scenario are rejected. After eight unrelated warmup requests and one prefix-primer request, it starts profiling, sends one concurrent eight-request batch, and stops profiling. Preparation is outside the trace.
 
@@ -605,40 +605,40 @@ The deployment's prefix-caching setting and profile session must match these arg
 
 Each output contains `capture.json`, the original manifest as `workload.json`, `server.log`, and raw metric snapshots. `capture.json` records preparation and captured request results, timestamps, profiler start/stop outcomes, and the expected remote trace directory. Its `kind` is `profile_capture`, separate from benchmark results. A `completed` capture means requests and profiler shutdown validated; it does not verify that trace files persisted or contain GPU events. `trace_files_verified` remains false in the capture record; a separate trace receipt records the download and GPU-event checks. The driver neither deploys nor stops Modal apps nor downloads traces.
 
-Follow the [profiling runbook](docs/profiling.md) for the two manual deployments, readiness checks, bounded trace downloads, GPU-event checks, and automatic app shutdown. The runbook uses Git Bash and the existing saved workload; no new benchmark study is required.
+The [profiling runbook](docs/profiling.md) covers the two deployments, readiness checks, trace downloads, GPU-event verification, and automatic shutdown. It uses Git Bash and the existing workload.
 
 #### Stop Any Live Deployment
 
-Stop the app after completing your chosen live procedure. The profiling runbook and cache helper include automatic shutdown; the manual command is:
+Stop the application after a live procedure. The cache helper and profiling runbook include automatic shutdown; to stop it manually:
 
 ```bash
 python -m modal app stop llm-inference-optimization-lab
 ```
 
-Stopping the application terminates its active GPU containers while preserving separately managed persistent volumes.
+Stopping the app ends active GPU containers but leaves persistent Modal Volumes intact.
 
 ## Limitations
 
-The project has several constraints:
+The experiments have some practical limits:
 
-- **Test coverage:** One model, two GPUs, and a narrow set of settings and synthetic workloads do not represent production traffic.
-- **Experiment reliability:** Few repeats, some fixed-order tests, uncommitted code, and declared cache-study hardware/software details limit confidence and reproducibility.
-- **Timing overhead:** Client latency includes network overhead; cache throughput includes checkpoint time.
-- **Diagnostic coverage:** GPU traces cover one shared-prefix pair and include profiling overhead. Server averages and CPU annotations do not show GPU phase timings or utilization.
-- **Capacity and cost:** Sustainable capacity, requests meeting latency targets, and startup/idle costs were not measured.
-- **Model quality:** Response quality and correctness were not evaluated.
+- Only Qwen3-4B on L4 and A10 was tested, using selected settings and synthetic prompts. The findings do not describe production traffic.
+- The studies have few independent repetitions. Fixed execution order, dirty worktrees, and deployment settings that were not independently confirmed at runtime limit the strength of the comparisons.
+- Client latency includes network time, and cache-study throughput includes time spent checkpointing results.
+- Profiling covers one shared-prefix pair and adds overhead. Server phase averages and CPU annotations do not measure GPU phase duration or utilization.
+- Sustainable request capacity, latency-target attainment, and startup or idle serving costs were not measured.
+- Model response quality was not evaluated.
 
 ## Future Work
 
-Potential extensions:
+Possible follow-ups:
 
-- **Test coverage:** Compare more models, GPUs, server settings, prefix-sharing patterns, and mixed-length/bursty workloads.
-- **Experiment reliability:** Repeat fresh comparisons in different orders with clean committed code and recorded GPU/software details; report variation across runs.
-- **Timing overhead:** Measure checkpoint time separately and distinguish client/network overhead from server execution.
-- **Diagnostic coverage:** Profile unique-prefix and long-output requests; investigate scheduling, KV-cache pressure, and GPU utilization.
-- **Capacity and cost:** Measure request rates meeting latency targets, tokens per GPU-hour, and serving cost including startup and idle time.
-- **Model quality:** Check answer quality when changing models, precision, or generation settings.
+- Try other model and GPU combinations, scheduling settings, prefix-sharing patterns, and realistic mixtures of prompt lengths and request arrivals.
+- Repeat fresh comparisons in different orders, using clean committed code and recorded runtime GPU/software details. Report variation between independent sessions.
+- Measure checkpoint cost separately and distinguish client/network time from server execution.
+- Profile unique-prefix and long-output requests, then examine scheduling, KV-cache pressure, and GPU utilization.
+- Measure how many requests can meet latency targets, how many tokens each GPU-hour produces, and the serving costs of startup and idle time.
+- Check response quality when comparing models, precision settings, or generation parameters.
 
 ## Conclusion
 
-The L4 scheduling study rejected a larger token budget for its measured workloads. The cache study observed shared-prefix reuse, reduced prefill work, and lower shared-prefix latency, alongside substantial timing variation across sessions. Both experiments use saved request results and server telemetry to distinguish implemented features from measured behavior.
+On the L4, increasing the scheduling budget from 2048 to 4096 did not help either tested workload. On the A10, shared-prefix requests showed real cache reuse, less prefill computation, and lower latency, though the size of the benefit varied across sessions. The profiling pair adds evidence about the GPU work avoided when cached prefixes are reused. These findings remain limited to the measured configurations and workloads.
