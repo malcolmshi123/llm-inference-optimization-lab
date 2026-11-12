@@ -1,8 +1,8 @@
 # Capture a small profiling pair
 
-Run these commands in **Git Bash**, from the repository root. They use the existing A10 deployment and capture eight shared-prefix requests per treatment. GPU startup and image preparation may take longer than the capture itself. This procedure has been checked offline; the first live capture is still a validation step.
+Run the profiling pair in Git Bash from the repository root. The procedure uses the existing A10 deployment and captures eight shared-prefix requests per treatment. GPU startup and image preparation may take longer than the capture. The procedure has passed offline checks. Use the first live run to verify the capture on Modal.
 
-Use one terminal. Run cache-off first and continue to cache-on only after its trace download verifies. Do not run the normal benchmark helper or another client against the app during either capture.
+Use one terminal for both treatments. Run cache-off first and verify its downloaded trace before starting cache-on. Keep the app idle apart from the capture. Pause the normal benchmark helper and any other clients.
 
 ## 1. Set up the shell
 
@@ -25,11 +25,11 @@ test -f "$MANIFEST"
 "$PY" -m bench.profile_capture --help
 ```
 
-Keep credentials in the shell environment. The app name and endpoint must refer to the same deployment. If Modal prints a different endpoint during deployment, stop and update `VLLM_BASE_URL` before trying a capture.
+Keep credentials in the shell environment. Check that the app name and endpoint refer to the same deployment. If Modal prints a different endpoint, stop and update `VLLM_BASE_URL` before running the capture.
 
 ## 2. Define the download check
 
-This reads every downloaded compressed trace, requires at least one GPU kernel event, and writes a separate validation receipt. CPU-only frontend traces are allowed alongside GPU worker traces. It does not change `capture.json` or establish an optimization result.
+The check reads each compressed trace and requires at least one GPU kernel event across the download. CPU-only frontend traces can accompany the GPU worker traces. The check writes a separate receipt and leaves `capture.json` intact. The receipt verifies the trace download. An optimization claim needs performance measurements.
 
 ```bash
 check_profile_traces() {
@@ -79,9 +79,9 @@ PY
 
 ## 3. Define the treatment procedure
 
-The helper deploys exactly one profiling treatment, checks readiness and startup evidence, runs the capture driver, downloads traces, and stops the app. Its exit trap also attempts shutdown on failure or Ctrl+C. It refuses existing local session/log directories. Use a fresh label for every attempted treatment, including retries, so remote trace directories cannot mix attempts.
+Each call deploys one treatment, checks readiness and the startup log, captures and downloads traces, then stops the app. The exit trap attempts shutdown on failure or Ctrl+C. Use a fresh label for each attempt, including retries. The helper rejects existing local session or log directories, and unique labels keep remote traces from different attempts apart.
 
-Readiness is limited to 300 seconds. Startup-log polling and download retries are bounded; a failed capture is not automatically rerun. Modal may need a few seconds to commit flushed files to its Volume, so a download can be retried in the same newly created trace directory. The `--force` below only refreshes that session's downloaded copies. [Volume persistence](https://modal.com/docs/guide/volumes#background-commits)
+The readiness request times out after 300 seconds. The helper polls for the startup log up to ten times and tries the download up to three times. A failed capture requires a new attempt. Modal may need a few seconds to commit flushed files to the Volume, so each download retry uses the trace directory created for that session. The `--force` flag refreshes the local copies in that directory. [Volume persistence](https://modal.com/docs/guide/volumes#background-commits)
 
 ```bash
 capture_profile() (
@@ -197,19 +197,19 @@ PY
 
 ## 4. Run cache-off, then cache-on
 
-Run this as a plain command; let the helper finish and shut down the app:
+Run cache-off as a plain command and wait for the helper to finish and stop the app.
 
 ```bash
 capture_profile shared-c8-off-01 off
 ```
 
-Continue only if it printed a successful GPU-event check and app shutdown. If it failed, inspect that session's logs and `capture.json` before another GPU attempt.
+Start cache-on after the GPU-event check passes and the app stops. If cache-off fails, inspect the session logs and `capture.json` before starting another GPU run.
 
 ```bash
 capture_profile shared-c8-on-01 on shared-c8-off-01
 ```
 
-The second command checks that its server identity differs from the first. It uses the same manifest and a separate trace directory. Each session makes 17 generation requests: eight warmups, one primer, and eight profiled requests.
+Cache-on uses the same manifest and a separate trace directory. The helper checks that the server process differs from the cache-off process. Each session sends 17 generation requests. Eight warm up the server, one primes the prefix, and eight run under the profiler.
 
 ## 5. Check the pair and open the traces
 
@@ -241,13 +241,13 @@ print("Pair validated. Inspect the GPU worker traces next.")
 PY
 ```
 
-Open the GPU-containing `.json.gz` files identified by each `trace-check.json` in [Perfetto](https://ui.perfetto.dev/). vLLM documents this viewer for its profiler traces. Compare the beginning of the batch, GPU kernel activity, and subsequent decode iterations. Keep frontend CPU traces distinct from GPU worker traces. [vLLM profiling](https://docs.vllm.ai/en/v0.21.0/contributing/profiling/)
+Use each `trace-check.json` to find the `.json.gz` files that contain GPU events. Open those files in [Perfetto](https://ui.perfetto.dev/), the viewer vLLM documents for these traces. Compare the start of the batch and the kernel activity in later decode iterations. Read the frontend CPU traces separately from the GPU worker traces. [vLLM profiling](https://docs.vllm.ai/en/v0.21.0/contributing/profiling/)
 
-Retain the raw traces and receipts. Kernel-event presence does not prove that every expected operation was captured, nor does a profile establish an uninstrumented speedup. Keep these captures separate from the published cache-study results. The driver leaves `trace_files_verified` false; the separate receipt records the download check without rewriting the original capture record.
+Keep the raw traces and receipts with the profiling runs, separate from the published cache-study results. A trace with kernel events may still be missing operations, and a profiled run includes instrumentation overhead. The driver leaves `trace_files_verified` false. Use the separate receipt to confirm the download without editing the original capture record.
 
 ## Offline analysis
 
-After downloading both captures, run this locally. It does not contact Modal or allocate a GPU. Use a new output directory: existing outputs are not overwritten.
+Once both downloads pass, run the summary on your machine. It needs neither a Modal connection nor a GPU. Pick a fresh output directory because the summary refuses to overwrite existing outputs.
 
 ```bash
 "$PY" -m bench.profile_summary \
@@ -256,28 +256,28 @@ After downloading both captures, run this locally. It does not contact Modal or 
   --output-dir "$PROFILE_DIR/comparison"
 ```
 
-The export contains `summary.json`, `kernels.csv`, `annotations.csv`, and `01_gpu_timeline.png` / `.svg`. Kernel names remain complete in CSV and JSON. The loader revalidates the selected requests, raw metric windows, fresh server identities, observed GPU properties, trace hashes, receipt kernel counts, and coverage of downloaded trace files. It supports one GPU worker trace per capture, with CPU-only frontend traces retained in the inventory. Annotated context tokens must reconcile with available new-prefill counters.
+The export includes `summary.json`, `kernels.csv`, `annotations.csv`, and `01_gpu_timeline.png` / `.svg`. The CSV and JSON keep full kernel names. Before writing, the loader checks the selected requests, raw metric windows, distinct server processes, observed GPU properties, trace hashes, kernel counts in the receipts, and coverage of the downloaded files. It accepts one GPU worker trace per capture and keeps CPU-only frontend traces in the inventory. If new-prefill counters are available, the annotated context token counts must agree with them.
 
-Chrome JSON `ts` and `dur` use microseconds even when `displayTimeUnit` is `ms`; the summarizer converts durations to milliseconds. Summed kernel durations can double-count overlap. The interval union merges overlap on the single GPU, while the span runs from the first kernel start to the final kernel end. Neither measures SM utilization. The plot coalesces gaps below 0.5 ms only for display; exact sums, spans, and union durations are preserved. [Chrome trace format](https://perfetto.dev/docs/getting-started/other-formats)
+Chrome trace JSON records `ts` and `dur` in microseconds even when `displayTimeUnit` is `ms`. The summarizer converts durations to milliseconds. Adding kernel durations counts concurrent work more than once. The interval union counts overlapping time once on the single GPU. The span runs from the first kernel start to the last kernel end. Measuring SM utilization requires other data. The plot closes gaps shorter than 0.5 ms for display while the export retains the exact sums, spans, and union durations. [Chrome trace format](https://perfetto.dev/docs/getting-started/other-formats)
 
-vLLM 0.21 labels each worker execution with context request/token counts and generation request/token counts. A context request has not yet generated an output token, so later chunks of prefill remain context work. The analysis labels host scopes as `context_only`, `mixed`, `generation_only`, or `empty`, and exports their original names and counts. These are host ranges around model execution, not GPU phase durations. GPU kernels are not assigned to a phase by overlapping CPU timestamps. [Worker annotations](https://github.com/vllm-project/vllm/blob/v0.21.0/vllm/v1/worker/gpu_worker.py#L682), [iteration counts](https://github.com/vllm-project/vllm/blob/v0.21.0/vllm/v1/utils.py#L433)
+vLLM 0.21 records context and generation request and token counts for each worker execution. A request counts as context work until it generates its first output token, including later prefill chunks. The summary exports each host scope’s original name and counts and labels it `context_only`, `mixed`, `generation_only`, or `empty`. These scopes mark ranges on the host around model execution. Timestamp overlap alone cannot attribute GPU kernels to either phase. [Worker annotations](https://github.com/vllm-project/vllm/blob/v0.21.0/vllm/v1/worker/gpu_worker.py#L682), [iteration counts](https://github.com/vllm-project/vllm/blob/v0.21.0/vllm/v1/utils.py#L433)
 
-See the [README case study](../README.md#gpu-profiling-case-study) for interpretation. Preserve the raw captures and receipts; analysis outputs do not rewrite them or change the original benchmark comparison.
+See the [README case study](../README.md#gpu-profiling-case-study) for the findings. The summary writes its own outputs and leaves the captures, receipts, and original benchmark comparison intact.
 
 ## Recovery and returning to benchmarks
 
-If the shell closes or automatic shutdown reports an error, stop the app explicitly:
+If the shell closes or the shutdown trap reports an error, stop the app with this command.
 
 ```bash
 "$PY" -m modal app stop "$APP" --env main --yes
 ```
 
-Do not delete a failed session or overwrite remote traces during diagnosis. Resolve the cause before choosing fresh labels. If labels change, use the matching labels in the final pair check too.
+Keep failed sessions and remote traces while you investigate. Fix the cause before trying again with fresh labels. If you change the labels, update them in the final pair check too.
 
-Before a future normal benchmark deployment, clear any globally exported profiling setting:
+Clear any profiling setting you exported before redeploying for regular benchmarks.
 
 ```bash
 unset INFERENCE_LAB_PROFILE_SESSION
 ```
 
-The helper's deployment variables apply only to its deploy command. Stopping the profiling app does not restore a normal deployment; the normal benchmark workflow must redeploy its own configuration.
+The helper sets deployment variables for its deploy command alone. After stopping the profiling app, redeploy with the normal benchmark workflow to restore its configuration.

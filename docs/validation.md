@@ -1,8 +1,8 @@
 # Validate the tooling and saved evidence
 
-Run these commands in **Git Bash**, from the repository root, with the dependencies in `requirements.txt` installed. Python 3.11 matches [CPU CI](../.github/workflows/tests.yml). These checks run locally without a Modal deployment, GPU, model weights, or proxy credentials. Only the optional tokenizer download needs network access.
+From the repository root, open Git Bash and install the dependencies in `requirements.txt`. Use Python 3.11 to match [CPU CI](../.github/workflows/tests.yml). You can run the checks locally without a Modal deployment, GPU, model weights, or proxy credentials. The optional tokenizer download is the only step that needs network access.
 
-The commands validate existing measurements and regenerate analysis outputs. They do not rerun the performance experiments or establish a new speedup.
+Use these checks to verify saved measurements and regenerate the analysis outputs. A new speedup claim would require a new performance experiment.
 
 ## 1. Set up the shell and temporary outputs
 
@@ -22,7 +22,7 @@ PROFILE_DIR="$PWD/inference-runs/profiling"
 printf 'Validation outputs: %s\n' "$CHECK_DIR"
 ```
 
-Keep this terminal open for the remaining commands. Each comparison creates a new output directory and refuses to overwrite it. Repeat this setup to get a fresh temporary directory before rerunning the comparisons. The committed comparisons and raw evidence remain unchanged.
+Keep this terminal open so the remaining commands can use the paths you just set. The comparison tools require fresh output directories. Repeat this setup before rerunning either comparison. The committed comparisons and raw evidence stay where they are.
 
 ## 2. Run the CPU test suite offline
 
@@ -35,11 +35,11 @@ MPLBACKEND=Agg \
 "$PY" -m unittest discover -s tests -v
 ```
 
-Expect `OK`, with the real-tokenizer check skipped because this temporary Hugging Face cache is empty. The other tests use local fixtures and fake responses; they cover the benchmark, comparisons, server timings, and profiling tools. A passing suite validates the tooling, not GPU performance.
+Look for `OK`. The real-tokenizer check skips because the temporary Hugging Face cache is empty. The remaining tests use local fixtures and fake responses to exercise the benchmark, comparisons, server timing calculations, and profiling tools. GPU performance requires a live benchmark.
 
 ### Optional: require the pinned tokenizer check
 
-To match the separate CI integration step, download only the pinned tokenizer into the same temporary cache. This command requires network access:
+Download the pinned tokenizer into the same temporary cache to match the separate CI integration step. Run this command with network access.
 
 ```bash
 HF_HOME="$CHECK_DIR/huggingface" "$PY" - <<'PY'
@@ -50,7 +50,7 @@ AutoTokenizer.from_pretrained(MODEL_NAME, revision=MODEL_REVISION)
 PY
 ```
 
-Then run the integration check offline. It must pass rather than skip:
+Run the integration check offline. Expect it to pass with the tokenizer available in the cache.
 
 ```bash
 HF_HOME="$CHECK_DIR/huggingface" \
@@ -68,7 +68,7 @@ INFERENCE_LAB_REQUIRE_TOKENIZER=true \
 "$PY" -m bench.check_cache_pilots "$LAB_DIR"
 ```
 
-Expect both pilots to print `validated`, followed by scenario cache metrics. This checks saved requests, startup evidence, raw metric deltas, matching workloads, distinct server processes, and treatment order. Pilots remain separate from the full measured study.
+Each pilot should print `validated` followed by its scenario cache metrics. The check verifies saved requests, startup evidence, raw metric deltas, workload matches, distinct server processes, and treatment order. The full study uses separate measurements.
 
 ## 4. Recompute the full cache comparison
 
@@ -82,9 +82,9 @@ MPLBACKEND=Agg "$PY" -m bench.compare_cache \
   --require-cache-metrics
 ```
 
-Expect a successful export containing `comparison.json`, `comparison.csv`, and three PNG/SVG figure pairs: `01_cache_latency`, `02_cache_prefill`, and `03_server_timings`. The four sessions contain 512 measured requests, excluding preparation. Validation checks workload pairing, execution order, distinct process identities, request results, raw snapshots, and required cache counters.
+Look for `comparison.json`, `comparison.csv`, and PNG and SVG versions of `01_cache_latency`, `02_cache_prefill`, and `03_server_timings`. The four sessions contain 512 measured requests after excluding preparation. The comparison checks workload pairing, execution order, distinct server processes, request results, raw snapshots, and the required cache counters.
 
-The two rounds remain exploratory and are reported separately. Recorded dirty-worktree warnings describe the original captures; this check cannot reconstruct uncommitted source from those sessions.
+Read the two exploratory rounds separately. A dirty-worktree warning describes the checkout at capture time. The saved measurements cannot recover those uncommitted changes.
 
 ## 5. Recompute the profiling summary
 
@@ -95,16 +95,16 @@ MPLBACKEND=Agg "$PY" -m bench.profile_summary \
   --output-dir "$CHECK_DIR/profile-comparison"
 ```
 
-Expect a successful export containing `summary.json`, `kernels.csv`, `annotations.csv`, and `01_gpu_timeline.png` / `.svg`. This revalidates requests, metric windows, trace hashes and receipts, GPU events, and the paired workload/server identities. Each treatment profiles one eight-request batch; profiling overhead is included. Kernel durations and host annotations do not establish GPU utilization or a prefill/decode GPU-time split.
+Look for `summary.json`, `kernels.csv`, `annotations.csv`, and `01_gpu_timeline.png` / `.svg`. The summary checks the requests, metric windows, trace hashes and receipts, GPU events, and the workloads and server identities for both runs. Each treatment profiles one eight-request batch, so the timings include profiler overhead. Kernel durations and host annotations alone cannot tell you GPU utilization or how GPU time splits between prefill and decode.
 
-For new trace captures, use the separate [profiling runbook](profiling.md).
+To capture new traces, follow the [profiling runbook](profiling.md).
 
 ## Interpreting failures
 
-A missing `server.log` or `.prom` file means the saved evidence is incomplete. Restore the original file; do not synthesize startup evidence. The session `server.log` files are intentionally tracked despite the general `*.log` ignore rule.
+If a `server.log` or `.prom` file is missing, restore the original to complete the evidence. Use only the startup log from that session. Git tracks the session `server.log` files as exceptions to the `*.log` ignore rule.
 
-An existing output directory means the export is protected against overwriting. Repeat section 1 to choose a fresh temporary output directory.
+If the output directory already exists, repeat section 1 to create a fresh temporary directory.
 
-A failed required-tokenizer check means the pinned tokenizer could not be loaded or its length/prefix assertions failed. Check the download step before changing the workload.
+If the required-tokenizer check fails, confirm the pinned tokenizer downloaded and loads from the temporary cache before changing the workload. If it loads, inspect the length and prefix assertions.
 
-Keep the temporary outputs while reviewing them. They live outside the repository and can be deleted afterward. Passing these checks confirms consistency of the saved evidence and tooling; it does not add independent experimental replications.
+Keep the outputs until you finish reviewing them, then delete the temporary directory outside the repository if you no longer need it. A pass confirms that the tooling and saved evidence agree. Independent replication requires new runs.
